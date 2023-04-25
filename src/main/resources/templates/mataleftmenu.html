@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+    <!-- <aside cc> -->
+ 
+      <!-- Sidebar -->
+            <div class="sidebar" id="sidebar" th:fragment="leftmenu">
+                <div class="sidebar-inner slimscroll">
+					<div id="sidebar-menu" class="sidebar-menu">
+						<ul>
+							<li class="menu-title" sec:authorize="hasAuthority('dashboard_view')"> 
+								<span>Main</span>
+							</li>
+							<li id="dashboard_menu" sec:authorize="hasAuthority('dashboard_view')"> 
+								<a th:href="@{/home}"><i class="la la-dashboard"></i> <span>Dashboard</span></a>
+							</li>
+							<li class="menu-title"> 
+								<span>Organization</span>
+							</li>
+							<li id="organization_menu" sec:authorize="hasAuthority('organization_view')">
+								<a th:href="@{/organization}"><i class="la la-city"></i> <span> Organization</span></a>
+							</li>
+							<li id="office_menu" sec:authorize="hasAuthority('branch_view')">
+								<a th:href="@{/branch}"><i class="las la-code-branch"></i> <span> Office</span></a>
+							</li>
+							<li id="department_menu" sec:authorize="hasAuthority('department_view')">
+								<a th:href="@{/department}"><i class="la la-building"></i><span>Department</span></a>
+							</li>
+              				<li id="designation_menu" sec:authorize="hasAuthority('designation_view')">
+              					<a th:href="@{/designation}"><i class="la la-user-shield"></i><span>Designation</span></a>
+              				</li>
+							<li class="menu-title" sec:authorize="hasAuthority('employee_view')"> 
+								<span>Personnel</span>
+							</li>
+							<li id="employee_menu" sec:authorize="hasAuthority('employee_view')">
+								<a class="" th:href="@{/employee}"><i class="la la-user"></i><span>Employee</span></a>
+							</li>
+							<li class="menu-title" sec:authorize="hasAuthority('device_view')"> 
+								<span>Authorization</span>
+							</li>
+							<li id="device_menu" sec:authorize="hasAuthority('device_view')">
+								<a class="" th:href="@{/device}"><i class="la la-video"></i><span>Device</span></a>
+							</li>
+							<li id="area_menu" sec:authorize="hasAuthority('area_view')">
+								<a class="" th:href="@{/area}"><i class="las la-landmark"></i><span>Area</span></a>
+							</li>
+<!-- 							<li id="door_menu" sec:authorize="hasAuthority('door_view')"> -->
+<!-- 								<a class="" th:href="@{/door}"><i class="las la-door-open"></i><span>Door</span></a> -->
+<!-- 							</li> -->
+							<li id="shift_menu" sec:authorize="hasAuthority('shift_view')">
+								<a class="" th:href="@{/shift}"><i class="las la-hourglass"></i><span>Shift</span></a>
+							</li>
+<!-- 							<li id="access_level_menu" sec:authorize="hasAuthority('access_level_view')"> -->
+<!-- 								<a class="" th:href="@{/access-level}"><i class="las la-user-check"></i><span>Access Level</span></a> -->
+<!-- 							</li> -->
+							<li id="employee_shift_menu" sec:authorize="hasAuthority('employee_roster_view')">
+								<a class="" th:href="@{/employee-shift-daily-association}"><i class="las la-user-clock"></i><span>Employee Shift Roster</span></a>
+							</li>
+							<li class="menu-title"> 
+								<span>Logs</span>
+							</li>
+							    <li id="audit_menu"><a class="" th:href="@{/action}"><i class="lab la-buysellads"></i><span>Audit</span></a></li>
+								<li id="action_details_menu"><a class="" th:href="@{/action-details}"><i class="lab la-buffer"></i><span>Exception</span></a>
+							</li>
+							<li class="menu-title" sec:authorize="hasAuthority('email_schedule_view')"> 
+								<span>Notifications</span>
+							</li>
+<!-- 							<li id="constraint_range_menu"> -->
+<!-- 								<a class="" th:href="@{/constraint/range}"><i class="las la-exchange-alt"></i><span>Constraint Range</span></a> -->
+<!-- 							</li> -->
+<!-- 							<li id="constraint_single_menu"> -->
+<!-- 								<a class="" th:href="@{/constraint/single}"><i class="las la-random"></i><span>Constraint Single</span></a> -->
+<!-- 							</li> -->
+<!-- 							<li id="parameter_menu"> -->
+<!-- 								<a class="" th:href="@{/parameter}"><i class="las la-indent"></i><span>Parameter</span></a> -->
+<!-- 							</li> -->
+ 							<li id="email_setup_menu" sec:authorize="hasAuthority('email_setup_view')">
+								<a class="" th:href="@{/email/setup}"><i class="las la-envelope"></i><span>Email Setup</span></a>
+							</li> 
+							<li id="email_schedule_menu" sec:authorize="hasAuthority('email_schedule_view')">
+								<a class="" th:href="@{/email/schedule}"><i class="las la-envelope-open-text"></i><span>Email Schedule</span></a>
+							</li>
+							<li class="menu-title" sec:authorize="hasAuthority('transaction_view')"> 
+								<span>Reports</span>
+							</li>
+							    <li id="even-report_menu" sec:authorize="hasAuthority('transaction_view')"><a href="/transaction"><i class="las la-file-upload"></i><span> Event Report</span></a></li>
+								<li id="daily-report_menu" sec:authorize="hasAuthority('dailyreport_view')"><a href="/daily-reports"><i class="las la-file-alt"></i><span> Daily Attendance</span> </a></li>
+								<li id="monthly_menu" sec:authorize="hasAuthority('monthlyattendance_view')"><a href="/monthly/report"><i class="las la-calendar"></i><span> Monthly Attendance</span> </a></li>
+<!-- 								<li id="monthly_punch_menu" sec:authorize="hasAuthority('monthlypunchrecord_view')"><a href="/monthly/punch-record"><i class="las la-calendar"></i><span> Monthly Punch Record</span> </a></li> -->
+								<li id="absent_menu" sec:authorize="hasAuthority('absent_report_view')"><a href="/absent-report"><i class="las la-calendar-times"></i><span> Absent Report</span> </a></li>
+								<li id="exceptionSummary_menu" sec:authorize="hasAuthority('exception_summary_view')"><a href="/dailysummary"><i class="las la-exclamation-triangle"></i><span> Exception Summary</span> </a></li>
+								<li id="notification_log_menu" sec:authorize="hasAuthority('notification_log_view')"><a href="/notification/log"><i class="las la-bell"></i><span> Notification Log</span> </a></li>
+<!-- 								<li id="employee_shift_unassign_menu" sec:authorize="hasAuthority('employee_shift_unassigned_view')"><a href="/employee-shift-daily-association/unassigned"><i class="las la-times-circle"></i><span> Employee Shift Unassign</span> </a></li> -->
+<!-- 								<li><a href="/events/exception-reports"><i class="las la-exclamation-triangle"></i><span> Exception Report </span></a></li> -->
+							
+							
+							<li class="menu-title" sec:authorize="hasAuthority('user_view')"> 
+								<span>Administration</span>
+							</li>
+							<li id="user_menu" sec:authorize="hasAuthority('user_view')"> 
+								<a href="/user"><i class="la la-user-plus"></i> <span>Users</span></a>
+							</li>
+							<li id="role_menu" sec:authorize="hasAuthority('role_view')">
+								<a href="/role"><i class="las la-user-cog"></i> <span>Role</span></a>
+							</li>
+							<li id="privilege_menu" sec:authorize="hasAuthority('privilege_view')">
+								<a href="/privilege"><i class="las la-user-shield"></i> <span>Privilege</span></a>
+							</li>
+							
+						</ul>
+					</div>
+                </div>
+            </div>
+			<!-- /Sidebar -->
+     
+          
+   <!--  </aside> -->
+  </html> 
+    

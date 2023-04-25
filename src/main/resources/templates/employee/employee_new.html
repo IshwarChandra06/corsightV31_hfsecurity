@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="mataheader :: headfragment">
+</head>
+<body>
+
+	<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"></div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+		<!-- Page Wrapper -->
+		<div class="page-wrapper">
+
+			<!-- Page Content -->
+			<div class="content container-fluid">
+
+				<!-- Page Header -->
+				<div class="page-header">
+					<div class="row align-items-center">
+						<div class="col">
+							<h3 class="page-heaer">
+								<i class="la la-user"> <b><span th:text="${title}"></span></b></i>
+							</h3>
+							<br>
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item">Employee</li>
+								<li class="breadcrumb-item active"><span th:text="${title}"></span></li>
+							</ul>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6">
+						<div class="card">
+							<div class="card-body">
+								<form th:action="@{/employee/add}" enctype="multipart/form-data" th:object="${employee}" method="POST">
+									<input type="hidden" th:field="*{id}" placeholder="Area Id" class="form-control mb-4 col-4">
+									<input type="hidden" th:value="${title}" name="title" class="form-control mb-4 col-4">
+									<input type="hidden" th:field="${employee.poi}" class="form-control mb-4 col-4">
+									<div class="form-group">
+										<label><b>Name:<font color="red">*</font></b></label> 
+										<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="alert alert-danger"></p> 
+										<input type="text" th:field="*{name}" placeholder="Enter Employee Name" maxlength="50"
+											class="form-control">
+									</div>
+									<div class="form-group">
+										<label><b>Employee Id:<font color="red">*</font></b></label> 
+										<p th:if="${#fields.hasErrors('empId')}" th:errors="*{empId}" class="alert alert-danger"></p> 
+										<input type="text" th:field="*{empId}" placeholder="Enter Employee Id" maxlength="50"
+											class="form-control">
+									</div>
+									<div class="form-group">
+										<label><b>Gender:</b></label> 
+										<select  th:field="*{gender}" 
+											class="form-control">
+											<option value="">Select Gender</option>
+											<option value="Male">Male</option>
+											<option value="Female">Female</option>
+											<option value="Others">Others</option>
+											</select>
+									</div>
+									<div class="form-group" style="display:none;">
+										<label><b>Organization:</b></label> 
+										<select th:field="*{organization}" class="form-control">
+											<option th:each="organization : ${listOrganization}"
+												th:value="${organization.id}" th:text="${organization.name}">
+										</select>
+									</div>
+									<div class="form-group">
+										<label><b>Office:</b></label> 
+										<p th:if="${#fields.hasErrors('branch')}" th:errors="*{branch}" class="alert alert-danger"></p> 
+										<select th:field="*{branch}" class="form-control" id="branch">
+											<option value="">Select Office</option>
+											<option th:each="branch : ${listBranch}"
+												th:value="${branch.id}" th:text="${branch.name}">
+										</select>
+									</div>
+									<div class="form-group">
+										<label th:if="${title=='New Employee'}"><b>Area:</b></label>
+                                      <div th:if="${title=='New Employee'}" id="area"></div>
+									</div>
+									
+									<div class="form-group">
+										<label><b>Department:</b></label> 
+										<p th:if="${#fields.hasErrors('department')}" th:errors="*{department}" class="alert alert-danger"></p> 
+										<select name="worker"
+											th:field="*{department}" class="form-control">
+											<option value="">Select Department</option>
+											<option th:each="department : ${listDepartment}"
+												th:value="${department.id}" th:text="${department.name}">
+										</select>
+									</div>
+									<div class="form-group">
+										<label><b>Designation:</b></label>
+										<p th:if="${#fields.hasErrors('designation')}" th:errors="*{designation}" class="alert alert-danger"></p>  
+										<select th:field="*{designation}" class="form-control">
+											<option value="">Select Designation</option>
+											<option th:each="designation : ${listDesignation}"
+												th:value="${designation.id}" th:text="${designation.name}">
+										</select>
+									</div>
+									<div class="form-group">
+										<label><b>Mobile No:</b></label> 
+										<input type="number" class="form-control" th:field="*{mobile}" pattern="/^-?\d+\.?\d*$/" 
+										onKeyPress="if(this.value.length==10) return false;"/>
+											
+									</div>
+									<div class="form-group">
+										<label><b>Email:</b></label> 
+										<input type="email" th:field="*{email}" maxlength="50" placeholder="Enter Email"
+											class="form-control">
+									</div>
+									<div class="form-group">
+										<label><b>Upload Image:</b></label> 
+										<input type="file" name="files" id="file" placeholder="choose file"
+											class="form-control"onchange="validateSize(this); fileValidation()" accept=".jpg" >
+<!-- 											multiple="multiple" -->
+									</div>
+									<div class="text-right">
+										<button type="submit" class="btn btn-primary">Submit</button>
+									    <a class="btn btn-danger" th:href="@{/employee}">Cancel</a>
+									</div>
+								</form>
+								<div class="form-group">
+						            <label><b>Note:<font color="red">*</font></b></label>
+						              <ul style="list-style-type:disc;">
+										   <li><font color="red">Image Name should be like "EmployeeId.jpg". 
+										  e.g "12345.jpg", where 12345 is the Employee Id.</font></li>
+										  <li><font color="red">Image size should be more than 10KB and less than 700KB</font></li>
+										  <li><font color="red">Image extension should be (.jpg) format.</font></li>
+										  <li><font color="red">Make sure that uploaded image is a face image.</font> </li>
+						             </ul> 
+						            </div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:replace="matafooter :: footer"></div>
+	<script src="/assets/js/app.js"></script> 
+	<script>
+		$(document).ready(function(){
+		        	$("#branch").change(function() {
+		                sendAjaxRequest();
+		            });
+	        	
+    	function sendAjaxRequest() {
+    	    var branch = $("#branch").val();
+    	    $.get( "/areabybranchid?branchId=" + branch, function( data ) {
+//     	    	console.log(data);
+    	    	var option='';//'<input type="checkbox" name="selectall" id="select_all_checkox" value="Select All" onclick="selectAll()" />Select All</br>';
+    	        $("#area").empty();
+    	        data.forEach(function(item, i) {
+    	        	var areaItem = item.name;
+    	            option +='<input type="checkbox"  id="area" name="area" value ="'+item.id+'" />'+areaItem+'</br>';
+    	        });
+    	        $("#area").append(option);
+    	    });
+    	};
+    	
+    	function selectAll() {
+    		console.log(" inside select ");
+    	    // this refers to the clicked checkbox
+    	    // find all checkboxes inside the checkbox' form
+    	    var elements = document.getElementsById('select_all');
+    	    console.log(elements);
+    	    // iterate and change status
+    	    for (var i = elements.length; i--; ) {
+    	        if (elements[i].type == 'checkbox') {
+    	            elements[i].checked = this.checked;
+    	        }
+    	    }
+    	}
+    	
+    	
+		 });
+		function validateSize(input) {
+  		  const fileSize = input.files[0].size;
+  		  if(fileSize < 10240){
+  			 alert('File size under 10 KB');
+  		  }
+  		  if (fileSize > 716800) {
+  		    alert('File size exceeds 700 KB');
+  		    // $(file).val(''); //for clearing with Jquery
+  		  } else {
+  		    // Proceed further
+  		  }
+  		}
+		function fileValidation(){
+		var fileInput = 
+            document.getElementById('file');
+          
+        var filePath = fileInput.value;
+      
+        // Allowing file type
+        var allowedExtensions = /(\.jpg)$/i;
+
+          
+        if (!allowedExtensions.exec(filePath)) {
+            alert('File type is not in jpg format');
+            fileInput.value = '';
+            return false;
+        } 
+		}
+	</script>
+</body>
+</html>

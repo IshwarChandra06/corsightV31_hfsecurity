@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="mataheader :: headfragment">
+</head>
+<body>
+
+<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"> </div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+	
+	
+	<!-- Page Wrapper -->
+            <div class="page-wrapper">
+			
+				<!-- Page Content -->
+                <div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row align-items-center">
+							<div class="col">
+								<h3 class="page-heaer"><i class="la la-user-shield"> <b><span th:text="${title}"></span></b></i></h3><br>
+								<ul class="breadcrumb">
+						        <li class="breadcrumb-item">Door</li>
+						       <li class="breadcrumb-item active"> <span th:text="${title}"></span></li>
+								</ul>
+							</div>
+							
+						</div>
+					</div>
+
+			<div class="row">
+						<div class="col-md-6">
+							<div class="card">
+								<div class="card-body">
+									<form action="#" th:action="@{/door/add}"
+									th:object="${door}" method="POST">
+									<input type="hidden" th:field="*{id}" placeholder=""
+										class="form-control mb-4 col-4"> 
+										<input type="hidden" th:value="${title}" name="title"
+										 class="form-control mb-4 col-4">
+										 
+										<div class="form-group">
+											<label><b>Name:<font color="red">*</font></b></label>
+											<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="alert alert-danger"></p>
+											<input type="text" th:field="*{name}" placeholder="Enter Door Name" class="form-control" required="required" maxlength="50">
+										</div>
+										<div class="form-group" style="display:none">
+										<label><b>Organization:</b></label> <select name="worker"
+											th:field="*{organization}" class="form-control">
+											<option th:each="organization : ${listOrganization}"
+												th:value="${organization.id}" th:text="${organization.name}">
+										</select>
+									</div>
+									<div class="form-group">
+										<label><b>IP Address:</b></label>
+										<input type="text" th:field="*{ipAddress}" placeholder="Enter IP Address" class="form-control" maxlength="30">
+									</div>
+									<div class="form-group">
+										<label><b>Port:</b></label>
+										<input type="text" th:field="*{port}" placeholder="Enter Port" class="form-control" maxlength="10">
+									</div>
+									<div class="form-group">
+										<label><b>Username:</b></label>
+										<input type="text" th:field="*{username}" placeholder="Enter Username" class="form-control" maxlength="30">
+									</div>
+									<div class="form-group">
+										<label><b>Password:</b></label>
+										<input type="password" th:field="*{password}" placeholder="Enter Password" class="form-control" maxlength="30">
+									</div>
+									<div class="form-group">
+										<label><b>Device:</b></label> <br>
+										<label><b>Select All</b></label>&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="door" onclick="CheckAll(this)" /><br>
+										<div class="stats-list">
+										<div th:each="device : ${deviceList}">
+										<input type="checkbox" th:field="*{device}" class="check-all" name="door" th:value="${device.id}" >
+										<label th:text="${device.name}"></label><br>
+										</div></div>
+									</div>
+										<div class="text-right">
+											<button type="submit" class="btn btn-primary">Submit</button>
+											 <a class="btn btn-danger" th:href="@{/door}">Cancel</a>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+	</div>
+	</div>
+	</div>
+	</div>
+<div th:replace="matafooter :: footer"></div>
+<script src="/assets/js/app.js"></script> 
+<script>
+    function CheckAll(x) {
+    	
+    	var select =$(".check-all");
+        var allInputs = $(".check-all");
+        
+        for (var i = 0, max = allInputs.length; i < max; i++) 
+        {
+            if (allInputs[i].type == 'checkbox')
+            if (x.checked == true)
+                allInputs[i].checked = true;
+            else
+                allInputs[i].checked = false;
+        }
+    }
+</script>
+</body>
+</html>

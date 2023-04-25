@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+ <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.png">
+		
+		<!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+
+      <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+		
+		<!-- Lineawesome CSS -->
+        <link rel="stylesheet" href="/assets/css/line-awesome.min.css">
+		
+		<!-- Chart CSS -->
+		<link rel="stylesheet" href="/assets/plugins/morris/morris.css">
+		
+		<!-- Main CSS -->
+        <link rel="stylesheet" href="/assets/css/style.css">
+		
+		<!-- Select2 CSS -->
+		<link rel="stylesheet" href="/assets/css/select2.min.css">
+  <link th:rel="stylesheet" href="/assets/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.css"/>
+<!--     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/> -->
+    <link th:rel="stylesheet" th:href="@{/webjars/font-awesome/5.11.2/css/all.css} "/>
+</head>
+<body>
+
+	<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"></div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+		<!-- Page Wrapper -->
+		<div class="page-wrapper">
+
+			<!-- Page Content -->
+			<div class="content container-fluid">
+
+				<!-- Page Header -->
+				<div class="page-header">
+					<div class="row align-items-center">
+						<div class="col">
+							<h3 class="page-heaer">
+								<i class="las la-envelope-open-text"> <b><span th:text="${title}"></span></b></i>
+							</h3>
+							<br>
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item">Email Schedule</li>
+								<li class="breadcrumb-item active"> <span th:text="${title}"></span></li>
+							</ul>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6">
+						<div class="card">
+							<div class="card-body">
+								<form th:action="@{/email/schedule/add}" th:object="${emailSchedule}"
+									method="POST">
+									<input type="hidden" th:field="*{id}" placeholder="Branch Id" class="form-control mb-4 col-4">
+									<input type="hidden" th:value="${title}" name="title" placeholder="Branch Id" class="form-control mb-4 col-4">
+									<div class="form-group" style="display:none">
+										<label><b>Organization:</b></label> 
+										<select th:field="*{organization}" class="form-control">
+											<option th:each="organization : ${listOrganization}"
+												th:value="${organization.id}" th:text="${organization.name}">
+										</select>
+									</div>
+									<div class="form-group">
+										 <label><b>Report Type:</b></label>
+											<select name="reportType" th:field="*{reportType}" class="form-control">
+											<option value="">Select Report Type</option>
+<!-- 												<option th:each="report : ${listConstraint}" th:value="${report.type}" -->
+<!-- 													th:text="${report.type}"> -->
+													<option value="Daily Report">Daily Report</option>
+													<option value="Monthly Report">Monthly Report</option>
+										</select>
+									</div>
+									<div class="form-group">
+										<label><b>File Type:</b></label>
+												<select name="fileType" th:field="*{fileType}" class="form-control" >
+													<option th:value="excel">Excel</option>
+													<option th:value="excel">CSV</option>
+													<option th:value="excel">PDF</option>
+											</select>
+									</div>
+									<div class="form-group">
+										 <label><b>File Name:</b></label>
+											<input type="text" th:field="*{fileName}" placeholder="Enter File Name"
+												class="form-control">
+									</div>
+									<div class="form-group">
+										
+										<label for="date"><b>Send Timing</b></label>
+										<div class="form-group date">
+						                    <div class="input-group date" id="datetimepicker" data-target-input="nearest">
+						                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker"
+						                               th:field="*{sendTiming}" id="date" placeholder="Enter Send Timing"/>
+						                        <div class="input-group-addon input-group-append" data-target="#datetimepicker" data-toggle="datetimepicker">
+						                            <div class="input-group-text">
+						                            	<i class="fa fa-calendar-alt"></i>
+						                            </div>
+						                        </div>
+						                    </div>
+						                </div>
+									</div>
+									<div class="form-group">
+										<label><b>To Email Address:</b></label>	
+								             <input type="email" th:field="*{toEmailAddress}" placeholder="Enter Email Address"
+												class="form-control" maxlength="50">
+									</div>
+									<div class="form-group">
+										<label><b>Email Subject:</b></label>
+                                        <input type="text" th:field="*{emailSubject}" placeholder="Enter Subject" class="form-control" maxlength="100">
+									</div>
+									<div class="form-group">
+										<label><b>Email Body:</b></label>
+                                            <textarea th:field="*{emailBody}" placeholder="Enter Email Body" class="form-control" rows="5" cols="8" maxlength="200"></textarea>
+									</div>
+									<div class="text-right">
+										<button type="submit" class="btn btn-primary">Submit</button>
+									    <a class="btn btn-danger" th:href="@{/email/schedule}">Cancel</a>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:replace="matafooter :: footer"></div>
+	<script src="/assets/js/app.js"></script> 
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script src="/assets/moment/moment.min.js"></script>
+<script src="/assets/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.js"></script>
+	<script>
+    $.fn.datetimepicker.Constructor.Default = $.extend({}, $.fn.datetimepicker.Constructor.Default, {
+        icons: {
+            time: 'far fa-clock',
+            date: 'far fa-calendar',
+            up: 'fas fa-arrow-up',
+            down: 'fas fa-arrow-down',
+            previous: 'fas fa-chevron-left',
+            next: 'fas fa-chevron-right',
+            today: 'far fa-calendar-check-o',
+            clear: 'far fa-trash',
+            close: 'far fa-times'
+        } });
+
+    $('#datetimepicker').datetimepicker({
+        format: 'DD/MM/YYYY h:mm:ss A'
+    });
+</script>
+</body>
+</html>

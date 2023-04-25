@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="mataheader :: headfragment">
+</head>
+<body>
+
+	<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"></div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+		<!-- Page Wrapper -->
+		<div class="page-wrapper">
+
+			<!-- Page Content -->
+			<div class="content container-fluid">
+
+				<!-- Page Header -->
+				<div class="page-header">
+					<div class="row align-items-center">
+						<div class="col">
+							<h3 class="page-heaer">
+								<i class="las la-landmark"> <b><span th:text="${title}"></span></b></i>
+							</h3>
+							<br>
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item">Area</li>
+								<li class="breadcrumb-item active"><span th:text="${title}"></span></li>
+							</ul>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6">
+						<div class="card">
+							<div class="card-body">
+								<form action="#" th:action="@{/area/add}" th:object="${area}" method="POST">
+									<input type="hidden" th:field="*{id}" placeholder="Area Id" class="form-control mb-4 col-4">
+									<input type="hidden" th:value="${title}" name="title" placeholder="Area Id" class="form-control mb-4 col-4">
+									<div class="form-group">
+										<label><b>Office:<font color="red">*</font></b></label> 
+										<p th:if="${#fields.hasErrors('branch')}" th:errors="*{branch}" class="alert alert-danger"></p> 
+										<select th:field="*{branch}" class="form-control">
+										<option value="">Select Office</option>
+											<option th:each="branch : ${listBranch}"
+												th:value="${branch.id}" th:text="${branch.name}">
+										</select>
+									</div>
+									<div class="form-group">
+										<label><b>Name:<font color="red">*</font></b></label> 
+										<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="alert alert-danger"></p> 
+										<input type="text" th:field="*{name}" placeholder="Enter Area Name"
+											class="form-control" maxlength="50">
+									</div>
+									<div class="form-group">
+										<label><b>Description:</b></label>
+										<textarea th:field="*{description}" placeholder="Enter Description"
+											class="form-control" rows="5" cols="8" maxlength="200"></textarea>
+									</div>
+									<div class="form-group" style="display:none">
+										<label><b>Watchlist:</b></label> 
+										<select name="Watchlist" th:field="*{watchlist}" class="form-control">
+										<option value="whitelist">Whitelist</option>
+										<option value="blacklist">Blacklist</option>
+										</select>
+									</div>
+									<div class="form-group" style="display:none">
+										<label><b>Organization:</b></label> <select name="worker"
+											th:field="*{organization}" class="form-control">
+											<option th:each="organization : ${listOrganization}"
+												th:value="${organization.id}" th:text="${organization.name}">
+										</select>
+									</div>
+<!-- 									<div class="form-group"> -->
+<!-- 										<label><b>Door:</b></label> <select name="worker" -->
+<!-- 											th:field="*{door}" class="form-control"> -->
+<!-- 											<option value="">Select Door</option> -->
+<!-- 											<option th:each="door : ${listDoor}" -->
+<!-- 												th:value="${door.id}" th:text="${door.name}"> -->
+<!-- 										</select> -->
+<!-- 									</div> -->
+									
+									<div class="text-right">
+										<button type="submit" class="btn btn-primary">Submit</button>
+									    <a class="btn btn-danger" th:href="@{/area}">Cancel</a>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:replace="matafooter :: footer"></div>
+	<script src="/assets/js/app.js"></script> 
+</body>
+</html>

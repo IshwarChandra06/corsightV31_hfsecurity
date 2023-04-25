@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="mataheader :: headfragment">
+<style>
+	.card-body{
+		padding:0px;
+				
+		
+	}
+	.my-5{
+		margin-top: 2rem !important;
+		margin-bottom: 1rem !important;
+		margin-left: 10rem !important;
+	}
+	
+</style>
+</head>
+<body>
+
+	<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"></div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+
+  <!-- <div classmargin-left: 10rem !important;="container">
+    <div sec:authorize="isAuthenticated()">
+        <form id="logoutForm" method="POST" th:action="@{/logout}">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        </form>
+
+       <h2>Welcome <span sec:authentication="name"></span>| <i><a onclick="document.forms['logoutForm'].submit()">Logout</a></i></h2>
+    </div>
+  </div>
+ -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+<div class="container my-2">
+	<!-- <p class="my-5">
+						<a href="/ui/campaign/list" class="btn btn-primary"><i
+							class="fas fa-user-plus ml-2">All </i></a>
+					</p> -->
+					
+		<div class="card">
+			<div class="card-body">
+				<div th:switch="${employeelist}" class="container my-5"><br><br>
+					<!-- <div class="col-md-12"> -->
+						
+						<h4 th:case="null">No Employees added yet!</h4>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+<div th:replace="matafooter :: footer"></div>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="mataheader :: headfragment">
+</head>
+<body>
+
+	<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"></div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+		<!-- Page Wrapper -->
+		<div class="page-wrapper">
+
+			<!-- Page Content -->
+			<div class="content container-fluid">
+
+				<!-- Page Header -->
+				<div class="page-header">
+					<div class="row align-items-center">
+						<div class="col">
+							<h3 class="page-heaer">
+						<i class="las la-file-import"> Upload Shift Roster Excel File</i>
+					</h3>
+					<br>
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item">Authorization</li>
+								<li class="breadcrumb-item active"> Upload Shift Roster Excel File</li>
+							</ul>
+				</div>
+				         <div class="col-auto float-right ml-auto">
+							 <a th:href="@{/shift-roster-template-download}" class="btn add-btn"><i class="las la-download"></i>Excel Shift Roster Template</a>
+							</div>
+
+					</div>
+				</div>
+			<div class="row">
+					<div class="col-md-6">
+						<div class="card">
+							<div class="card-body">
+				
+					<form method="POST" enctype="multipart/form-data"
+						th:action="@{/upload/employee-shift/excel}" id="fileUploadForm">
+						<div class="form-group">
+							    <label class="control-label" for="uploadfile"><b>Upload File:</b></label> 
+								<input type="file" class="form-control" id="uploadfile"
+								placeholder="Upload File" name="uploadfile"></input>
+						</div>
+						<div class="text-right">
+						<button type="submit" class="btn btn-primary" id="btnSubmit">Upload</button> 
+						<a th:href="@{/employee-shift-daily-association}" class="btn btn-danger">Cancel</a>
+						</div>
+					</form>
+					<div th:if="${message}">
+						<b><span th:text="${message}"></span></b>
+					</div><br>
+					<div th:if="${validationMsg !=''}">
+						<div th:if="${validationMsg.emptyEmployeeId !=''}"> 
+							<label><b>Following Excel Row No are having empty EmpId:-</b></label> 
+								<span th:text="${validationMsg.emptyEmployeeId}"></span>
+						</div><br>
+					 	<div th:if="${validationMsg.emptyEmployeeName !=''}"> 
+				 	      <label><b>Following Excel Row No are having empty Employee Name:-</b></label> 
+								<span th:text="${validationMsg.emptyEmployeeName}"></span>
+					 	</div><br>
+						 <div th:if="${validationMsg.mismatchEmployee !=''}">
+							 <label><b>Following EmpId are not in Employee table:-</b></label> 
+								<span th:text="${validationMsg.mismatchEmployee}"></span> 
+						</div> <br>
+						<div th:if="${validationMsg.mismatchShift !=''}">
+						 <label><b>Following Shift Names are not in Shift table:-</b></label> 
+						<span th:text="${validationMsg.mismatchShift}"></span>
+						</div><br>
+						
+					</div><br>
+					<div class="form-group">
+									<label><b>Note:<font color="red">*</font></b></label>
+						 			<ul style="list-style-type:disc;">
+							  			<li><font color="red">Employee Name and Employee Id  should be mandatory in excel sheet.</font></li>
+							  			<li><font color="red">If Employee Id or Employee Name will be empty in excel 
+							  				sheet ,then that particular employee will not be added to database.</font></li>
+							  			<li><font color="red">Employee Id should be unique in excel sheet.</font></li>
+							  			<li><font color="red">Shift name is case sensitive.</font></li>
+									</ul>
+								</div><br>
+				<br>
+			
+	</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+		<div th:replace="matafooter :: footer"></div>
+		<script src="/assets/js/app.js"></script> 
+		
+</body>
+</html>

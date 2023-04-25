@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="mataheader :: headfragment">
+<style type="text/css">
+	.anyClass {
+  		height:150px;
+  		overflow-y: scroll;
+	}
+	
+</style>
+</head>
+<body>
+
+<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"> </div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+	</div>
+	
+	<!-- Page Wrapper -->
+            <div class="page-wrapper">
+			
+				<!-- Page Content -->
+                <div class="content container-fluid">
+				
+	
+					<!-- Page Header -->
+					<!-- <div class="page-header">
+						<div class="row">
+							<div class="col-sm-12">
+								<h3 class="page-title">Welcome Admin!</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item active">Dashboard</li>
+								</ul>
+							</div>
+						</div>
+					</div> -->
+					<!-- /Page Header -->
+				
+					<div class="row" th:object="${countDto}">
+						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+							<div class="card dash-widget">
+								<div class="card-body">
+									<a href="/employee">
+									<span class="dash-widget-icon"><i class="la la-users"></i></span>
+									<div class="dash-widget-info">
+										<h3><span id="enrolled" th:text="*{totalEmployee}"></span></h3>
+										<span>Enrolled</span>
+									</div>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+							<div class="card dash-widget">
+								<div class="card-body">
+									<a href="/transaction">
+									<span class="dash-widget-icon"><i class="las la-user-friends"></i></span>
+									<div class="dash-widget-info">
+										<h3><span id="present" th:text="*{presentEmployee}"></span></h3>
+										<span>Present</span>
+									</div>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+							<div class="card dash-widget">
+								<div class="card-body">
+									<a href="/transaction">
+									<span class="dash-widget-icon"><i class="las la-exclamation-triangle"></i></span>
+									<div class="dash-widget-info">
+										<h3><span id="noMask" th:text="*{noMask}"></span></h3>
+										<span>No Mask</span>
+									</div>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+							<div class="card dash-widget">
+								<div class="card-body">
+									<a href="/transaction">
+									<span class="dash-widget-icon"><i class="las la-door-open"></i></span>
+									<div class="dash-widget-info">
+										<h3><span id="transactions" th:text="*{transactions}"></span></h3>
+										<span>Transactions</span>
+									</div>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+					<div class="col-md-4  d-flex ">
+							<div class="card flex-fill dash-statistics ">
+								<div class="card-header">
+									<h3 class="card-title mb-0">Department Attendance</h3>
+								</div>
+								<div class="card-body">
+									<div class="stats-list realtime-list"></div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="col-md-8 d-flex" >
+<!-- 							<div class="row"> -->
+								<div class="col-md-12 text-center">
+									<div class="card">
+										<div class="card-body">
+											<h3 class="card-title">Last 7 Days Attendance</h3>
+											<div id="barchart_div"></div>
+										</div>
+									</div>
+								</div>
+<!-- 							</div> -->
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-md-4 d-flex">
+							<div class="card card-table flex-fill ">
+								<div class="card-header">
+									<h3 class="card-title mb-0">Realtime</h3>
+								</div>
+								<div class="card-body">
+									<div class="table-responsive realtime-list">
+										<table class="table custom-table mb-0">
+											<tbody class="table-data">
+											</tbody>
+										</table>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+						
+						<div class="col-md-8">
+							<div class="row">
+								<div class="col-md-12 text-center">
+									<div class="card">
+										<div class="card-body">
+											<h3 class="card-title">Current Day Event Logs</h3>
+
+											<div id="line_chart"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+		</div>
+		</div>
+	
+<div th:replace="matafooter :: footer"></div>
+
+	
+<!-- load graph -->
+	<script src="/assets/js/loader.js"></script>
+<!-- Custom JS -->
+	<script src="/assets/js/app.js"></script> 
+
+<script>
+	var colorArray = ['#FF6633', '#ffc000', '#8faadc', '#a9d18e',
+		  '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', 
+		  '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
+		  '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A', 
+		  '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
+		  '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC', 
+		  '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
+		  '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680', 
+		  '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
+		  '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3', 
+		  '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF']; 
+
+	
+	function topDashboard(){
+		$.ajax({
+			url : '/attendanceCount',
+			success : function(result) {
+// 				console.log(result);
+				var enrolled = $("#enrolled").html(result.totalEmployee);
+				var present = $("#present").html(result.presentEmployee);
+				var noMask = $("#noMask").html(result.noMask);
+				var transactions = $("#transactions").html(result.transactions);
+			}
+		 });
+	}
+	
+	function drawDashboard(){
+		$.ajax({
+			url : '/api/common-chart',
+			success : function(result) {
+				var department = result.department;
+				var barData = result.barData;
+				var lineData = result.lineData;
+				
+				//for department List
+				departmentList(department);
+				
+				//for bar-chart
+				if(Object.keys(barData.data).length === 0){
+					var msg ='Company wise attendance for last day';
+					$("#barchart_div").html('').append("No Data")
+				}else{
+					google.charts.setOnLoadCallback(function() {drawBarChart(barData);});
+				}
+				
+				//for Line chart
+				if(Object.keys(lineData.data).length === 0){
+					var msg ='Company wise attendance for today';
+					$("#line_chart").html('').append("No Data")
+				}else{
+// 					console.log(lineData);
+// 					google.charts.setOnLoadCallback(drawLineChart(lineData));
+					google.charts.setOnLoadCallback(function() {drawLineChart(lineData);});
+				}
+			}
+		 });
+	
+		function departmentList(result) {
+			var departmentData = '' ;
+			$(".stats-list").html('');
+			$.each(result, function(i, obj) {
+				var value= (obj.presentEmployee/obj.totalEmployee)*100;
+				departmentData += '<div class="stats-info">'
+					+'<p>'+obj.departmentName+ '<strong>'+obj.presentEmployee+' <small>/ '+obj.totalEmployee+'</small></strong></p>'
+					+'<div class="progress">'
+					+'<div class="progress-bar bg-primary" role="progressbar" style="width: '+value+'%" aria-valuenow="'+value+'" aria-valuemin="0" aria-valuemax="100"></div>'
+					+'</div>'
+					+'</div>';
+			});
+			$(".stats-list").append(departmentData);
+		}
+		
+		function drawBarChart(result) {			
+			var data = new google.visualization.DataTable();
+			
+			data.addColumn('string', 'Date');
+			data.addColumn('number', 'Count');
+// 			 $.each(result.header, function(i, obj) {
+// 				 data.addColumn('number', obj);
+// 			});
+			
+			var dataArray = result.data;
+			
+			data.addRows(dataArray);
+	
+			var barchart = new google.visualization.ColumnChart(document.getElementById('barchart_div'));
+
+	        var columns = [];
+	        var defaultSeries = [1, 2, 3, 4, 5];
+	        var series = {};
+	        for (var i = 0; i < data.getNumberOfColumns(); i++) {
+	            if (i == 0 || defaultSeries.indexOf(i) > -1) {
+	                columns.push(i);
+	            }
+	            else {
+	                columns.push({
+	                    label: data.getColumnLabel(i),
+	                    type: data.getColumnType(i),
+	                    sourceColumn: i,
+	                    calc: function () {
+	                        return null;
+	                    }
+	                });
+	            }
+	            if (i > 0) {
+	                columns.push({
+	                    calc: 'stringify',
+	                    sourceColumn: i,
+	                    type: 'string',
+	                    role: 'annotation'
+	                });
+	                // set the default series option
+	                series[i - 1] = {};
+	                if (defaultSeries.indexOf(i) == -1) {
+	                    // backup the default color (if set)
+	                    if (typeof(series[i - 1].color) !== 'undefined') {
+	                        series[i - 1].backupColor = series[i - 1].color;
+	                    }
+	                    series[i - 1].color = '#CCCCCC';
+	                }
+	            }
+	        }
+
+	        var barchart_options = {
+// 	        		title : 'Company wise attendance for last 7 days',
+	   			 	sliceVisibilityThreshold:0,
+	   				titleTextStyle:{
+	   					fontSize : 16,
+	   					bold : true,
+	   				},
+	   				
+	   			 height : 300,
+	   			isStacked: true,
+	   			vAxis: {
+	   		          textStyle:{
+	   							fontSize : 11,
+	   						 
+	   						}
+	   			 },
+	   			 
+	   			 hAxis: {
+	   		           textStyle:{
+	   							fontSize : 11,
+	   						},
+	   			 		slantedText:true,
+	   			 },
+	   			animation: {
+		            duration: 1000,
+		            easing: 'linear',
+		        },
+		       
+	   			 explorer: {
+	   	                keepInBounds: true,
+	   	                maxZoomIn: 8.0,
+	   	              },
+	   			 colors:['#ff9b44', '#8faadc', '#a9d18e', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6' ],
+	   			 legend:'none'
+// 	            series: series
+	        }
+
+// 	        function showHideSeries () {
+// 	            var sel = barchart.getSelection();
+	            
+// 	            // if selection length is 0, we deselected an element
+// 	            if (sel.length > 0) {
+// 	                // if row is undefined, we clicked on the legend
+// 	                if (sel[0].row == null) {
+// 	                    var col = sel[0].column;
+// 	                    if (typeof(columns[col]) == 'number') {
+// 	                        var src = columns[col];
+// 	                        //console.log("sel "+src)
+// 	                        // hide the data series
+// 	                        columns[col] = {
+// 	                            label: data.getColumnLabel(src),
+// 	                            type: data.getColumnType(src),
+// 	                            sourceColumn: src,
+// 	                            calc: function () {
+// 	                                return null;
+// 	                            }
+// 	                        };
+	
+// 	                        // grey out the legend entry
+// 	                        series[src - 1].color = '#CCCCCC';
+// 	                    }
+// 	                    else {
+// 	                        var src = columns[col].sourceColumn;
+	
+// 	                        // show the data series
+// 	                        columns[col] = src;
+// 	                        series[src - 1].color = null;
+// 	                    }
+// 	                    var view = new google.visualization.DataView(data);
+// 	                    view.setColumns(columns);
+// 	                    barchart.draw(view, barchart_options);
+// 	                }
+// 	            }
+// 	        }
+
+//         	google.visualization.events.addListener(barchart, 'select', showHideSeries);
+
+// 	        // create a view with the default columns
+	        var view = new google.visualization.DataView(data);
+// 	        view.setColumns(columns);
+	        barchart.draw(view, barchart_options);
+		}
+		
+		function drawLineChart(result) {
+			var data = new google.visualization.DataTable();
+		        data.addColumn('string', 'Date');
+		        data.addColumn('number', 'Count');
+				
+// 		        $.each(result.header, function(i, obj) {
+// 					data.addColumn('number', obj);
+			
+// 		        });
+			  
+			var arr = result.data;
+			arr.sort(sortFunction);
+			function sortFunction(a, b) {
+		        if (a[0] === b[0]) {
+		            return 0;
+		        }
+		        else {
+		            return (a[0] < b[0]) ? -1 : 1;
+		        }
+		    }
+				
+			data.addRows(arr);
+
+// 			console.log(data);
+	        var lineChart = new google.visualization.LineChart(document.getElementById('line_chart'));
+
+	       // chart.draw(data, options);
+	        
+// 	        document.getElementById("download1").addEventListener('click', function(){
+// 	        	line_chart.innerHTML = '<img id="chart" src=' + lineChart.getImageURI() + '>';
+// 	            document.getElementById("download1").setAttribute("href", lineChart.getImageURI())
+// 				  var a =  document.getElementById("download1");
+// 				  a.href = url_base64jp;
+// 			});
+	        
+// 	        var columns = [];
+// 	        // display these data series by default
+// 	        var defaultSeries = [1, 2, 3];
+// 	        var series = {};
+// 	        for (var i = 0; i < data.getNumberOfColumns(); i++) {
+// 	            if (i == 0 || defaultSeries.indexOf(i) > -1) {
+// 	                // if the column is the domain column or in the default list, display the series
+// 	                columns.push(i);
+// 	            }
+// 	            else {
+// 	                // otherwise, hide it
+// 	                columns.push({
+// 	                    label: data.getColumnLabel(i),
+// 	                    type: data.getColumnType(i),
+// 	                    sourceColumn: i,
+// 	                    calc: function () {
+// 	                        return null;
+// 	                    }
+// 	                });
+// 	            }
+// 	            if (i > 0) {
+// 	                columns.push({
+// 	                    calc: 'stringify',
+// 	                    sourceColumn: i,
+// 	                    type: 'string',
+// 	                    role: 'annotation'
+// 	                });
+// 	                // set the default series option
+// 	                series[i - 1] = {};
+// 	                if (defaultSeries.indexOf(i) == -1) {
+// 	                    // backup the default color (if set)
+// 	                    if (typeof(series[i - 1].color) !== 'undefined') {
+// 	                        series[i - 1].backupColor = series[i - 1].color;
+// 	                    }
+// 	                    series[i - 1].color = '#CCCCCC';
+// 	                }
+// 	            }
+// 	        }
+
+	        var options = {
+// 		          title: 'Attendance for today',
+		          sliceVisibilityThreshold:0,
+		          titleTextStyle:{
+						fontSize : 16,
+						bold : true,
+					},
+		          curveType: 'function',
+		          height : 300,
+		          vAxis: {
+			          textStyle:{
+								fontSize : 11,
+							}
+				 },
+				 hAxis: {
+			           textStyle:{
+								fontSize : 11,
+							},
+				 		slantedText:true,
+				 },
+				 /* width: data.getNumberOfRows() * 65,
+				 bar: {groupWidth: 20}, */
+				 explorer: {
+		             // axis: 'horizantal',
+		              keepInBounds: true,
+		              maxZoomIn: 4.0
+		            },
+				 colors:[ '#ff9b44', '#E6B3B3', '#6680B3', '#66991A'],
+				 legend:'none'
+	        		        
+// 	            series: series
+	        }
+
+// 	        function showHideSeries () {
+// 	            var sel = chart.getSelection();
+// 	            // if selection length is 0, we deselected an element
+// 	            if (sel.length > 0) {
+// 	                // if row is undefined, we clicked on the legend
+// 	                if (sel[0].row == null) {
+// 	                    var col = sel[0].column;
+// 	                    if (typeof(columns[col]) == 'number') {
+// 	                        var src = columns[col];
+
+// 	                        // hide the data series
+// 	                        columns[col] = {
+// 	                            label: data.getColumnLabel(src),
+// 	                            type: data.getColumnType(src),
+// 	                            sourceColumn: src,
+// 	                            calc: function () {
+// 	                                return null;
+// 	                            }
+// 	                        };
+
+// 	                        // grey out the legend entry
+// 	                        series[src - 1].color = '#CCCCCC';
+// 	                    }
+// 	                    else {
+// 	                        var src = columns[col].sourceColumn;
+
+// 	                        // show the data series
+// 	                        columns[col] = src;
+// 	                        series[src - 1].color = null;
+// 	                    }
+// 	                    var view = new google.visualization.DataView(data);
+// 	                    view.setColumns(columns);
+// 	                    lineChart.draw(view, options);
+// 	                }
+// 	            }
+// 	        }
+
+// 	        google.visualization.events.addListener(lineChart, 'select', showHideSeries);
+		        // create a view with the default columns
+		        var view = new google.visualization.DataView(data);
+// 		        view.setColumns(columns);
+		        lineChart.draw(view, options);
+		    
+	      	}
+	}
+	
+	$.ajax({
+		url : '/api/pandemic/transaction',
+		 type: 'GET',
+    	success: function (result) {
+    		var div_data ='';
+    		$.each(result, function(i, customer){
+    			if(null != customer.employee){
+    				var desig = '';
+    				var timeStr =  customer.punchTimeStr;
+                    var time = customer.punchDateStr;
+                    var mask = '';
+                    if(customer.wearingMask)
+                    	mask = "Not_Masked";
+                    else
+                    	mask = "Masked";
+                    var name = "Unidentified"
+                    //console.log(customer.worker)
+//                     if(null != customer.employee){
+                    	
+                    	name = customer.name;
+                    	if(null != customer.employee.designation){
+                    		desig = customer.employee.designation.name;
+                    	}
+//                     }
+                    
+        			div_data +='<tr><td>' 
+    					+'<h2 class="table-avatar">'
+         				+'<a href="#" class="avatar"><img style="max-height:50px;max-width:35px;"  alt="" src="data:image/jpeg;base64,'+customer.cropImageByte+'"></a>'
+         				+'&nbsp;<a href="">'+name+'<span>'+desig+'</span></a>'
+      					+'</h2>' 
+    					+'</td>'
+    					+'<td>'
+    					+'<h2 class="table-avatar">'
+//     					+''+time+' '+timeStr+'<span class="text-sm text-muted">'+mask+'</span>'
+      					+'<a>'+time+' '+timeStr+'<span>'+mask+'</span></a>'
+      					+'</h2>' 
+    					+'</td></tr>';
+    			}  
+			});
+    		$(".table-data").append(div_data);
+    	}
+   });
+
+	$(document).ready(function() {
+		google.charts.load('current', {'packages' : [ 'corechart' ]});
+		drawDashboard()
+		
+		$("#dashboard_menu").addClass("active");
+		
+	});
+	
+	var eventSource = new EventSource('/api/event/receiver');
+	var subscribeEvents = function() {
+		
+        var key = $("#key").val();
+        
+        eventSource.onmessage = function(e) {
+        	var notification = JSON.parse(e.data);
+        	if(null != notification.employee){
+        		console.log(notification);
+        		var desig = '';
+        		var time = notification.punchDateStr;
+        		var timeStr =  notification.punchTimeStr;
+                   var mask = '';
+                   if(notification.wearingMask)
+                   	mask = "Not_Masked";
+                   else
+                   	mask = "Masked";
+                   var name = "Unidentified";
+                   if(null != notification.employee){
+                   	name = notification.name;
+                   	if(null != notification.employee.designation){
+                   		desig = notification.employee.designation.name;
+                   	}
+                   }
+                    var html =
+                   	 '<tr id="'+notification.appearanceId+'"><td>' 
+    					+'<h2 class="table-avatar">'
+    					+'<a href="#" class="avatar"><img style="max-height:50px;max-width:35px;"  alt="" src="data:image/jpeg;base64,'+notification.cropImageByte+'"></a>'
+         				+'<a href="">'+name+'<span>'+desig+'</span></a>'
+      					+'</h2>' 
+    					+'</td>'
+    					+'<td>'
+    					+'<h2 class="table-avatar">'
+      					+'<a href="">'+time+' '+timeStr+'<span>'+mask+'</span></a>'
+      					+'</h2>' 
+    					+'</td></tr>';
+                   	
+                       var dataDiv = $(".table-data").find('#'+notification.appearanceId);
+                       if(null === dataDiv.html() || undefined === dataDiv.html()){
+                       	$(".table-data").prepend(html);
+                       }else{
+                       	dataDiv.replaceWith(html)
+                       }
+        	}
+        	
+            drawDashboard();
+            topDashboard();
+        };
+    }
+	
+	window.onload = subscribeEvents;
+	    
+	 window.onbeforeunload = function() {
+		 subscribeEvents.close();
+	 }
+   
+</script>
+</body>
+</html>

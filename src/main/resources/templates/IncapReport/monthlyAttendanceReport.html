@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta name="description" content="Smarthr - Bootstrap Admin Template">
+	<meta name="keywords" content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern, accounts, invoice, html5, responsive, CRM, Projects">
+    <meta name="author" content="Dreamguys - Bootstrap Admin Template">
+    <meta name="robots" content="noindex, nofollow">
+    <title>MATA</title>
+    
+    <!-- Favicon -->
+      <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.png">
+
+	<!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+
+	<!-- Fontawesome CSS -->
+      <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+
+	<!-- Lineawesome CSS -->
+      <link rel="stylesheet" href="/assets/css/line-awesome.min.css">
+      
+      <!-- Main CSS -->
+       <link rel="stylesheet" href="/assets/css/style.css">
+    
+	<link rel="stylesheet" type="text/css" href="/assets/css/example-styles.css">
+<!--     <link rel="stylesheet" type="text/css" href="/assets/css/demo-styles.css"> -->
+<style type="text/css">
+.table-wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+}
+</style>
+</head>
+<body>
+
+<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"> </div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+		<!-- Page Wrapper -->
+		<div class="page-wrapper">
+
+			<!-- Page Content -->
+			<div class="content container-fluid">
+				
+				<!-- Page Header -->
+				<div class="page-header">
+					<div class="row align-items-center">
+						<div class="col">
+							<h3 class="page-heaer">
+								<i class="las la-calendar"> Monthly Report</i>
+							</h3>
+							<br>
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item">Reports</li>
+								<li class="breadcrumb-item active"><i class="las la-calendar"></i> Monthly Report</li>
+							</ul>
+						</div>
+						<div class="col"> 
+						<div class="col-auto float-right ml-auto"  id="excel-button" sec:authorize="hasAuthority('monthlyattendance_export')">
+							<button  value ="excel" type="button" class="btn add-btn export-data"><i class="las la-download"></i>Export In Excel</button>
+						</div>
+					</div>
+					</div>
+				</div>
+				<!-- /Page Header -->
+				
+				<!-- Search Filter -->
+				<div class="row filter-row">
+					<div class="col-sm-6 col-md-3"> 
+						<div class="form-group form-focus">
+							<input type="date"  class="form-control floating "  id="date">
+							<label class="focus-label">Date <font style="color:red;">*</font></label>
+						</div>
+					</div>
+
+					<div class="col-sm-6 col-md-3">  
+						<a class="btn btn-success btn-block searchButtonField"> Search </a>  
+					</div>
+					
+				</div>
+				<div style="display:none">
+					<input type="hidden" id="orginalByDate">
+				</div>
+				<div id= "input-field" class="row">
+				</div>
+				<!-- /Search Filter -->
+				
+				<div class="row">
+					<div class="col-md-12">
+						<div class="table-wrapper">
+							<table id="vehicle" class="table table-striped custom-table mb-0 datatable">
+								<thead>
+									<tr id="table-header">
+									</tr>
+								</thead>
+								<tbody id="table-body">
+								</tbody>
+							</table><br>
+								<div class = "row col-sm-12">
+									<div class = "col-sm-7" id="filter-out-of-total">
+									</div>
+									
+									<div class="pagination-box">
+										<ul class="pagination"  id="page-no-of-table">
+										</ul>
+									</div>
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+	<div th:replace="matafooter :: footer"></div>
+	
+
+	<!-- Custom JS -->
+	<script src="/assets/js/app.js"></script> 
+    <script type="text/javascript" src="/assets/js/jquery.multi-select.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+	<script src="/assets/js/bootstrap-datetimepicker.min.js"></script>
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#monthly_menu").addClass("active");
+			//start sort
+			$(document).on('click', '.sortByField', function(e) {
+				var value = $(this).val();
+				var valueList = value.split("-");
+				
+				var date = new Date().toISOString().slice(0, 10);
+				
+				ajaxCall(date, "sortByField", "previousPage", valueList[0],valueList[1],valueList[2]);
+				
+        	})
+        	//end sort 
+        	
+        	$(function(){
+                var date = new Date().toISOString().slice(0, 10);
+                
+				ajaxCall(date, "sortByField", "previousPage", 1,"id","desc");
+        	})
+        	
+			$(document).on('click', '.previousPage', function(e) {
+				var value = $(this).val();
+				var valueList = value.split("-");
+				
+				var date = new Date().toISOString().slice(0, 10);
+				
+				ajaxCall(date, designation, "sortByField", "previousPage", valueList[0],valueList[1],valueList[2]);
+        	})
+			
+			//start search and sort field
+			$(document).on('click', '.sortBySearchField', function(e) {
+				var value = $(this).val();
+				var valueList = value.split("-");
+				
+				var date = document.getElementById('date').value;
+				
+                ajaxCall(date, "sortBySearchField", "nextPage", valueList[0],valueList[1],valueList[2]);
+				
+        	})
+        	//end search and sort field
+        	
+        	$(document).on('click', '.nextPage', function(e) {
+				var value = $(this).val();
+				var valueList = value.split("-");
+				
+				var date = document.getElementById('date').value;
+				
+                ajaxCall(date, "sortBySearchField", "nextPage", valueList[0],valueList[1],valueList[2]);
+        	})
+			
+        	$(document).on('click', '.searchButtonField', function(e) {
+        		
+        		var date = document.getElementById('date').value;
+				
+                ajaxCall(date, "sortBySearchField", "nextPage", 1,"id","desc");
+        	})
+	        	
+	        function ajaxCall(date, headFlag, pageFlag, pageno, sortField,sortDir) {
+				var data = {
+	           		"date" : date,
+	           		"pageno":pageno,
+	           		"sortField":sortField,
+	           		"sortDir":sortDir
+	            }; 
+	         	
+	            $.ajax({
+	                url: '/api/search/incap/monthly-attendance-report',
+	                type: 'GET',
+	               	data: data,
+	               	success: function (result) {
+	               		var table_header = tableHeader(result, headFlag);
+	               		var table_data = tableData(result.data[0]);
+	               		var pageno = pagenoData(result, pageFlag);
+	               		
+						$("#table-header").html('').append(table_header);			
+	               		
+						$("tbody#table-body").html('').append(table_data);
+						
+	               		$("#filter-out-of-total").html('').append("Showing "+((null == result.data )?0:result.data.length)+" entries (filtered from "+result.total_record+" total entries)");
+					
+	               		$("#page-no-of-table").html('').append(pageno);
+	               	}
+	            })
+	        }
+			
+	        function tableHeader(result, flag) {
+				var table_header ='';
+				if(result.data[0].dataList.length == 0) {
+					$.each(result.data[0].headList, function(i, customer){
+						table_header +=  '<th><b>' + customer + '</b></th>' ;
+	           		})
+				}else {
+					$.each(result.data[0].headList, function(i, customer){
+						table_header +=  '<th><button  value="'+result.page_number+'-'+customer+'-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>'+customer+'</b></button></th>' ;
+	           		})
+				}
+				return table_header;
+			}
+	        
+			function tableData(result) {
+				var table_data ='';
+				$.each(result.dataList, function(i, customer){
+					table_data +='<tr>' +
+						'<td>' + customer.empId + '</td>' +
+						'<td>' + customer.empName+'</td>' + 
+						'<td>' + customer.department+'</td>' + 
+						'<td>' + customer.designation+ '</td>' +
+						'<td>' + customer.organization+ '</td>' ;
+		       			var data_list ='';
+				        $.each(customer.dateList, function(i, customer){
+				       		data_list +='<td>' + customer+'</td>'
+				       	});
+				        table_data +=data_list;
+				        table_data += '<td>' + customer.totalPresentCount+'</td>' +
+		               	 '<td>' + customer.totalAbsentCount+ '</td>' +
+		               	 '<td>' + customer.totalWeekOff+'</td>' + 
+		               	 '<td>' + customer.totalOverTime+'</td>' +
+		               	 '<td>' + customer.totalLateIn+'</td>' + 
+		               	 '<td>' + customer.totalEarlyOut+ '</td>' +
+		               	 '<td>' + customer.payableDays+ '</td>'+
+		               	'<td>' + customer.totalDays+'</td>' ;
+		        	'</tr>';
+				})
+				return table_data;
+			}
+			
+			function pagenoData(result, flag){
+           		var pageno ='';
+           		//pre
+           		if(result.page_number<=1){
+           			pageno += '<li class="page-item disabled">'+
+						'<span  class="page-link" >Previous</span>'+
+						'</li>';
+           		}else{
+           			pageno += '<li class="page-item">'+
+           					'<button value="'+ (result.page_number-1) +'-id-desc" type="button" class="page-link '+flag+'">Previous</button>'+
+						'</li>';
+           		}
+				
+				for( var i= 1; i<=result.total_pages; i++){
+					
+					if(result.total_pages <= 8){
+						if(i == result.page_number){
+          					pageno += '<li class="page-item active">'+
+      							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+							'</li>';
+          				}else{
+          					pageno += '<li class="page-item">'+
+      							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+						'</li>';
+          				}
+           			}else{
+           				if(i == 1){
+    						if(1 == result.page_number){
+               					pageno += '<li class="page-item active">'+
+       								'<button value="'+ 1 +'-id-desc" type="button" class="page-link '+flag+'">'+ 1 +'</button>'+
+    							'</li>';
+           					}else{
+    	       					pageno += '<li class="page-item">'+
+    	   							'<button value="'+ 1 +'-id-desc" type="button" class="page-link '+flag+'">'+ 1 +'</button>'+
+    							'</li>';
+    	       				}
+    						
+    					} else if(i<=5){
+    						if(result.page_number == 5 && i == 5){
+    							pageno += '<li class="page-item">'+
+    		   						'<span class="page-link"><b>..</b></span>'+
+    		   					'</li>';
+    	           				pageno += '<li class="page-item">'+
+    								'<button value="'+ (i-1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i-1) +'</button>'+
+    							'</li>';
+    						
+    							pageno += '<li class="page-item active">'+
+    								'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    							'</li>';
+    							
+    							pageno += '<li class="page-item">'+
+    								'<button value="'+ (i+1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i+1) +'</button>'+
+    							'</li>';
+    							
+    						} else if(result.page_number < 5){
+    							if(i == result.page_number){
+    	           					pageno += '<li class="page-item active">'+
+    	       							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    								'</li>';
+    	           				}else{
+    	           					pageno += '<li class="page-item">'+
+    	       							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    								'</li>';
+    	           				}
+    						}
+               			} else if(i>5 && i < result.total_pages-3 && i== result.page_number){
+               				
+               				pageno += '<li class="page-item">'+
+    	   						'<span class="page-link"><b>..</b></span>'+
+    	   					'</li>';
+               				pageno += '<li class="page-item">'+
+    							'<button value="'+ (i-1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i-1) +'</button>'+
+    						'</li>';
+    					
+    						pageno += '<li class="page-item active">'+
+    							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    						'</li>';
+    						
+    						pageno += '<li class="page-item">'+
+    							'<button value="'+ (i+1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i+1) +'</button>'+
+    						'</li>';
+           				}else if(i == result.total_pages-3){
+           					pageno += '<li class="page-item">'+
+    	   						'<span class="page-link"><b>..</b></span>'+
+    	   					'</li>';
+    						if(result.page_number == result.total_pages-3 && i == result.total_pages-3){
+    							
+    	           				pageno += '<li class="page-item">'+
+    								'<button value="'+ (i-1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i-1) +'</button>'+
+    							'</li>';
+    						
+    							pageno += '<li class="page-item active">'+
+    								'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    							'</li>';
+    							
+    							pageno += '<li class="page-item">'+
+    								'<button value="'+ (i+1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i+1) +'</button>'+
+    							'</li>';
+    							pageno += '<li class="page-item">'+
+    		   						'<span class="page-link"><b>..</b></span>'+
+    		   					'</li>';
+    							
+    						} else if(result.page_number == result.total_pages || result.page_number == result.total_pages-1 || result.page_number == result.total_pages-2){
+    							pageno += '<li class="page-item">'+
+    								'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    							'</li>';
+    						}
+           				} else if(i >= result.total_pages-2 && i < result.total_pages){
+    						if(result.page_number >= result.total_pages-2) {
+    							if(i == result.page_number){
+    								pageno += '<li class="page-item active">'+
+    									'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    								'</li>';
+    							}else{
+    								pageno += '<li class="page-item">'+
+    									'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    								'</li>';
+    							}
+    						}
+           				} else if(i == result.total_pages){
+           					if(i == result.page_number){
+           						pageno += '<li class="page-item active">'+
+    	  							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    							'</li>';
+           					}else{
+           						pageno += '<li class="page-item ">'+
+    	  							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    						'</li>';
+           					}
+              			}
+           			}
+           		}
+           		
+           		//next
+           		if(result.page_number < result.total_pages){
+           			pageno += '<li class="page-item" >'+
+							'<button value="'+ (result.page_number+1) +'-id-desc" type="button" class="page-link '+flag+'">Next</button>'+
+						'</li>';
+           		}else{
+           			pageno += '<li class="page-item disabled" >'+
+							'<span  class="page-link" >Next</span>'+
+						'</li>';
+           		}
+           		return pageno;
+			}
+			
+			
+			//Excel
+			$(document).on('click', '.export-data', function(e) {
+				
+				var sDate = document.getElementById('date').value;
+				
+				var data = {
+	    	    	"sDate" : sDate,
+				}; 
+	    	            
+	           	$.ajax({
+	            	url: '/api/monthly/attendance/export-to-file',
+	            	type: 'GET',
+	        		data: data,
+	           		xhr: function () {
+	                	var xhr = new XMLHttpRequest();
+	                	xhr.onreadystatechange = function () {
+	                    	if (xhr.readyState == 2) {
+	                        	if (xhr.status == 200) {
+	                            	xhr.responseType = "blob";
+	                        	} else {
+	                            	xhr.responseType = "text";
+	                        	}
+	                    	}
+	                	};
+	                	return xhr;
+	            	},
+	            	success: function (result) {
+	            		var blob = new Blob([result], { type: "application/octetstream" });
+	            		const currentDate = moment(new Date()).format('DD_MM_YYYY HH_mm_ss');
+
+	                	var isIE = false || !!document.documentMode;
+	                	if (isIE) {
+	                    	window.navigator.msSaveBlob(blob, fileName);
+	                	} else {
+	                    	var url = window.URL || window.webkitURL;
+	                    	link = url.createObjectURL(blob);
+	                    	var a = $("<a />");
+	                    	a.attr("download", "Monthly_Attendence_Report_"+currentDate+".xlsx");
+	                    	a.attr("href", link);
+	                    	$("body").append(a);
+	                    	a[0].click();
+	                    	$("body").remove(a);
+	                	}
+	            	}
+	       		})
+			})
+	});
+	</script>
+</body>
+</html>

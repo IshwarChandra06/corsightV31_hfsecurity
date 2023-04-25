@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="mataheader :: headfragment">
+</head>
+<body>
+
+	<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"></div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+		<!-- Page Wrapper -->
+		<div class="page-wrapper">
+
+			<!-- Page Content -->
+			<div class="content container-fluid">
+
+				<!-- Page Header -->
+				<div class="page-header">
+					<div class="row align-items-center">
+						<div class="col">
+							<h3 class="page-heaer">
+								<i class="las la-code-branch"> <b><span th:text="${title}"></span></b></i>
+							</h3>
+							<br>
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item">Branch</li>
+								<li class="breadcrumb-item active"> <span th:text="${title}"></span></li>
+							</ul>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6">
+						<div class="card">
+							<div class="card-body">
+								<form action="#" th:action="@{/branch/add}"th:object="${branch}" method="POST">
+									<input type="hidden" th:field="*{id}" placeholder="Branch Id" class="form-control mb-4 col-4">
+									<input type="hidden" th:value="${title}" name="title" placeholder="Branch Id" class="form-control mb-4 col-4">
+									<div class="form-group">
+										<label><b>Name:<font color="red">*</font></b></label> 
+										<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="alert alert-danger"></p> 
+										<input type="text" th:field="*{name}" maxlength="50" placeholder="Enter Office Name" class="form-control">
+									</div>
+									<div class="form-group" style="display:none">
+										<label><b>Organization:</b></label> 
+										<select th:field="*{organization}" class="form-control">
+											<option th:each="organization : ${listOrganization}"
+												th:value="${organization.id}" th:text="${organization.name}">
+										</select>
+									</div>
+									<div class="form-group">
+										<label><b>Address:</b></label>
+										<textarea th:field="*{address}" maxlength="200" placeholder="Enter Address" class="form-control" rows="5" cols="8"></textarea>
+									</div>
+									<div class="form-group">
+										<label><b>City:</b></label> 
+										<input type="text" th:field="*{city}" maxlength="50" placeholder="Enter City Name" class="form-control">
+									</div>
+									<div class="form-group">
+										<label><b>State:</b></label> 
+										<select th:field="*{state}" class="form-control">
+										<option value="">Select State</option>
+											<option value="Andhra Pradesh">Andhra Pradesh</option>
+											<option value="Arunachal Pradesh">Arunachal Pradesh</option>
+											<option value="Assam">Assam</option>
+											<option value="Bihar">Bihar</option>
+											<option value="Chhattisgarh">Chhattisgarh</option>
+											<option value="Goa">Goa</option>
+											<option value="Gujarat">Gujarat</option>
+											<option value="Haryana">Haryana</option>
+											<option value="Himachal Pradesh">Himachal Pradesh</option>
+											<option value="Jharkhand">Jharkhand</option>
+											<option value="Karnataka">Karnataka</option>
+											<option value="Kerala">Kerala</option>
+											<option value="Madhya Pradesh">Madhya Pradesh</option>
+											<option value="Maharashtra">Maharashtra</option>
+											<option value="Manipur">Manipur</option>
+											<option value="Meghalaya">Meghalaya</option>
+											<option value="Mizoram">Mizoram</option>
+											<option value="Nagaland">Nagaland</option>
+											<option value="Odisha">Odisha</option>
+											<option value="Punjab">Punjab</option>
+											<option value="Rajasthan">Rajasthan</option>
+											<option value="Sikkim">Sikkim</option>
+											<option value="Tamil Nadu">Tamil Nadu</option>
+											<option value="Telangana">Telangana</option>
+											<option value="Tripura">Tripura</option>
+											<option value="Uttar Pradesh">Uttar Pradesh</option>
+											<option value="Uttarakhand">Uttarakhand</option>
+											<option value="West Bengal">West Bengal</option>
+										</select>
+									</div>
+									<div class="form-group">
+										<label><b>Pin Code:</b></label> <input type="number"
+											th:field="*{pinCode}" pattern="/^-?\d+\.?\d*$/" 
+										onKeyPress="if(this.value.length==6) return false;"
+											class="form-control">
+									</div>
+									
+									<div class="text-right">
+										<button type="submit" class="btn btn-primary">Submit</button>
+									    <a class="btn btn-danger" th:href="@{/branch}">Cancel</a>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:replace="matafooter :: footer"></div>
+	<script src="/assets/js/app.js"></script> 
+</body>
+</html>

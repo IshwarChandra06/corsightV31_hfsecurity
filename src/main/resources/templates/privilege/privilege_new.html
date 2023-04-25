@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="mataheader :: headfragment">
+</head>
+<body>
+
+	<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"></div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+
+
+		<!-- Page Wrapper -->
+		<div class="page-wrapper">
+
+			<!-- Page Content -->
+			<div class="content container-fluid">
+
+				<!-- Page Header -->
+				<div class="page-header">
+					<div class="row align-items-center">
+						<div class="col">
+							<h3 class="page-heaer">
+								<i class="la la-city"> <b><span th:text="${title}"></span></b></i>
+							</h3>
+							<br>
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item">Privilege</li>
+								<li class="breadcrumb-item active"> <span th:text="${title}"></span></li>
+							</ul>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6">
+						<div class="card">
+							<!-- 								<div class="card-header"> -->
+							<!-- 									<h4 class="card-title mb-0">Basic Form</h4> -->
+							<!-- 								</div> -->
+							<div class="card-body">
+								<form action="#" th:action="@{/privilege/add}"
+									 th:object="${privilege}"
+									method="POST">
+									<input type="hidden" th:field="*{id}"
+										placeholder="Department Id" class="form-control mb-4 col-4">
+										
+										<input type="hidden" th:value="${title}" name="title"
+										 class="form-control mb-4 col-4">
+										 
+									<div class="form-group">
+										<label><b>Name:<font color="red">*</font></b></label> 
+									<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="alert alert-danger"></p> 
+										<input type="text"
+											th:field="*{name}" placeholder="Enter Privilege Name" maxlength="50"
+											class="form-control">
+									</div>
+									<div class="text-right">
+										<button type="submit" class="btn btn-primary">Submit</button>
+									    <a class="btn btn-danger" th:href="@{/privilege}">Cancel</a>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:replace="matafooter :: footer"></div>
+	<script src="/assets/js/app.js"></script> 
+</body>
+</html>

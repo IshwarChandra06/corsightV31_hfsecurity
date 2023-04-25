@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="mataheader :: headfragment"></head>
+<body>
+
+	<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"></div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+		<!-- Page Wrapper -->
+		<div class="page-wrapper">
+
+			<!-- Page Content -->
+			<div class="content container-fluid">
+
+				<!-- Page Header -->
+				<div class="page-header">
+					<div class="row align-items-center">
+						<div class="col">
+							<h3 class="page-heaer">
+								<i class="las la-calculator"> Generate Daily Attendance</i>
+							</h3>
+							<br>
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item">Reports</li>
+								<li class="breadcrumb-item">Daily Attendance</li>
+								<li class="breadcrumb-item active">Generate</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- /Page Header -->
+
+				<!-- Search Filter -->
+				<div class="row filter-row mb-4" >
+										<div class="col-sm-6 col-md-3">  
+							<div class="form-group form-focus">
+								<div class="cal-icon">
+									<input class="form-control floating datetimepicker"name="sDate" type="text" id="sDate">
+								</div>
+								<label class="focus-label">Start Date</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3">  
+								<div class="form-group form-focus">
+								<div class="cal-icon">
+									<input class="form-control floating datetimepicker"name="eDate" type="text" id="eDate">
+								</div>
+								<label class="focus-label">End Date</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-2">  
+						<button type="submit" class="btn btn-primary" id="generateButton">Generate</button>
+						<img class="spinner" alt="" src="/assets/images/loading.gif" style="height:20px;margin-left:20px;display: none;">
+						</div>
+						
+					</div>
+					</div>
+				</div>
+			</div>
+
+	<div th:replace="matafooter :: footer"></div>
+        
+	<!-- Datetimepicker JS -->
+	<script src="/assets/js/moment.min.js"></script>
+	<script src="/assets/js/bootstrap-datetimepicker.min.js"></script>
+	
+	<!-- Select2 JS -->
+		<script src="/assets/js/select2.min.js"></script>
+		
+	<!-- Custom JS -->
+	<script src="/assets/js/app.js"></script>
+<script>
+$(document).ready(function(){
+	$("#generateButton").click(function(){
+		$(".spinner").show();
+		var sDate = document.getElementById('sDate').value;
+        var eDate = document.getElementById('eDate').value;
+        console.log(sDate)
+		checkDate(sDate,eDate);
+		
+	})
+})
+
+     function checkDate(from,to) {
+			
+			if(from.length!==0 && to.length===0){
+				$(".spinner").hide();
+				 alert("Please Select End Date Fiter !");
+			}else if(to.length!==0 && from.length===0){
+				$(".spinner").hide();
+				 alert("Please Select Start Date Fiter !");
+			}
+			else if(from.length!==0 && to.length!==0){
+				
+				
+				var sDateParts = from.split("/");
+				var eDateParts = to.split("/");
+				
+				var sDay = new Date(sDateParts[2]+"-"+sDateParts[1]+"-"+sDateParts[0]);
+				var eDay = new Date(eDateParts[2]+"-"+eDateParts[1]+"-"+eDateParts[0]);
+				var today =new Date(new Date().toISOString().slice(0, 10));
+				var diffDays = parseInt((eDay - sDay) / (1000 * 60 * 60 * 24), 10);
+				console.log(diffDays)
+				if(sDay > eDay){
+					$(".spinner").hide();
+				   alert("Start Date Is Greater Than End Date !");
+				}
+				else if(diffDays>1){
+					$(".spinner").hide();
+				   alert("You Can Calculate maximum Last 2 Days Data !");
+				}else{
+					 var data = {
+			            		"sDate" : from,
+			            		"eDate" : to,
+			            }; 
+					  
+			            $.ajax({
+			            	
+			                url: '/get/daily-attendance',
+			                type: 'GET',
+			               	data: data,
+			               	success: function (result) {
+			               		$(".spinner").hide();
+			               	}
+			             })
+				}
+			}
+}
+</script>
+</body>
+</html>

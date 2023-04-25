@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+ <link th:rel="stylesheet" href="/assets/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"/>
+ 
+        <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.png">
+		
+		<!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+
+      <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+		
+		<!-- Lineawesome CSS -->
+        <link rel="stylesheet" href="/assets/css/line-awesome.min.css">
+		
+		<!-- Chart CSS -->
+		<link rel="stylesheet" href="/assets/plugins/morris/morris.css">
+		
+		<!-- Main CSS -->
+        <link rel="stylesheet" href="/assets/css/style.css">
+		
+		<!-- Select2 CSS -->
+		<link rel="stylesheet" href="/assets/css/select2.min.css">
+
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/line-awesome.css">
+
+</head>
+<!-- <head > -->
+<!--     <meta charset="UTF-8"/> -->
+<!--     <title>Spring Boot Thymeleaf Application - Bootstrap Time Picker</title> -->
+
+<!--     <link th:rel="stylesheet" href="/assets/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"/> -->
+<!--     <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/> -->
+
+<!--     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css"> -->
+<!-- </head> -->
+<body>
+
+<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"> </div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+	
+	
+	<!-- Page Wrapper -->
+            <div class="page-wrapper">
+			
+				<!-- Page Content -->
+                <div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row align-items-center">
+							<div class="col">
+								<h3 class="page-heaer"><i class="las la-hourglass"> <b><span th:text="${title}"></span></b></i></h3><br>
+								<ul class="breadcrumb">
+						        <li class="breadcrumb-item">Shift</li>
+						       <li class="breadcrumb-item active"> <span th:text="${title}"></span></li>
+								</ul>
+							</div>
+							
+						</div>
+					</div>
+
+			<div class="row">
+						<div class="col-md-6">
+							<div class="card">
+<!-- 								<div class="card-header"> -->
+<!-- 									<h4 class="card-title mb-0">Basic Form</h4> -->
+<!-- 								</div> -->
+								<div class="card-body">
+									<form action="#" th:action="@{/shift/add}"
+									th:object="${shift}" method="POST">
+									<input type="hidden" th:field="*{id}" placeholder="Shift Id"
+										class="form-control mb-4 col-4"> 
+										<input type="hidden" th:value="${title}" name="title"
+										 class="form-control mb-4 col-4">
+										<div class="form-group">
+											<label><b>Name:<font color="red">*</font></b></label>
+											<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="alert alert-danger"></p> 
+											<input type="text" th:field="*{name}" placeholder="Enter Shift Name" maxlength="50" class="form-control">
+										</div>
+										<div class="form-group" style="display:none">
+										<label><b>Organization:</b></label> <select name="organization"
+											th:field="*{organization}" class="form-control">
+											<option th:each="organization : ${listOrganization}"
+												th:value="${organization.id}" th:text="${organization.name}">
+										</select>
+									</div>
+									<div class="form-group">
+									<label for="time"><b>Start Time:</b></label>
+					                    <div class="input-group date" id="start_time">
+					                        <input type="text" id="time" value="11:31:00" placeholder="Enter Start Time" class="form-control"
+					                               th:field="*{startTime}"/>
+					                        <div class="input-group-addon input-group-append">
+					                            <div class="input-group-text">
+					                              <i class="fa fa-clock-o"></i>
+					                            </div>
+					                        </div>
+					                    </div>
+									
+									</div>
+									<div class="form-group">
+									<label for="time"><b>End Time:</b></label>
+					                    <div class="input-group date" id="end_time">
+					                        <input type="text" id="time" value="11:31:00" placeholder="Enter End Time" class="form-control"
+					                               th:field="*{endTime}"/>
+					                        <div class="input-group-addon input-group-append">
+					                            <div class="input-group-text">
+					                               <i class="fa fa-clock-o"></i>
+					                            </div>
+					                        </div>
+					                    </div>
+									
+									</div>
+									<div class="form-group">
+											<label><b>Shift Ends In Next Day:</b></label>&nbsp;&nbsp;&nbsp;
+											<input type="checkbox" th:field="*{shiftEndNextDay}" value ="Shift End Next Day"> Yes<b></b>
+										</div>
+									
+										<div class="text-right">
+											<button type="submit" class="btn btn-primary">Submit</button>
+										    <a class="btn btn-danger" th:href="@{/shift}">Cancel</a>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+	</div>
+	</div>
+	</div>
+	</div>
+<div th:replace="matafooter :: footer"></div>
+<script src="/assets/js/app.js"></script> 
+
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script src="/assets/moment/moment.min.js"></script>
+<script src="/assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+
+<script>
+    $('#start_time').datetimepicker({
+        "allowInputToggle": true,
+        "showClose": true,
+        "showClear": true,
+        "showTodayButton": true,
+        "format": "HH:mm:ss",
+    });
+    $('#end_time').datetimepicker({
+        "allowInputToggle": true,
+        "showClose": true,
+        "showClear": true,
+        "showTodayButton": true,
+        "format": "HH:mm:ss",
+    });
+</script>
+</body>
+</html>

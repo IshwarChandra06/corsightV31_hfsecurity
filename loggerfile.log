@@ -1,0 +1,346 @@
+2022-01-21 15:17:07.920  INFO 25072 --- [restartedMain] com.eikona.mata.MataApplication          : Starting MataApplication using Java 15 on DESKTOP-06R5OP8 with PID 25072 (D:\work\Spring Boot\BillBoard\IOB-MATA\target\classes started by eikon in D:\work\Spring Boot\BillBoard\IOB-MATA)
+2022-01-21 15:17:07.921 DEBUG 25072 --- [restartedMain] com.eikona.mata.MataApplication          : Running with Spring Boot v2.5.3, Spring v5.3.9
+2022-01-21 15:17:07.921  INFO 25072 --- [restartedMain] com.eikona.mata.MataApplication          : No active profile set, falling back to default profiles: default
+2022-01-21 15:17:08.101  INFO 25072 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-01-21 15:17:08.136  INFO 25072 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 34 ms. Found 24 JPA repository interfaces.
+2022-01-21 15:17:08.285  INFO 25072 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@3596f89a' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-21 15:17:08.286  INFO 25072 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-21 15:17:08.329  INFO 25072 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2022-01-21 15:17:08.330  INFO 25072 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-01-21 15:17:08.330  INFO 25072 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-01-21 15:17:08.392  INFO 25072 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-01-21 15:17:08.392  INFO 25072 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 468 ms
+2022-01-21 15:17:08.428  INFO 25072 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-8 - Starting...
+2022-01-21 15:17:08.470  INFO 25072 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-8 - Start completed.
+2022-01-21 15:17:08.553  INFO 25072 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-01-21 15:17:08.557  INFO 25072 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2022-01-21 15:17:16.886  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Starting MataApplication using Java 15 on DESKTOP-06R5OP8 with PID 20296 (D:\work\Spring Boot\BillBoard\IOB-MATA\target\classes started by eikon in D:\work\Spring Boot\BillBoard\IOB-MATA)
+2022-01-21 15:17:16.888 DEBUG 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Running with Spring Boot v2.5.3, Spring v5.3.9
+2022-01-21 15:17:16.888  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : No active profile set, falling back to default profiles: default
+2022-01-21 15:17:16.949  INFO 20296 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-01-21 15:17:16.949  INFO 20296 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-01-21 15:17:17.728  INFO 20296 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-01-21 15:17:17.900  INFO 20296 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 166 ms. Found 24 JPA repository interfaces.
+2022-01-21 15:17:18.497  INFO 20296 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@32a8fca2' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-21 15:17:18.503  INFO 20296 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-21 15:17:18.814  INFO 20296 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2022-01-21 15:17:18.823  INFO 20296 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-01-21 15:17:18.823  INFO 20296 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-01-21 15:17:18.965  INFO 20296 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-01-21 15:17:18.965  INFO 20296 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2015 ms
+2022-01-21 15:17:19.101  INFO 20296 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-01-21 15:17:19.465  INFO 20296 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-01-21 15:17:19.598  INFO 20296 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-01-21 15:17:19.721  INFO 20296 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.32.Final
+2022-01-21 15:17:19.912  INFO 20296 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-01-21 15:17:20.109  INFO 20296 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2022-01-21 15:17:21.748  INFO 20296 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-01-21 15:17:21.755  INFO 20296 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-01-21 15:17:22.124  WARN 20296 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-01-21 15:17:23.172  INFO 20296 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@60a5e1db, org.springframework.security.web.context.SecurityContextPersistenceFilter@6addd8f5, org.springframework.security.web.header.HeaderWriterFilter@81b6ec1, org.springframework.security.web.authentication.logout.LogoutFilter@2e8c1131, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@2655ecdd, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@77fc1dc2, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@3d1ee3b2, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@487521c0, org.springframework.security.web.session.SessionManagementFilter@2e1512ec, org.springframework.security.web.access.ExceptionTranslationFilter@3c59000e, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@652405b1]
+2022-01-21 15:17:23.193  INFO 20296 --- [restartedMain] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+2022-01-21 15:17:24.406  WARN 20296 --- [restartedMain] o.s.b.a.batch.JpaBatchConfigurer         : JPA does not support custom isolation levels, so locks may not be taken when launching Jobs
+2022-01-21 15:17:24.411  INFO 20296 --- [restartedMain] o.s.b.c.r.s.JobRepositoryFactoryBean     : No database type set, using meta data indicating: MYSQL
+2022-01-21 15:17:24.429  INFO 20296 --- [restartedMain] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+2022-01-21 15:17:25.853  INFO 20296 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-01-21 15:17:25.897  INFO 20296 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2022-01-21 15:17:25.924  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Started MataApplication in 9.383 seconds (JVM running for 10.31)
+2022-01-21 15:22:01.088  INFO 20296 --- [http-nio-8084-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-01-21 15:22:01.088  INFO 20296 --- [http-nio-8084-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-01-21 15:22:01.091  INFO 20296 --- [http-nio-8084-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+2022-01-21 15:22:02.914  INFO 20296 --- [http-nio-8084-exec-8] c.e.mata.controller.EmployeeController   : Info effect
+2022-01-21 15:22:02.914 DEBUG 20296 --- [http-nio-8084-exec-8] c.e.mata.controller.EmployeeController   : Debug effect
+2022-01-21 15:22:02.914  WARN 20296 --- [http-nio-8084-exec-8] c.e.mata.controller.EmployeeController   : Warn effect
+2022-01-21 15:22:02.914 ERROR 20296 --- [http-nio-8084-exec-8] c.e.mata.controller.EmployeeController   : Error effect
+2022-01-21 15:22:02.914 TRACE 20296 --- [http-nio-8084-exec-8] c.e.mata.controller.EmployeeController   : Treace effect
+2022-01-21 15:27:05.010  INFO 20296 --- [Thread-5] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-01-21 15:27:05.013  INFO 20296 --- [Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2022-01-21 15:27:05.018  INFO 20296 --- [Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2022-01-21 15:27:05.148  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Starting MataApplication using Java 15 on DESKTOP-06R5OP8 with PID 20296 (D:\work\Spring Boot\BillBoard\IOB-MATA\target\classes started by eikon in D:\work\Spring Boot\BillBoard\IOB-MATA)
+2022-01-21 15:27:05.148 DEBUG 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Running with Spring Boot v2.5.3, Spring v5.3.9
+2022-01-21 15:27:05.148  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : No active profile set, falling back to default profiles: default
+2022-01-21 15:27:05.353  INFO 20296 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-01-21 15:27:05.394  INFO 20296 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 41 ms. Found 24 JPA repository interfaces.
+2022-01-21 15:27:05.546  INFO 20296 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@fad84aa' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-21 15:27:05.547  INFO 20296 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-21 15:27:05.607  INFO 20296 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2022-01-21 15:27:05.608  INFO 20296 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-01-21 15:27:05.608  INFO 20296 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-01-21 15:27:05.633  INFO 20296 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-01-21 15:27:05.633  INFO 20296 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 481 ms
+2022-01-21 15:27:05.696  INFO 20296 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2022-01-21 15:27:05.713  INFO 20296 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2022-01-21 15:27:05.812  INFO 20296 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-01-21 15:27:05.817  INFO 20296 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2022-01-21 15:27:06.777  INFO 20296 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-01-21 15:27:06.777  INFO 20296 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-01-21 15:27:06.869  WARN 20296 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-01-21 15:27:07.486  INFO 20296 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@5096ca1b, org.springframework.security.web.context.SecurityContextPersistenceFilter@65d132fe, org.springframework.security.web.header.HeaderWriterFilter@1df1f738, org.springframework.security.web.authentication.logout.LogoutFilter@e54c467, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@6420eded, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@770c05d8, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@65d66436, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@287a45e0, org.springframework.security.web.session.SessionManagementFilter@1f330383, org.springframework.security.web.access.ExceptionTranslationFilter@73ec2478, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@695a22b0]
+2022-01-21 15:27:07.491  INFO 20296 --- [restartedMain] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+2022-01-21 15:27:08.209  WARN 20296 --- [restartedMain] o.s.b.a.batch.JpaBatchConfigurer         : JPA does not support custom isolation levels, so locks may not be taken when launching Jobs
+2022-01-21 15:27:08.210  INFO 20296 --- [restartedMain] o.s.b.c.r.s.JobRepositoryFactoryBean     : No database type set, using meta data indicating: MYSQL
+2022-01-21 15:27:08.210  INFO 20296 --- [restartedMain] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+2022-01-21 15:27:08.303  INFO 20296 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-01-21 15:27:08.325  INFO 20296 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2022-01-21 15:27:08.332  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Started MataApplication in 3.248 seconds (JVM running for 592.719)
+2022-01-21 15:27:08.337  INFO 20296 --- [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2022-01-21 15:27:16.253  INFO 20296 --- [http-nio-8084-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-01-21 15:27:16.253  INFO 20296 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-01-21 15:27:16.259  INFO 20296 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 6 ms
+2022-01-21 15:27:16.261  INFO 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Info effect
+2022-01-21 15:27:16.261 DEBUG 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Debug effect
+2022-01-21 15:27:16.261  WARN 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Warn effect
+2022-01-21 15:27:16.261 ERROR 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Error effect
+2022-01-21 15:27:16.261 TRACE 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Treace effect
+2022-01-21 15:29:15.248  INFO 20296 --- [Thread-7] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-01-21 15:29:15.249  INFO 20296 --- [Thread-7] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown initiated...
+2022-01-21 15:29:15.252  INFO 20296 --- [Thread-7] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown completed.
+2022-01-21 15:29:15.352  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Starting MataApplication using Java 15 on DESKTOP-06R5OP8 with PID 20296 (D:\work\Spring Boot\BillBoard\IOB-MATA\target\classes started by eikon in D:\work\Spring Boot\BillBoard\IOB-MATA)
+2022-01-21 15:29:15.352 DEBUG 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Running with Spring Boot v2.5.3, Spring v5.3.9
+2022-01-21 15:29:15.352  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : No active profile set, falling back to default profiles: default
+2022-01-21 15:29:15.530  INFO 20296 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-01-21 15:29:15.564  INFO 20296 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 33 ms. Found 24 JPA repository interfaces.
+2022-01-21 15:29:15.704  INFO 20296 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@752351fe' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-21 15:29:15.705  INFO 20296 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-21 15:29:15.755  INFO 20296 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2022-01-21 15:29:15.756  INFO 20296 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-01-21 15:29:15.756  INFO 20296 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-01-21 15:29:15.778  INFO 20296 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-01-21 15:29:15.778  INFO 20296 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 424 ms
+2022-01-21 15:29:15.827  INFO 20296 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+2022-01-21 15:29:15.856  INFO 20296 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2022-01-21 15:29:15.956  INFO 20296 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-01-21 15:29:15.960  INFO 20296 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2022-01-21 15:29:17.500  INFO 20296 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-01-21 15:29:17.500  INFO 20296 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-01-21 15:29:17.607  WARN 20296 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-01-21 15:29:18.183  INFO 20296 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6671355d, org.springframework.security.web.context.SecurityContextPersistenceFilter@251e6994, org.springframework.security.web.header.HeaderWriterFilter@5e22a4a1, org.springframework.security.web.authentication.logout.LogoutFilter@1a5b24b4, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@7c4a990f, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@45720fa, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4f9b9b7d, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6c95cfb4, org.springframework.security.web.session.SessionManagementFilter@7f9f8b0f, org.springframework.security.web.access.ExceptionTranslationFilter@3ec3e568, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@43f17345]
+2022-01-21 15:29:18.191  INFO 20296 --- [restartedMain] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+2022-01-21 15:29:19.000  WARN 20296 --- [restartedMain] o.s.b.a.batch.JpaBatchConfigurer         : JPA does not support custom isolation levels, so locks may not be taken when launching Jobs
+2022-01-21 15:29:19.000  INFO 20296 --- [restartedMain] o.s.b.c.r.s.JobRepositoryFactoryBean     : No database type set, using meta data indicating: MYSQL
+2022-01-21 15:29:19.001  INFO 20296 --- [restartedMain] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+2022-01-21 15:29:19.029  INFO 20296 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-01-21 15:29:19.044  INFO 20296 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2022-01-21 15:29:19.052  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Started MataApplication in 3.724 seconds (JVM running for 723.438)
+2022-01-21 15:29:19.055  INFO 20296 --- [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2022-01-21 15:29:59.933  INFO 20296 --- [Thread-11] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-01-21 15:29:59.934  INFO 20296 --- [Thread-11] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown initiated...
+2022-01-21 15:29:59.936  INFO 20296 --- [Thread-11] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown completed.
+2022-01-21 15:30:00.046  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Starting MataApplication using Java 15 on DESKTOP-06R5OP8 with PID 20296 (D:\work\Spring Boot\BillBoard\IOB-MATA\target\classes started by eikon in D:\work\Spring Boot\BillBoard\IOB-MATA)
+2022-01-21 15:30:00.047 DEBUG 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Running with Spring Boot v2.5.3, Spring v5.3.9
+2022-01-21 15:30:00.047  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : No active profile set, falling back to default profiles: default
+2022-01-21 15:30:00.236  INFO 20296 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-01-21 15:30:00.272  INFO 20296 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 35 ms. Found 24 JPA repository interfaces.
+2022-01-21 15:30:00.417  INFO 20296 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@a85fdb1' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-21 15:30:00.418  INFO 20296 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-21 15:30:00.477  INFO 20296 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2022-01-21 15:30:00.478  INFO 20296 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-01-21 15:30:00.478  INFO 20296 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-01-21 15:30:00.507  INFO 20296 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-01-21 15:30:00.507  INFO 20296 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 458 ms
+2022-01-21 15:30:00.544  INFO 20296 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Starting...
+2022-01-21 15:30:00.572  INFO 20296 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Start completed.
+2022-01-21 15:30:00.633  INFO 20296 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-01-21 15:30:00.637  INFO 20296 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2022-01-21 15:30:01.134  INFO 20296 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-01-21 15:30:01.135  INFO 20296 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-01-21 15:30:01.232  WARN 20296 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-01-21 15:30:01.847  INFO 20296 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@58df750c, org.springframework.security.web.context.SecurityContextPersistenceFilter@778a1bea, org.springframework.security.web.header.HeaderWriterFilter@adac711, org.springframework.security.web.authentication.logout.LogoutFilter@467122e, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@67369204, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@6ccbf6d5, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@30755612, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@11fd11b3, org.springframework.security.web.session.SessionManagementFilter@7cadfbda, org.springframework.security.web.access.ExceptionTranslationFilter@13510177, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@b28f168]
+2022-01-21 15:30:01.852  INFO 20296 --- [restartedMain] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+2022-01-21 15:30:02.662  WARN 20296 --- [restartedMain] o.s.b.a.batch.JpaBatchConfigurer         : JPA does not support custom isolation levels, so locks may not be taken when launching Jobs
+2022-01-21 15:30:02.663  INFO 20296 --- [restartedMain] o.s.b.c.r.s.JobRepositoryFactoryBean     : No database type set, using meta data indicating: MYSQL
+2022-01-21 15:30:02.663  INFO 20296 --- [restartedMain] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+2022-01-21 15:30:02.691  INFO 20296 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-01-21 15:30:02.705  INFO 20296 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2022-01-21 15:30:02.714  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Started MataApplication in 2.695 seconds (JVM running for 767.101)
+2022-01-21 15:30:02.717  INFO 20296 --- [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2022-01-21 15:30:20.086  INFO 20296 --- [Thread-15] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-01-21 15:30:20.087  INFO 20296 --- [Thread-15] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Shutdown initiated...
+2022-01-21 15:30:20.090  INFO 20296 --- [Thread-15] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Shutdown completed.
+2022-01-21 15:30:20.219  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Starting MataApplication using Java 15 on DESKTOP-06R5OP8 with PID 20296 (D:\work\Spring Boot\BillBoard\IOB-MATA\target\classes started by eikon in D:\work\Spring Boot\BillBoard\IOB-MATA)
+2022-01-21 15:30:20.220 DEBUG 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Running with Spring Boot v2.5.3, Spring v5.3.9
+2022-01-21 15:30:20.220  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : No active profile set, falling back to default profiles: default
+2022-01-21 15:30:20.444  INFO 20296 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-01-21 15:30:20.518  INFO 20296 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 73 ms. Found 24 JPA repository interfaces.
+2022-01-21 15:30:21.080  INFO 20296 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@374ac35b' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-21 15:30:21.103  INFO 20296 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-21 15:30:21.237  INFO 20296 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2022-01-21 15:30:21.238  INFO 20296 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-01-21 15:30:21.238  INFO 20296 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-01-21 15:30:21.516  INFO 20296 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-01-21 15:30:21.517  INFO 20296 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1295 ms
+2022-01-21 15:30:21.604  INFO 20296 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-5 - Starting...
+2022-01-21 15:30:21.637  INFO 20296 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-5 - Start completed.
+2022-01-21 15:30:21.775  INFO 20296 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-01-21 15:30:21.784  INFO 20296 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2022-01-21 15:30:22.528  INFO 20296 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-01-21 15:30:22.529  INFO 20296 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-01-21 15:30:22.666  WARN 20296 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-01-21 15:30:23.813  INFO 20296 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@739b0dca, org.springframework.security.web.context.SecurityContextPersistenceFilter@2823f3c7, org.springframework.security.web.header.HeaderWriterFilter@4a5ea0f6, org.springframework.security.web.authentication.logout.LogoutFilter@49eefcda, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@68aeb0b6, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@27fcd2ca, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@181a9fd3, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3d0ad0ab, org.springframework.security.web.session.SessionManagementFilter@7452595b, org.springframework.security.web.access.ExceptionTranslationFilter@17330c6d, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@2f9297f7]
+2022-01-21 15:30:23.822  INFO 20296 --- [restartedMain] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+2022-01-21 15:30:24.913  WARN 20296 --- [restartedMain] o.s.b.a.batch.JpaBatchConfigurer         : JPA does not support custom isolation levels, so locks may not be taken when launching Jobs
+2022-01-21 15:30:24.914  INFO 20296 --- [restartedMain] o.s.b.c.r.s.JobRepositoryFactoryBean     : No database type set, using meta data indicating: MYSQL
+2022-01-21 15:30:24.914  INFO 20296 --- [restartedMain] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+2022-01-21 15:30:24.946  INFO 20296 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-01-21 15:30:24.967  INFO 20296 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2022-01-21 15:30:24.979  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Started MataApplication in 4.792 seconds (JVM running for 789.364)
+2022-01-21 15:30:24.981  INFO 20296 --- [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2022-01-21 15:30:30.702  INFO 20296 --- [Thread-19] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-01-21 15:30:30.703  INFO 20296 --- [Thread-19] com.zaxxer.hikari.HikariDataSource       : HikariPool-5 - Shutdown initiated...
+2022-01-21 15:30:30.706  INFO 20296 --- [Thread-19] com.zaxxer.hikari.HikariDataSource       : HikariPool-5 - Shutdown completed.
+2022-01-21 15:30:30.812  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Starting MataApplication using Java 15 on DESKTOP-06R5OP8 with PID 20296 (D:\work\Spring Boot\BillBoard\IOB-MATA\target\classes started by eikon in D:\work\Spring Boot\BillBoard\IOB-MATA)
+2022-01-21 15:30:30.813 DEBUG 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Running with Spring Boot v2.5.3, Spring v5.3.9
+2022-01-21 15:30:30.813  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : No active profile set, falling back to default profiles: default
+2022-01-21 15:30:30.993  INFO 20296 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-01-21 15:30:31.029  INFO 20296 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 35 ms. Found 24 JPA repository interfaces.
+2022-01-21 15:30:31.164  INFO 20296 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@62da7649' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-21 15:30:31.166  INFO 20296 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-21 15:30:31.226  INFO 20296 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2022-01-21 15:30:31.226  INFO 20296 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-01-21 15:30:31.226  INFO 20296 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-01-21 15:30:31.252  INFO 20296 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-01-21 15:30:31.253  INFO 20296 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 437 ms
+2022-01-21 15:30:31.292  INFO 20296 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-6 - Starting...
+2022-01-21 15:30:31.318  INFO 20296 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-6 - Start completed.
+2022-01-21 15:30:31.353  INFO 20296 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-01-21 15:30:31.358  INFO 20296 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2022-01-21 15:30:31.804  INFO 20296 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-01-21 15:30:31.804  INFO 20296 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-01-21 15:30:31.903  WARN 20296 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-01-21 15:30:32.518  INFO 20296 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1e336250, org.springframework.security.web.context.SecurityContextPersistenceFilter@4fe18aab, org.springframework.security.web.header.HeaderWriterFilter@721a88ec, org.springframework.security.web.authentication.logout.LogoutFilter@14a3f165, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@526f6920, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@12cb31bf, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@343086e2, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@411d8357, org.springframework.security.web.session.SessionManagementFilter@79534a88, org.springframework.security.web.access.ExceptionTranslationFilter@81abdbd, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@1646670]
+2022-01-21 15:30:32.524  INFO 20296 --- [restartedMain] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+2022-01-21 15:30:33.306  WARN 20296 --- [restartedMain] o.s.b.a.batch.JpaBatchConfigurer         : JPA does not support custom isolation levels, so locks may not be taken when launching Jobs
+2022-01-21 15:30:33.306  INFO 20296 --- [restartedMain] o.s.b.c.r.s.JobRepositoryFactoryBean     : No database type set, using meta data indicating: MYSQL
+2022-01-21 15:30:33.307  INFO 20296 --- [restartedMain] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+2022-01-21 15:30:33.331  INFO 20296 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-01-21 15:30:33.345  INFO 20296 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2022-01-21 15:30:33.352  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Started MataApplication in 2.561 seconds (JVM running for 797.738)
+2022-01-21 15:30:33.354  INFO 20296 --- [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2022-01-21 15:30:59.491  INFO 20296 --- [http-nio-8084-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-01-21 15:30:59.491  INFO 20296 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-01-21 15:30:59.494  INFO 20296 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2022-01-21 15:30:59.497  INFO 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Info effect
+2022-01-21 15:30:59.497 DEBUG 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Debug effect
+2022-01-21 15:30:59.497  WARN 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Warn effect
+2022-01-21 15:30:59.497 ERROR 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Error effect
+2022-01-21 15:30:59.497 TRACE 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Treace effect
+2022-01-21 15:31:37.365  INFO 20296 --- [Thread-23] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-01-21 15:31:37.366  INFO 20296 --- [Thread-23] com.zaxxer.hikari.HikariDataSource       : HikariPool-6 - Shutdown initiated...
+2022-01-21 15:31:37.368  INFO 20296 --- [Thread-23] com.zaxxer.hikari.HikariDataSource       : HikariPool-6 - Shutdown completed.
+2022-01-21 15:31:37.486  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Starting MataApplication using Java 15 on DESKTOP-06R5OP8 with PID 20296 (D:\work\Spring Boot\BillBoard\IOB-MATA\target\classes started by eikon in D:\work\Spring Boot\BillBoard\IOB-MATA)
+2022-01-21 15:31:37.486 DEBUG 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Running with Spring Boot v2.5.3, Spring v5.3.9
+2022-01-21 15:31:37.486  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : No active profile set, falling back to default profiles: default
+2022-01-21 15:31:37.654  INFO 20296 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-01-21 15:31:37.685  INFO 20296 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 30 ms. Found 24 JPA repository interfaces.
+2022-01-21 15:31:37.812  INFO 20296 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@282c594c' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-21 15:31:37.813  INFO 20296 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-21 15:31:37.872  INFO 20296 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2022-01-21 15:31:37.872  INFO 20296 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-01-21 15:31:37.872  INFO 20296 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-01-21 15:31:37.894  INFO 20296 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-01-21 15:31:37.894  INFO 20296 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 406 ms
+2022-01-21 15:31:37.943  INFO 20296 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-7 - Starting...
+2022-01-21 15:31:37.962  INFO 20296 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-7 - Start completed.
+2022-01-21 15:31:38.125  INFO 20296 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-01-21 15:31:38.129  INFO 20296 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2022-01-21 15:31:38.880  INFO 20296 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-01-21 15:31:38.880  INFO 20296 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-01-21 15:31:38.976  WARN 20296 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-01-21 15:31:39.498  INFO 20296 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@42dbd705, org.springframework.security.web.context.SecurityContextPersistenceFilter@6b2bcde2, org.springframework.security.web.header.HeaderWriterFilter@27ebf866, org.springframework.security.web.authentication.logout.LogoutFilter@5d6d094, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@7fe6ba91, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4fcdee47, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@371d0710, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@60248cd0, org.springframework.security.web.session.SessionManagementFilter@27e41b2f, org.springframework.security.web.access.ExceptionTranslationFilter@38a38c2c, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@3aefc685]
+2022-01-21 15:31:39.503  INFO 20296 --- [restartedMain] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+2022-01-21 15:31:40.249  WARN 20296 --- [restartedMain] o.s.b.a.batch.JpaBatchConfigurer         : JPA does not support custom isolation levels, so locks may not be taken when launching Jobs
+2022-01-21 15:31:40.250  INFO 20296 --- [restartedMain] o.s.b.c.r.s.JobRepositoryFactoryBean     : No database type set, using meta data indicating: MYSQL
+2022-01-21 15:31:40.250  INFO 20296 --- [restartedMain] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+2022-01-21 15:31:40.276  INFO 20296 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-01-21 15:31:40.290  INFO 20296 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2022-01-21 15:31:40.297  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Started MataApplication in 2.836 seconds (JVM running for 864.683)
+2022-01-21 15:31:40.300  INFO 20296 --- [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2022-01-21 15:31:52.210  INFO 20296 --- [http-nio-8084-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-01-21 15:31:52.212  INFO 20296 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-01-21 15:31:52.217  INFO 20296 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 5 ms
+2022-01-21 15:31:52.218  INFO 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Info effect
+2022-01-21 15:31:52.219 DEBUG 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Debug effect
+2022-01-21 15:31:52.219  WARN 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Warn effect
+2022-01-21 15:31:52.219 ERROR 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Error effect
+2022-01-21 15:31:52.219 TRACE 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Treace effect
+2022-01-21 15:33:03.099  INFO 20296 --- [Thread-27] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-01-21 15:33:03.100  INFO 20296 --- [Thread-27] com.zaxxer.hikari.HikariDataSource       : HikariPool-7 - Shutdown initiated...
+2022-01-21 15:33:03.103  INFO 20296 --- [Thread-27] com.zaxxer.hikari.HikariDataSource       : HikariPool-7 - Shutdown completed.
+2022-01-21 15:33:03.224  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Starting MataApplication using Java 15 on DESKTOP-06R5OP8 with PID 20296 (D:\work\Spring Boot\BillBoard\IOB-MATA\target\classes started by eikon in D:\work\Spring Boot\BillBoard\IOB-MATA)
+2022-01-21 15:33:03.225 DEBUG 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Running with Spring Boot v2.5.3, Spring v5.3.9
+2022-01-21 15:33:03.225  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : No active profile set, falling back to default profiles: default
+2022-01-21 15:33:03.395  INFO 20296 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-01-21 15:33:03.427  INFO 20296 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 31 ms. Found 24 JPA repository interfaces.
+2022-01-21 15:33:03.559  INFO 20296 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@69db4f8f' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-21 15:33:03.560  INFO 20296 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-21 15:33:03.610  INFO 20296 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2022-01-21 15:33:03.611  INFO 20296 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-01-21 15:33:03.611  INFO 20296 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-01-21 15:33:03.634  INFO 20296 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-01-21 15:33:03.634  INFO 20296 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 407 ms
+2022-01-21 15:33:03.683  INFO 20296 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-8 - Starting...
+2022-01-21 15:33:03.727  INFO 20296 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-8 - Start completed.
+2022-01-21 15:33:03.748  INFO 20296 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-01-21 15:33:03.751  INFO 20296 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2022-01-21 15:33:04.252  INFO 20296 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-01-21 15:33:04.253  INFO 20296 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-01-21 15:33:04.351  WARN 20296 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-01-21 15:33:04.899  INFO 20296 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3fad8dc5, org.springframework.security.web.context.SecurityContextPersistenceFilter@1ecb0dbe, org.springframework.security.web.header.HeaderWriterFilter@7cf97383, org.springframework.security.web.authentication.logout.LogoutFilter@2cc84ec2, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@78f4e133, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@13d39ffe, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2481836c, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@5cdb117c, org.springframework.security.web.session.SessionManagementFilter@65a56840, org.springframework.security.web.access.ExceptionTranslationFilter@22f5fc0d, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@1b486ca1]
+2022-01-21 15:33:04.904  INFO 20296 --- [restartedMain] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+2022-01-21 15:33:05.662  WARN 20296 --- [restartedMain] o.s.b.a.batch.JpaBatchConfigurer         : JPA does not support custom isolation levels, so locks may not be taken when launching Jobs
+2022-01-21 15:33:05.662  INFO 20296 --- [restartedMain] o.s.b.c.r.s.JobRepositoryFactoryBean     : No database type set, using meta data indicating: MYSQL
+2022-01-21 15:33:05.663  INFO 20296 --- [restartedMain] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+2022-01-21 15:33:05.698  INFO 20296 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-01-21 15:33:05.715  INFO 20296 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2022-01-21 15:33:05.724  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Started MataApplication in 2.526 seconds (JVM running for 950.11)
+2022-01-21 15:33:05.726  INFO 20296 --- [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2022-01-21 15:33:12.766  INFO 20296 --- [http-nio-8084-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-01-21 15:33:12.766  INFO 20296 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-01-21 15:33:12.769  INFO 20296 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+2022-01-21 15:33:12.771  INFO 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Info effect
+2022-01-21 15:33:12.771 DEBUG 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Debug effect
+2022-01-21 15:33:12.771  WARN 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Warn effect
+2022-01-21 15:33:12.771 ERROR 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Error effect
+2022-01-21 15:33:12.771 TRACE 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Treace effect
+2022-01-21 15:34:08.586  INFO 20296 --- [Thread-31] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-01-21 15:34:08.587  INFO 20296 --- [Thread-31] com.zaxxer.hikari.HikariDataSource       : HikariPool-8 - Shutdown initiated...
+2022-01-21 15:34:08.590  INFO 20296 --- [Thread-31] com.zaxxer.hikari.HikariDataSource       : HikariPool-8 - Shutdown completed.
+2022-01-21 15:34:08.715  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Starting MataApplication using Java 15 on DESKTOP-06R5OP8 with PID 20296 (D:\work\Spring Boot\BillBoard\IOB-MATA\target\classes started by eikon in D:\work\Spring Boot\BillBoard\IOB-MATA)
+2022-01-21 15:34:08.716 DEBUG 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Running with Spring Boot v2.5.3, Spring v5.3.9
+2022-01-21 15:34:08.716  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : No active profile set, falling back to default profiles: default
+2022-01-21 15:34:08.891  INFO 20296 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-01-21 15:34:08.922  INFO 20296 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 30 ms. Found 24 JPA repository interfaces.
+2022-01-21 15:34:09.054  INFO 20296 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@7963dfc3' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-21 15:34:09.055  INFO 20296 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-21 15:34:09.100  INFO 20296 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2022-01-21 15:34:09.100  INFO 20296 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-01-21 15:34:09.101  INFO 20296 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.50]
+2022-01-21 15:34:09.348  INFO 20296 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-01-21 15:34:09.348  INFO 20296 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 631 ms
+2022-01-21 15:34:09.381  INFO 20296 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-9 - Starting...
+2022-01-21 15:34:09.504  INFO 20296 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-9 - Start completed.
+2022-01-21 15:34:09.792  INFO 20296 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-01-21 15:34:09.799  INFO 20296 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2022-01-21 15:34:11.400  INFO 20296 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-01-21 15:34:11.400  INFO 20296 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-01-21 15:34:11.486  WARN 20296 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-01-21 15:34:12.033  INFO 20296 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7d8194c1, org.springframework.security.web.context.SecurityContextPersistenceFilter@37f7abce, org.springframework.security.web.header.HeaderWriterFilter@4282ef9f, org.springframework.security.web.authentication.logout.LogoutFilter@1499e318, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@7232d8db, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7242f801, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@27e90fc1, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@52ec98e1, org.springframework.security.web.session.SessionManagementFilter@2bb25b15, org.springframework.security.web.access.ExceptionTranslationFilter@1588514, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@7470648c]
+2022-01-21 15:34:12.037  INFO 20296 --- [restartedMain] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+2022-01-21 15:34:12.845  WARN 20296 --- [restartedMain] o.s.b.a.batch.JpaBatchConfigurer         : JPA does not support custom isolation levels, so locks may not be taken when launching Jobs
+2022-01-21 15:34:12.845  INFO 20296 --- [restartedMain] o.s.b.c.r.s.JobRepositoryFactoryBean     : No database type set, using meta data indicating: MYSQL
+2022-01-21 15:34:12.846  INFO 20296 --- [restartedMain] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+2022-01-21 15:34:12.870  INFO 20296 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-01-21 15:34:12.884  INFO 20296 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2022-01-21 15:34:12.892  INFO 20296 --- [restartedMain] com.eikona.mata.MataApplication          : Started MataApplication in 4.2 seconds (JVM running for 1017.279)
+2022-01-21 15:34:12.895  INFO 20296 --- [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2022-01-21 15:34:20.820  INFO 20296 --- [http-nio-8084-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-01-21 15:34:20.821  INFO 20296 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-01-21 15:34:20.826  INFO 20296 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 5 ms
+2022-01-21 15:34:20.830  INFO 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Info effect
+2022-01-21 15:34:20.830 DEBUG 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Debug effect
+2022-01-21 15:34:20.830  WARN 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Warn effect
+2022-01-21 15:34:20.830 ERROR 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Error effect
+2022-01-21 15:34:20.830 TRACE 20296 --- [http-nio-8084-exec-1] c.e.mata.controller.EmployeeController   : Treace effect
+2022-01-21 15:35:24.215  INFO 20296 --- [Thread-35] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-01-21 15:35:24.216  INFO 20296 --- [Thread-35] com.zaxxer.hikari.HikariDataSource       : HikariPool-9 - Shutdown initiated...
+2022-01-21 15:35:24.219  INFO 20296 --- [Thread-35] com.zaxxer.hikari.HikariDataSource       : HikariPool-9 - Shutdown completed.

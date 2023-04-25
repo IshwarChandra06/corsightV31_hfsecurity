@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta name="description" content="Smarthr - Bootstrap Admin Template">
+	<meta name="keywords" content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern, accounts, invoice, html5, responsive, CRM, Projects">
+    <meta name="author" content="Dreamguys - Bootstrap Admin Template">
+    <meta name="robots" content="noindex, nofollow">
+    <title>MATA</title>
+    
+    <!-- Favicon -->
+      <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.png">
+
+	<!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+
+	<!-- Fontawesome CSS -->
+      <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+
+	<!-- Lineawesome CSS -->
+      <link rel="stylesheet" href="/assets/css/line-awesome.min.css">
+      
+      <!-- Main CSS -->
+       <link rel="stylesheet" href="/assets/css/style.css">
+    
+	<link rel="stylesheet" type="text/css" href="/assets/css/example-styles.css">
+<!--     <link rel="stylesheet" type="text/css" href="/assets/css/demo-styles.css"> -->
+<style type="text/css">
+.table-wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+}
+</style>
+</head>
+<body>
+
+<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"> </div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+		<!-- Page Wrapper -->
+		<div class="page-wrapper">
+
+			<!-- Page Content -->
+			<div class="content container-fluid">
+				
+				<!-- Page Header -->
+				<div class="page-header">
+					<div class="row align-items-center">
+						<div class="col">
+							<h3 class="page-heaer">
+								<i class="la la-user-shield"> <b><span th:text="${title}"></span></b></i>
+							</h3>
+							<br>
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item">Reports</li>
+								<li class="breadcrumb-item active"><i
+									class="la la-user-shield"></i> <b><span th:text="${title}"></span></b></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- /Page Header -->
+				
+				<!-- Search Filter -->
+				<div class="row filter-row">
+					<div class="col-sm-6 col-md-3"> 
+						<div class="form-group form-focus select-focus">
+						 	<label ><b>Add Filter:</b></label>
+					        <select id="people" name="people" multiple>
+								<option value="id" >Id</option>
+								<option value="employeeId" >Employee Id</option>
+								<option value="employeeName" >Employee Name</option>
+								<option value="office" >Office</option>
+								<option value="department" >Department</option>
+								<option value="designation" >Designation</option>
+					        </select>
+						</div>
+					</div>
+
+					<div class="col-sm-6 col-md-1" id="hide-search" style="display: none;"></div>
+				</div>
+				<div style="display:none">
+					<input type="hidden" id="orginalById">
+					<input type="hidden" id="orginalByEmployeeId">
+					<input type="hidden" id="orginalByEmployeeName">
+					<input type="hidden" id="orginalByOffice">
+					<input type="hidden" id="orginalByDepartment">
+					<input type="hidden" id="orginalByDesignation">
+				</div>
+				<div id= "input-field" class="row">
+				</div>
+				<!-- /Search Filter -->
+				
+				<div class="row">
+					<div class="col-md-12">
+						<div class="table-wrapper">
+							<table id="vehicle" class="table table-striped custom-table mb-0 datatable">
+								<thead>
+									<tr id="table-header">
+									</tr>
+								</thead>
+								<tbody id="table-body">
+								</tbody>
+							</table><br>
+								<div class = "row col-sm-12">
+									<div class = "col-sm-7" id="filter-out-of-total">
+									</div>
+									
+									<div class="pagination-box">
+										<ul class="pagination"  id="page-no-of-table">
+										</ul>
+									</div>
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:replace="matafooter :: footer"></div>
+	<div style="display:none;">
+		<div><input type="text" th:value="${date}" id="date-date"></div>
+		<div><input type="text" th:value="${organization}" id="organization-org"></div>
+		<div><input type="text" th:value="${flag}" id="flag"></div>
+	</div>
+
+	<!-- Custom JS -->
+	<script src="/assets/js/app.js"></script> 
+    <script type="text/javascript" src="/assets/js/jquery.multi-select.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var date = document.getElementById('date-date').value;
+			var organization = document.getElementById('organization-org').value;
+			var flag = document.getElementById('flag').value;
+			
+			console.log(organization);
+			
+			$(function(){
+		        $('#people').multiSelect();
+		        $('#ice-cream').multiSelect();
+		        $('#line-wrap-example').multiSelect({
+		            positionMenuWithin: $('.position-menu-within')
+		        });
+		        $('#modal-example').multiSelect({
+		            'modalHTML': '<div class="multi-select-modal">'
+		        });
+	    	});
+		
+			$("#people").change(function() {
+				var selectedvalue = $("#people").val();
+				var selectedText = $("#people").text();
+	     	    var matches = document.querySelectorAll('input[type="checkbox"]:not(:checked)');
+	     	   for(var i=0; i< matches.length; i++) {
+					var oldInput = document.getElementById(matches[i].value);
+					if(oldInput != null)
+						document.getElementById("remove-element-"+matches[i].value).remove();
+	     	    }
+        	    
+	     	   var inputText = '';
+        	    for(var i=0; i< selectedvalue.length; i++) {
+					var oldInput = document.getElementById(selectedvalue[i]);
+					if(oldInput == null){
+							inputText += '<div class="col-md-3" id="remove-element-'+selectedvalue[i]+'"><div class="form-group">'+
+							'<label><b>'+selectedvalue[i][0].toUpperCase()+ selectedvalue[i].slice(1)+':</b></label> '+
+							'<input type="text" placeholder="Enter '+selectedvalue[i]+'" id="'+selectedvalue[i]+'" class="form-control">'+
+						'</div></div>';
+					}
+        	    }
+        	    	
+				document.getElementById("hide-search").remove();
+			
+				inputText +='<div class="col-sm-6 col-md-1" id="hide-search" style="margin-top:34px">'+
+						'<a class="btn btn-success btn-block searchButtonField"> Search </a><br><br>'+
+				'</div>';
+				
+        	    $("#input-field").append(inputText);
+        	    
+        	    if(selectedvalue.length == 0){
+					$("#hide-search").css("display","none"); 
+				 }
+			});
+			
+			
+			function uncheckedRemove(){
+				var matches = document.querySelectorAll('input[type="checkbox"]:not(:checked)');
+				for(var i=0; i< matches.length; i++) {
+					 var oldInput = document.getElementById(matches[i].value);
+					 if(oldInput != null){
+						 oldInput.remove();
+					 }
+	     	    }
+			}
+			
+			function uncheckedAppend(){
+				var matches = document.querySelectorAll('input[type="checkbox"]:not(:checked)');
+	     	    var unchecked ='';
+	     	    for(var i=0; i< matches.length; i++) {
+	     	    	unchecked += '<input type="hidden" id="'+matches[i].value+'"/>';
+	     	    }
+	     	    $("#input-field").append(unchecked);
+			}
+			
+			//start sort
+			$(document).on('click', '.sortByField', function(e) {
+				var value = $(this).val();
+				var valueList = value.split("-");
+				
+				var id = document.getElementById('orginalById').value;
+                var employeeId= document.getElementById('orginalByEmployeeId').value;
+                var employeeName = document.getElementById('orginalByEmployeeName').value;
+                var office = document.getElementById('orginalByOffice').value;
+                var department = document.getElementById('orginalByDepartment').value;
+                var designation = document.getElementById('orginalByDesignation').value;
+				
+				ajaxCall(id, employeeId, employeeName, office, department, designation, "sortByField", "previousPage", valueList[0],valueList[1],valueList[2]);
+				
+        	})
+        	//end sort 
+        	
+        	$(function(){
+        		var id = document.getElementById('orginalById').value;
+                var employeeId= document.getElementById('orginalByEmployeeId').value;
+                var employeeName = document.getElementById('orginalByEmployeeName').value;
+                var office = document.getElementById('orginalByOffice').value;
+                var department = document.getElementById('orginalByDepartment').value;
+                var designation = document.getElementById('orginalByDesignation').value;
+				
+				ajaxCall(id, employeeId, employeeName, office, department, designation, "sortByField", "previousPage", 1,"id","desc");
+        	})
+        	
+			$(document).on('click', '.previousPage', function(e) {
+				var value = $(this).val();
+				var valueList = value.split("-");
+				
+				var id = document.getElementById('orginalById').value;
+                var employeeId= document.getElementById('orginalByEmployeeId').value;
+                var employeeName = document.getElementById('orginalByEmployeeName').value;
+                var office = document.getElementById('orginalByOffice').value;
+                var department = document.getElementById('orginalByDepartment').value;
+                var designation = document.getElementById('orginalByDesignation').value;
+				
+				ajaxCall(id, employeeId, employeeName, office, department, designation, "sortByField", "previousPage", valueList[0],valueList[1],valueList[2]);
+        	})
+			
+			//start search and sort field
+			$(document).on('click', '.sortBySearchField', function(e) {
+				uncheckedAppend();
+				var value = $(this).val();
+				var valueList = value.split("-");
+				
+				var id = document.getElementById('id').value;
+                var employeeId= document.getElementById('employeeId').value;
+                var employeeName = document.getElementById('employeeName').value;
+                var office = document.getElementById('office').value;
+                var department = document.getElementById('department').value;
+                var designation = document.getElementById('designation').value;
+                uncheckedRemove();
+				ajaxCall(id, employeeId, employeeName, office, department, designation, "sortBySearchField", "nextPage", valueList[0],valueList[1],valueList[2]);
+				
+        	})
+        	
+        	$(document).on('click', '.nextPage', function(e) {
+        		uncheckedAppend();
+				var value = $(this).val();
+				var valueList = value.split("-");
+				
+				var id = document.getElementById('id').value;
+                var employeeId= document.getElementById('employeeId').value;
+                var employeeName = document.getElementById('employeeName').value;
+                var office = document.getElementById('office').value;
+                var department = document.getElementById('department').value;
+                var designation = document.getElementById('designation').value;
+                uncheckedRemove();
+                ajaxCall(id, employeeId, employeeName, office, department, designation, "sortBySearchField", "nextPage", valueList[0],valueList[1],valueList[2]);
+        	})
+			
+        	$(document).on('click', '.searchButtonField', function(e) {
+        		uncheckedAppend();
+        		var id = document.getElementById('id').value;
+                var employeeId= document.getElementById('employeeId').value;
+                var employeeName = document.getElementById('employeeName').value;
+                var office = document.getElementById('office').value;
+                var department = document.getElementById('department').value;
+                var designation = document.getElementById('designation').value;
+                uncheckedRemove();
+                ajaxCall(id, employeeId, employeeName, office, department, designation, "sortBySearchField", "nextPage", 1,"id","desc");
+        	})
+	        	
+	        function ajaxCall(id, employeeId, employeeName, office, department, designation, headFlag, pageFlag, pageno, sortField,sortDir) {
+				var data = {
+	           		"id" : id,
+	           		"date" : date,
+	           		"organization" : organization,
+	           		"employeeId":employeeId,
+	           		"employeeName":employeeName,
+	           		"office":office,
+	           		"department":department,
+	           		"designation":designation,
+	           		"pageno":pageno,
+	           		"sortField":sortField,
+	           		"sortDir":sortDir
+	            }; 
+	         	
+	            $.ajax({
+	                url: '/api/search/'+flag+'/daily-attendance',
+	                type: 'GET',
+	               	data: data,
+	               	success: function (result) {
+	               		var table_header = tableHeader(result, headFlag);
+	               		var table_data = tableData(result);
+	               		var pageno = pagenoData(result, pageFlag);
+	               		
+						$("#table-header").html('').append(table_header);			
+	               		
+						$("tbody#table-body").html('').append(table_data);
+						
+	               		$("#filter-out-of-total").html('').append("Showing "+((null == result.data )?0:result.data.length)+" entries (filtered from "+result.total_record+" total entries)");
+					
+	               		$("#page-no-of-table").html('').append(pageno);
+	               	}
+	            })
+	        }
+			
+	        function tableHeader(result, flag) {
+				var table_header ='';
+				if(result.data.length == 0) {
+					table_header = '<th><b>Id</b></th>'+
+					'<td><b>Date</b></td>'+
+					'<td><b>Employee Id </b></td>'+
+					'<td><b>Employee Name</b></td>'+
+					'<th><b>Attendance Status</th>'+
+					'<th><b>As Per Roster</th>'+
+					'<td><b>Office</b></td>'+
+					'<td><b>Department</b></td>'+
+					'<td><b>Designation</b></td>'+
+					'<th><b>Shift In Time</b></th>'+
+					'<th><b>Shift Out Time</b></th>'+
+					'<th><b>Employee In Time</b></th>'+
+					'<th><b>Employee Out Time</b></th>'+
+					'<th><b>Work Time</b></th>'+
+					'<th><b>Early Coming</b></th>'+
+					'<th><b>Late Going</b></th>'+
+					'<th><b>Early Going</b></th>'+
+					'<th><b>Late Coming</b></th>'+
+					'<th><b>Missed Out Punch</b></th>'+
+					'<th><b>Employee In Temp</b></th>'+
+					'<th><b>Employee Out Temp</b></th>'+
+					'<th><b>Employee In Mask</b></th>'+
+					'<th><b>Employee Out Mask</b></th>'+
+					'<th><b>Employee In Location</b></th>'+
+					'<th><b>Employee Out Location</b></th>'+
+					'<th><b>Employee In Access Type</b></th>'+
+					'<th><b>Employee Out Access Type</b></th>';
+						
+						
+				}else {
+					table_header = '<th><button  value="'+result.page_number+'-id-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Id</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-dateStr-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Date</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-empId-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Employee Id</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-employeeName-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Employee Name</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-attendanceStatus-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Attendance Status</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-asPerRoster-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>As Per Roster</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-branch-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Office</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-department-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Department</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-designation-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Designation</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-shiftInTime-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Shift In Time</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-shiftOutTime-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Shift Out Time</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-empInTime-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Employee In Time</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-empOutTime-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Employee Out Time</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-workTime-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Work Time</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-earlyComing-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Early Coming</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-lateGoing-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Late Going</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-earlyGoing-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Early Going</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-lateComing-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Late Coming</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-missedOutPunch-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Missed Out Punch</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-empInTemp-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Employee In Temp</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-empOutTemp-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Employee Out Temp</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-empInMask-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Employee In MasK</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-empOutMask-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Employee Out Mask</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-empInLocation-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Employee In Location</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-empInLocation-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Employee Out Location</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-empInAccessType-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Employee In Access Type</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-empOutAccessType-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Employee Out Access Type</b></button>'+
+		   			'</th>';
+				}
+				return table_header;
+			}
+	        
+			function tableData(result) {
+				var table_data ='';
+           		$.each(result.data, function(i, customer) {
+           			table_data +='<tr><td>' + customer.id + '</td>' +
+	           		'<td>' + customer.dateStr + '</td>' +
+	            	'<td>' + customer.empId + '</td>' +
+	            	'<td>' + customer.employeeName.toLocaleUpperCase() + '</td>'+
+	            	'<td>' + ((null != customer.attendanceStatus)?customer.attendanceStatus:'')+ '</td>' +
+	            	'<td>' + ((null != customer.asPerRoster)?customer.asPerRoster:'')+ '</td>'+
+	            	'<td>' + ((null != customer.department)?customer.department:'')+ '</td>'+
+               		'<td>' + ((null != customer.designation)?customer.designation:'')+ '</td>' +
+               		'<td>' + ((null != customer.office)?customer.office:'') + '</td>'+
+               		'<td>' + ((null != customer.shiftInTime)?customer.shiftInTime:'')+ '</td>' +
+               		'<td>' + ((null != customer.shiftOutTime)?customer.shiftOutTime:'')+ '</td>' +
+               		'<td>' + ((null != customer.empInTime)?customer.empInTime:'')+ '</td>' +
+               		'<td>' + ((null != customer.empOutTime)?customer.empOutTime:'')+ '</td>' +
+               		'<td>' + ((null != customer.workTime)?customer.workTime:'') + '</td>'+
+               		'<td>' + ((null != customer.earlyComing)?customer.earlyComing:'') + '</td>'+
+               		'<td>' + ((null != customer.lateGoing)?customer.lateGoing:'') + '</td>'+
+               		'<td>' + ((null != customer.earlyGoing)?customer.earlyGoing:'') + '</td>'+
+               		'<td>' + ((null != customer.lateComing)?customer.lateComing:'') + '</td>'+
+               		'<td>' + ((null != customer.missedOutPunch)?customer.missedOutPunch:'')+ '</td>' +
+               		'<td>' + ((null != customer.empInTemp)?customer.empInTemp:'')+ '</td>'+
+               		'<td>' + ((null != customer.empOutTemp)?customer.empOutTemp:'')+ '</td>' +
+               		'<td>' + ((null != customer.empInMask)?customer.empInMask:'') + '</td>'+
+               		'<td>' + ((null != customer.empOutMask)?customer.empOutMask:'')+ '</td>' +
+               		'<td>' + ((null != customer.empInLocation)?customer.empInLocation:'')+ '</td>' +
+               		'<td>' + ((null != customer.empOutLocation)?customer.empOutLocation:'') + '</td>'+
+               		'<td>' + ((null != customer.empInAccessType)?customer.empInAccessType:'')+ '</td>' +
+               		'<td>' + ((null != customer.empOutAccessType)?customer.empOutAccessType:'') + '</td>'+
+               		'</tr>';
+           		});
+           		return table_data;
+			}
+			
+			function pagenoData(result, flag){
+           		var pageno ='';
+           		//pre
+           		if(result.page_number<=1){
+           			pageno += '<li class="page-item disabled">'+
+						'<span  class="page-link" >Previous</span>'+
+						'</li>';
+           		}else{
+           			pageno += '<li class="page-item">'+
+           					'<button value="'+ (result.page_number-1) +'-id-desc" type="button" class="page-link '+flag+'">Previous</button>'+
+						'</li>';
+           		}
+				
+				for( var i= 1; i<=result.total_pages; i++){
+					
+					if(result.total_pages <= 8){
+						if(i == result.page_number){
+          					pageno += '<li class="page-item active">'+
+      							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+							'</li>';
+          				}else{
+          					pageno += '<li class="page-item">'+
+      							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+						'</li>';
+          				}
+           			}else{
+           				if(i == 1){
+    						if(1 == result.page_number){
+               					pageno += '<li class="page-item active">'+
+       								'<button value="'+ 1 +'-id-desc" type="button" class="page-link '+flag+'">'+ 1 +'</button>'+
+    							'</li>';
+           					}else{
+    	       					pageno += '<li class="page-item">'+
+    	   							'<button value="'+ 1 +'-id-desc" type="button" class="page-link '+flag+'">'+ 1 +'</button>'+
+    							'</li>';
+    	       				}
+    						
+    					} else if(i<=5){
+    						if(result.page_number == 5 && i == 5){
+    							pageno += '<li class="page-item">'+
+    		   						'<span class="page-link"><b>..</b></span>'+
+    		   					'</li>';
+    	           				pageno += '<li class="page-item">'+
+    								'<button value="'+ (i-1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i-1) +'</button>'+
+    							'</li>';
+    						
+    							pageno += '<li class="page-item active">'+
+    								'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    							'</li>';
+    							
+    							pageno += '<li class="page-item">'+
+    								'<button value="'+ (i+1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i+1) +'</button>'+
+    							'</li>';
+    							
+    						} else if(result.page_number < 5){
+    							if(i == result.page_number){
+    	           					pageno += '<li class="page-item active">'+
+    	       							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    								'</li>';
+    	           				}else{
+    	           					pageno += '<li class="page-item">'+
+    	       							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    								'</li>';
+    	           				}
+    						}
+               			} else if(i>5 && i < result.total_pages-3 && i== result.page_number){
+               				
+               				pageno += '<li class="page-item">'+
+    	   						'<span class="page-link"><b>..</b></span>'+
+    	   					'</li>';
+               				pageno += '<li class="page-item">'+
+    							'<button value="'+ (i-1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i-1) +'</button>'+
+    						'</li>';
+    					
+    						pageno += '<li class="page-item active">'+
+    							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    						'</li>';
+    						
+    						pageno += '<li class="page-item">'+
+    							'<button value="'+ (i+1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i+1) +'</button>'+
+    						'</li>';
+           				}else if(i == result.total_pages-3){
+           					pageno += '<li class="page-item">'+
+    	   						'<span class="page-link"><b>..</b></span>'+
+    	   					'</li>';
+    						if(result.page_number == result.total_pages-3 && i == result.total_pages-3){
+    							
+    	           				pageno += '<li class="page-item">'+
+    								'<button value="'+ (i-1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i-1) +'</button>'+
+    							'</li>';
+    						
+    							pageno += '<li class="page-item active">'+
+    								'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    							'</li>';
+    							
+    							pageno += '<li class="page-item">'+
+    								'<button value="'+ (i+1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i+1) +'</button>'+
+    							'</li>';
+    							pageno += '<li class="page-item">'+
+    		   						'<span class="page-link"><b>..</b></span>'+
+    		   					'</li>';
+    							
+    						} else if(result.page_number == result.total_pages || result.page_number == result.total_pages-1 || result.page_number == result.total_pages-2){
+    							pageno += '<li class="page-item">'+
+    								'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    							'</li>';
+    						}
+           				} else if(i >= result.total_pages-2 && i < result.total_pages){
+    						if(result.page_number >= result.total_pages-2) {
+    							if(i == result.page_number){
+    								pageno += '<li class="page-item active">'+
+    									'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    								'</li>';
+    							}else{
+    								pageno += '<li class="page-item">'+
+    									'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    								'</li>';
+    							}
+    						}
+           				} else if(i == result.total_pages){
+           					if(i == result.page_number){
+           						pageno += '<li class="page-item active">'+
+    	  							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    							'</li>';
+           					}else{
+           						pageno += '<li class="page-item ">'+
+    	  							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    						'</li>';
+           					}
+              			}
+           			}
+           		}
+           		
+           		//next
+           		if(result.page_number < result.total_pages){
+           			pageno += '<li class="page-item" >'+
+							'<button value="'+ (result.page_number+1) +'-id-desc" type="button" class="page-link '+flag+'">Next</button>'+
+						'</li>';
+           		}else{
+           			pageno += '<li class="page-item disabled" >'+
+							'<span  class="page-link" >Next</span>'+
+						'</li>';
+           		}
+           		return pageno;
+			}
+	});
+	</script>
+</body>
+</html>

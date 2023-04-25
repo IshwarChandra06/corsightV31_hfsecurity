@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="mataheader :: headfragment">
+</head>
+<body>
+
+<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"> </div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+	<!-- Page Wrapper -->
+	<div class="page-wrapper">
+			
+				<!-- Page Content -->
+				<div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row align-items-center">
+							<div class="col">
+								<h3 class="page-heaer"><i class="las la-landmark"> Area Association</i></h3><br>
+								<ul class="breadcrumb">
+								 <li class="breadcrumb-item">Personnel</li>
+						        <li class="breadcrumb-item"><i class="la la-user"></i> Employee</li>
+						       <li class="breadcrumb-item active"><i class="las la-landmark"></i> Area Association</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+					
+					<div class="row">
+						<div class="col-md-6">
+							<div class="card">
+								<div class="card-body">
+									<form th:action="@{/employee-to-area/association/save}" th:object="${employee}" method="POST">
+										<input type="hidden" name="id" id="id" th:value="${id}">
+										<div class="table_wrapper">
+											<table class="table">
+												<thead>
+													<tr>
+														<th>Select</th>
+														<th>Office</th>
+														<th>Area</th>
+														
+													</tr>
+												</thead>
+												<tbody>
+													<tr th:each="area : ${listArea}">
+														<td><input type="checkbox" th:field="*{area}" th:value="${area.id}"></td>
+						     							<td th:text="${area.branch.name}"></td>
+														<td th:text="${area.name}" th:field="*{area}" th:value="${area.id}"></td>
+													</tr>
+												</tbody>
+											</table>
+										</div><br>
+										<div class="text-left">
+											<button type="submit" class="btn btn-primary">Submit</button>
+									   		<a class="btn btn-danger" th:href="@{/employee}">Cancel</a>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+                </div>
+            </div>
+		</div> 
+
+	<div th:replace="matafooter :: footer"></div>
+	
+	<!-- Datatable JS -->
+	<script type="text/javascript" src="/assets/js/jquery.spring-friendly.js"></script>
+	<script src="/assets/js/app.js"></script> 
+	
+</body>
+</html>

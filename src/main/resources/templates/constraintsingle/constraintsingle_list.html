@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="mataheader :: headfragment">
+</head>
+<body>
+
+<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"> </div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+		<!-- Page Wrapper -->
+		<div class="page-wrapper">
+
+			<!-- Page Content -->
+			<div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row align-items-center">
+							<div class="col">
+								<h3 class="page-heaer"><i class="las la-random"> Constraint Single</i></h3><br>
+								<ul class="breadcrumb">
+						        <li class="breadcrumb-item">Properties</li>
+						       <li class="breadcrumb-item active"><i class="las la-random"></i> Constraint Single</li>
+								</ul>
+							</div>
+							<div class="col-auto float-right ml-auto" sec:authorize="hasAuthority('constraint_single_create')">
+								<a th:href = "@{/constraint/single/new}" class="btn add-btn" ><i class="fa fa-plus"></i> Add Constraint Single</a>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+					
+					<div class="row">
+						<div class="col-md-12">
+							<div>
+								<table id="table-data" class="table table-striped custom-table mb-0 datatable">
+									<thead>
+										<tr>
+											<th>Id</th>
+											<th>Value</th>
+											<th>Type</th>
+											<th class="text-right" sec:authorize="hasAnyAuthority('constraint_single_update','constraint_single_delete')">Actions</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+					</div>
+                </div>
+            </div>
+		</div> 
+		
+		<div style="display:none;">
+		<div sec:authorize="hasAuthority('constraint_single_update')"> <span id="span_update"></span></div>
+		<div sec:authorize="hasAuthority('constraint_single_delete')"> <span id="span_delete"></span></div>
+	</div>
+
+	<div th:replace="matafooter :: footer"></div>
+	
+	
+	<!-- Datatable JS -->
+	<script src="/assets/js/jquery.dataTables.1.10.23.js"></script>
+	<script src="/assets/js/dataTables.bootstrap4.min.js"></script>
+	<script type="text/javascript" src="/assets/js/jquery.spring-friendly.js"></script>
+	<script src="/assets/js/app.js"></script>
+	<script  src="/assets/js/ellipsis.js"></script> 
+	<script>
+		$(document).ready(function() {
+			var showUpdate = $("#span_update").length>0;
+			var showDelete = $("#span_delete").length>0;
+			
+			var table = $('table#table-data').DataTable({
+				'ajax' : '/api/constraint/single',
+				'serverSide' : true,
+              'columnDefs': [
+		            { 'width': '50px', 'targets': 0 },
+		            { 'width': '100px', 'targets': 1,'render': $.fn.dataTable.render.ellipsis(20) },
+		            { 'width': '100px', 'targets': 2 ,'render': $.fn.dataTable.render.ellipsis(20)},
+		            { 'width': '100px', 'targets': 3 ,orderable: false},
+		        ],
+		        'fixedColumns': true,
+				 columns : [
+					 { data : 'id' }, 
+					{ data : 'value' }, 			
+					{ data : 'type' }, 
+					{ data : "id",
+						className: "text-right",
+						render : function(data, type,row, meta) {
+							var returnStr = "";
+							
+							if (showUpdate){
+								returnStr += '<a href="/constraint/single/edit/'+ data +'" class="btn btn-primary" ><i class="las la-edit"></i></a>';
+							}
+							
+							if(showDelete){
+								returnStr += '&nbsp;&nbsp;<a href="/constraint/single/delete/'+ data +'" id="deleteButton" class="btn btn-danger"><i class="las la-trash"></i></a>';
+							}
+							
+							return returnStr;
+						}
+					}, 
+				]
+			});
+			table.column(3).visible(showUpdate || showDelete);
+			$(".dataTables_filter").addClass("d-flex justify-content-end");
+			$("#constraint_single_menu").addClass("active");
+		});
+	</script>
+</body>
+</html>

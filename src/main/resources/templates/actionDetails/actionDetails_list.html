@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="mataheader :: headfragment">
+</head>
+<body>
+
+<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"> </div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+	
+	
+	<!-- Page Wrapper -->
+	<div class="page-wrapper">
+			
+				<!-- Page Content -->
+				<div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row align-items-center">
+							<div class="col">
+								<h3 class="page-heaer"><i class="lab la-buffer"> <b>Exception</b></i></h3><br>
+								<ul class="breadcrumb">
+						        <li class="breadcrumb-item">Logs</li>
+						       <li class="breadcrumb-item active"><i class="lab la-buffer"></i> Exception</li>
+								</ul>
+							</div>
+							<div class="col-auto float-right ml-auto"  id="excel-button" sec:authorize="hasAuthority('action_details_export')">
+							<button  value ="excel" type="button" class="btn add-btn export-data"><i class="las la-download"></i> Export to Excel</button>
+						</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+					
+					<!-- Search Filter -->
+				<div class="row filter-row">
+					<div class="col-sm-6 col-md-3"> 
+						<div class="form-group form-focus select-focus">
+						 	<label ><b>Add Filter:</b></label>
+					        <select id="people" name="people" multiple>
+								<option value="employeeId" >Employee Id</option>
+								<option value="employeeName" >Employee Name</option>
+								<option value="deviceName" >Device Name</option>
+								<option value="date" >Date</option>
+					        </select>
+						</div>
+						
+					</div>
+					<div class="col-sm-6 col-md-1" id="hide-search" style="display: none;"></div>
+				</div>
+				<div id= "input-field" class="row">
+				</div>
+				<!-- /Search Filter -->
+				
+				<div class="row">
+					<div class="col-md-12">
+						<div>
+							<table id="vehicle" class="table table-striped custom-table mb-0 datatable">
+								<thead>
+									<tr id="table-header"></tr>
+								</thead>
+								<tbody id="table-body"></tbody>
+							</table><br>
+							<div class = "row">
+								<div class = "col-sm-6" id="filter-out-of-total"></div>
+								
+								<div class="col-sm-6 pagination-box">
+									<ul class="pagination"  id="page-no-of-table"></ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> 
+	<div th:replace="matafooter :: footer"></div>
+	<div style="display:none;">
+		<div sec:authorize="hasAuthority('action_details_export')"> <span id="span_export"></span></div>
+	</div>
+	<!-- Custom JS -->
+	<script src="/assets/js/app.js"></script> 
+    <script type="text/javascript" src="/assets/js/jquery.multi-select.js"></script>
+    <script src="/assets/moment/moment.min.js"></script>
+    
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#action_details_menu").addClass("active");
+			var showExport = $("#span_export").length>0;
+			$(function(){
+		        $('#people').multiSelect();
+		        $('#ice-cream').multiSelect();
+		        $('#line-wrap-example').multiSelect({
+		            positionMenuWithin: $('.position-menu-within')
+		        });
+		        $('#modal-example').multiSelect({
+		            'modalHTML': '<div class="multi-select-modal">'
+		        });
+	    	});
+		
+			$("#people").change(function() {
+				var selectedvalue = $("#people").val();
+				var selectedText = $("#people").text();
+	     	    var matches = document.querySelectorAll('input[type="checkbox"]:not(:checked)');
+	     	   for(var i=0; i< matches.length; i++) {
+					
+					if(matches[i].value == "date"){
+						var oldInput = document.getElementById("remove-element-startDate");
+						if(oldInput != null){
+							document.getElementById("remove-element-startDate").remove();
+							document.getElementById("remove-element-endDate").remove();
+						}
+						
+					}else{
+						var oldInput = document.getElementById(matches[i].value);
+						if(oldInput != null)
+							document.getElementById("remove-element-"+matches[i].value).remove();
+					}
+	     	    }
+        	    var inputText = '';
+        	    for(var i=0; i< selectedvalue.length; i++) {
+        	    	
+        	    	if(selectedvalue[i]=="date"){
+						var oldInput = document.getElementById("remove-element-startDate");
+						var oldInput = document.getElementById("remove-element-startDate");
+						if(oldInput == null){
+							inputText += '<div class="col-md-3" id="remove-element-startDate"><div class="form-group">'+
+								'<label><b>'+'StartDate'+':</b></label> '+
+								'<input type="date" placeholder="Enter startDate'+'" id="startDate" class="form-control">'+
+							'</div></div>';
+							inputText += '<div class="col-md-3" id="remove-element-endDate"><div class="form-group">'+
+								'<label><b>'+'EndDate'+':</b></label> '+
+								'<input type="date" placeholder="Enter endDate'+'" id="endDate" class="form-control">'+
+							'</div></div>';
+						}
+        	    	}else{
+						var oldInput = document.getElementById(selectedvalue[i]);
+						if(oldInput == null){
+								inputText += '<div class="col-md-3" id="remove-element-'+selectedvalue[i]+'"><div class="form-group">'+
+								'<label><b>'+selectedvalue[i][0].toUpperCase()+ selectedvalue[i].slice(1)+':</b></label> '+
+								'<input type="text" placeholder="Enter '+selectedvalue[i]+'" id="'+selectedvalue[i]+'" class="form-control">'+
+							'</div></div>';
+							}
+						}
+        	    	}
+        	    	
+					document.getElementById("hide-search").remove();
+				
+					inputText +='<div class="col-sm-6 col-md-1" id="hide-search" style="margin-top:34px">'+
+							'<a class="btn btn-success btn-block searchButtonField"> Search </a><br><br>'+
+					'</div>';
+					
+	        	    $("#input-field").append(inputText);
+	        	    
+	        	    if(selectedvalue.length == 0){
+						$("#hide-search").css("display","none"); 
+					 }
+			});
+			
+			
+			function uncheckedRemove(){
+				var matches = document.querySelectorAll('input[type="checkbox"]:not(:checked)');
+				for(var i=0; i< matches.length; i++) {
+					
+					if(matches[i].value == "date"){
+						var oldInput = document.getElementById("startDate");
+						if(oldInput != null){
+							document.getElementById('startDate').remove();
+						 	document.getElementById('endDate').remove();
+						}
+					}else{
+						var oldInput = document.getElementById(matches[i].value);
+						 if(oldInput != null)
+							 oldInput.remove();
+					}
+	     	    }
+			}
+			
+			function uncheckedAppend(){
+				var matches = document.querySelectorAll('input[type="checkbox"]:not(:checked)');
+	     	    var unchecked ='';
+	     	    for(var i=0; i< matches.length; i++) {
+					 if(matches[i].value=="date"){
+					 	unchecked += '<input type="hidden" id="startDate"/><input type="hidden" id="endDate"/>';
+					 }else
+	     	    		unchecked += '<input type="hidden" id="'+matches[i].value+'"/>';
+	     	    }
+	     	    $("#input-field").append(unchecked);
+			}
+			
+			
+			function checkDate() {
+			
+				var from = document.getElementById('startDate').value;
+	            var to = document.getElementById('endDate').value;
+	            
+				if(from.length!==0 && to.length===0){
+					var sdate = $("#startDate").empty();
+					 alert("Please Select End Date Fiter !");
+				}else if(to.length!==0 && from.length===0){
+					var edate = $("#endDate").empty();
+					 alert("Please Select Start Date Fiter !");
+				}
+				else if(from.length!==0 && to.length!==0){
+					if(from > to){
+						var edate = $("#endDate").empty();
+					   alert("Start Date Is Greater Than End Date !");
+					}
+				}
+			}
+			
+			$(function(){
+        		
+				ajaxCall("","","","","", "sortByField", "previousPage", 1,"id","desc");
+        	})
+        	
+        	
+			//start sort
+			$(document).on('click', '.sortByField', function(e) {
+				var value = $(this).val();
+				var valueList = value.split("-");
+				
+				ajaxCall("","","","","", "sortByField", "previousPage", valueList[0],valueList[1],valueList[2]);
+				
+        	})
+        	//end sort 
+        	
+			$(document).on('click', '.previousPage', function(e) {
+				var value = $(this).val();
+				var valueList = value.split("-");
+				
+				ajaxCall("","","","","", "sortByField", "previousPage", valueList[0],valueList[1],valueList[2]);
+        	})
+			
+			//start search and sort field
+			$(document).on('click', '.sortBySearchField', function(e) {
+				uncheckedAppend();
+				var value = $(this).val();
+				var valueList = value.split("-");
+				
+				var employeeId = document.getElementById('employeeId').value;
+				var name = document.getElementById('employeeName').value;
+				var device = document.getElementById('deviceName').value;
+				var sDate = document.getElementById('startDate').value;
+	            var eDate = document.getElementById('endDate').value;
+				checkDate();
+				uncheckedRemove();
+				ajaxCall(employeeId, name, device, sDate, eDate, "sortBySearchField", "nextPage", valueList[0],valueList[1],valueList[2]);
+				
+        	})
+        	//end search and sort field
+        	
+        	$(document).on('click', '.nextPage', function(e) {
+				uncheckedAppend();
+				var value = $(this).val();
+				var valueList = value.split("-");
+				
+				var employeeId = document.getElementById('employeeId').value;
+				var name = document.getElementById('employeeName').value;
+				var device = document.getElementById('deviceName').value;
+				var sDate = document.getElementById('startDate').value;
+	            var eDate = document.getElementById('endDate').value;
+				checkDate();
+				uncheckedRemove();
+				ajaxCall(employeeId, name, device, sDate, eDate,  "sortBySearchField", "nextPage", valueList[0],valueList[1],valueList[2]);
+        	})
+			
+        	$(document).on('click', '.searchButtonField', function(e) {
+				uncheckedAppend();
+        		
+        		var employeeId = document.getElementById('employeeId').value;
+				var name = document.getElementById('employeeName').value;
+				var device = document.getElementById('deviceName').value;
+				var sDate = document.getElementById('startDate').value;
+	            var eDate = document.getElementById('endDate').value;
+				checkDate();
+				uncheckedRemove();
+				ajaxCall(employeeId, name, device, sDate, eDate, "sortBySearchField", "nextPage", 1,"id","desc");
+        	})
+	        	
+	        function ajaxCall(employeeId, name, device, sDate, eDate, headFlag, pageFlag, pageno, sortField,sortDir) {
+				var data = {
+					"employeeId":employeeId,
+	           		"name":name,
+	           		"device":device,
+	           		"sDate":sDate,
+	           		"eDate":eDate,
+	           		"pageno":pageno,
+	           		"sortField":sortField,
+	           		"sortDir":sortDir
+	            }; 
+	         	
+	            $.ajax({
+	                url: '/api/search/action-details',
+	                type: 'GET',
+	               	data: data,
+	               	success: function (result) {
+	               		var table_header = tableHeader(result, headFlag);
+	               		var table_data = tableData(result);
+	               		var pageno = pagenoData(result, pageFlag);
+	               		
+	               		if("sortBySearchField" == headFlag && showExport){
+	               			$("#excel-button").html('').append('<button  value ="excel" type="button" class="btn add-btn export-data-by-search"><i class="las la-download"></i> Export to Excel</button>');
+	               		}
+						$("#table-header").html('').append(table_header);			
+						$("tbody#table-body").html('').append(table_data);
+	               		$("#filter-out-of-total").html('').append("Showing "+((null == result.data )?0:result.data.length)+" entries (filtered from "+result.total_record+" total entries)");
+	               		$("#page-no-of-table").html('').append(pageno);
+	               	}
+	            })
+	        }
+			
+			function tableHeader(result, flag) {
+				var table_header ='';
+				if(result.data.length == 0) {
+					table_header = '<th><b>Employee Id</b></th>'+
+						'<th><b>Employee Name</b></th>'+
+						'<th><b>Action</b></th>'+
+						'<th><b>Device Name</b></th>'+
+						'<th><b>IP Address</b></th>'+
+						'<th><b>Status</b></th>'+
+						'<th><b>Modified Date</b></th>'+
+						'<th><b>Message</b></th>';
+				}else {
+					table_header = '<th><button  value="'+result.page_number+'-employeeId-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Employee Id</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-employeeName-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Employee Name</b></button>'+
+		   			'</th><th>'+		
+						'<button  value="'+result.page_number+'-action-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Action</b></button>'+	
+					'</th><th>'+
+		   				'<button  value="'+result.page_number+'-device-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Device Name</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-device-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>IP Address</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-status-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Stats</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-createdDate-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Modified Date</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-message-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Massage</b></button>'+
+		   			'</th>';
+				}
+				return table_header;
+			}
+			
+			function tableData(result) {
+				var table_data ='';
+           		$.each(result.data, function(i, customer) {
+           			console.log(customer.status)
+           			table_data +='<tr>' +
+               	 		'<td>' + ((customer.action == null)?'': customer.action.employee.empId )+ '</td>' +
+               	 		'<td>' + ((customer.action == null)?'': customer.action.employee.name) + '</td>'+
+               	 		'<td>' + ((customer.action == null)?'': customer.action.type) + '</td>'+
+               	 		'<td>' + ((customer.device == null)?'': customer.device.name) + '</td>'+
+               	 		'<td>' +( (customer.device == null)?'': customer.device.ipAddress) + '</td>'+
+               	 		'<td>' + ((customer.status == null)?'': customer.status) + '</td>'+
+               	 		'<td>' + ((customer.lastModifiedDate == null)?'': moment(customer.lastModifiedDate, "YYYY-MM-DD'T'HH:mm:ss.SSS'Z'").format("YYYY-MM-DD")) + '</td>'+
+               	 		'<td>' + ((customer.message == null)?'':customer.message)+ '</td>';
+               	 		
+           		
+           		});
+           		return table_data;
+			}
+			
+			function pagenoData(result, flag){
+           		var pageno ='';
+           		//pre
+           		if(result.page_number<=1){
+           			pageno += '<li class="page-item disabled">'+
+						'<span  class="page-link" >Previous</span>'+
+						'</li>';
+           		}else{
+           			pageno += '<li class="page-item">'+
+           					'<button value="'+ (result.page_number-1) +'-id-desc" type="button" class="page-link '+flag+'">Previous</button>'+
+						'</li>';
+           		}
+				
+				for( var i= 1; i<=result.total_pages; i++){
+					
+					if(result.total_pages <= 8){
+						if(i == result.page_number){
+          					pageno += '<li class="page-item active">'+
+      							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+							'</li>';
+          				}else{
+          					pageno += '<li class="page-item">'+
+      							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+						'</li>';
+          				}
+           			}else{
+           				if(i == 1){
+    						if(1 == result.page_number){
+               					pageno += '<li class="page-item active">'+
+       								'<button value="'+ 1 +'-id-desc" type="button" class="page-link '+flag+'">'+ 1 +'</button>'+
+    							'</li>';
+           					}else{
+    	       					pageno += '<li class="page-item">'+
+    	   							'<button value="'+ 1 +'-id-desc" type="button" class="page-link '+flag+'">'+ 1 +'</button>'+
+    							'</li>';
+    	       				}
+    						
+    					} else if(i<=5){
+    						if(result.page_number == 5 && i == 5){
+    							pageno += '<li class="page-item">'+
+    		   						'<span class="page-link"><b>..</b></span>'+
+    		   					'</li>';
+    	           				pageno += '<li class="page-item">'+
+    								'<button value="'+ (i-1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i-1) +'</button>'+
+    							'</li>';
+    						
+    							pageno += '<li class="page-item active">'+
+    								'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    							'</li>';
+    							
+    							pageno += '<li class="page-item">'+
+    								'<button value="'+ (i+1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i+1) +'</button>'+
+    							'</li>';
+    							
+    						} else if(result.page_number < 5){
+    							if(i == result.page_number){
+    	           					pageno += '<li class="page-item active">'+
+    	       							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    								'</li>';
+    	           				}else{
+    	           					pageno += '<li class="page-item">'+
+    	       							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    								'</li>';
+    	           				}
+    						}
+               			} else if(i>5 && i < result.total_pages-3 && i== result.page_number){
+               				
+               				pageno += '<li class="page-item">'+
+    	   						'<span class="page-link"><b>..</b></span>'+
+    	   					'</li>';
+               				pageno += '<li class="page-item">'+
+    							'<button value="'+ (i-1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i-1) +'</button>'+
+    						'</li>';
+    					
+    						pageno += '<li class="page-item active">'+
+    							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    						'</li>';
+    						
+    						pageno += '<li class="page-item">'+
+    							'<button value="'+ (i+1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i+1) +'</button>'+
+    						'</li>';
+           				}else if(i == result.total_pages-3){
+           					pageno += '<li class="page-item">'+
+    	   						'<span class="page-link"><b>..</b></span>'+
+    	   					'</li>';
+    						if(result.page_number == result.total_pages-3 && i == result.total_pages-3){
+    							
+    	           				pageno += '<li class="page-item">'+
+    								'<button value="'+ (i-1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i-1) +'</button>'+
+    							'</li>';
+    						
+    							pageno += '<li class="page-item active">'+
+    								'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    							'</li>';
+    							
+    							pageno += '<li class="page-item">'+
+    								'<button value="'+ (i+1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i+1) +'</button>'+
+    							'</li>';
+    							pageno += '<li class="page-item">'+
+    		   						'<span class="page-link"><b>..</b></span>'+
+    		   					'</li>';
+    							
+    						} else if(result.page_number == result.total_pages || result.page_number == result.total_pages-1 || result.page_number == result.total_pages-2){
+    							pageno += '<li class="page-item">'+
+    								'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    							'</li>';
+    						}
+           				} else if(i >= result.total_pages-2 && i < result.total_pages){
+    						if(result.page_number >= result.total_pages-2) {
+    							if(i == result.page_number){
+    								pageno += '<li class="page-item active">'+
+    									'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    								'</li>';
+    							}else{
+    								pageno += '<li class="page-item">'+
+    									'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    								'</li>';
+    							}
+    						}
+           				} else if(i == result.total_pages){
+           					if(i == result.page_number){
+           						pageno += '<li class="page-item active">'+
+    	  							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    							'</li>';
+           					}else{
+           						pageno += '<li class="page-item ">'+
+    	  							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    						'</li>';
+           					}
+              			}
+           			}
+           		}
+           		
+           		//next
+           		if(result.page_number < result.total_pages){
+           			pageno += '<li class="page-item" >'+
+							'<button value="'+ (result.page_number+1) +'-id-desc" type="button" class="page-link '+flag+'">Next</button>'+
+						'</li>';
+           		}else{
+           			pageno += '<li class="page-item disabled" >'+
+							'<span  class="page-link" >Next</span>'+
+						'</li>';
+           		}
+           		return pageno;
+			}
+			
+			
+			//Export In Excel
+			$(document).on('click', '.export-data-by-search', function(e) {
+				uncheckedAppend();
+				var type = $(this).val();
+				var employeeId = document.getElementById('employeeId').value;
+				var name = document.getElementById('employeeName').value;
+				var device = document.getElementById('devcieName').value;
+				var sDate = document.getElementById('startDate').value;
+	            var eDate = document.getElementById('endDate').value;
+				uncheckedRemove();
+                if("excel" == type){
+                	$("#excel-button").html('').append('<button  value ="excel" type="button" class="btn add-btn" disabled><i class="las la-download"></i> Export To Excel  <span class="spinner-border spinner-border-sm"></span></button>');
+                	exportData(employeeId, name, device,sDate, eDate, "export-data-by-search","xlsx");
+                }
+			})
+			
+			$(document).on('click', '.export-data', function(e) {
+				
+				var type = $(this).val();
+				console.log(type);
+                
+                if("excel" == type){
+                	$("#excel-button").html('').append('<button  value ="excel" type="button" class="btn add-btn" disabled><i class="las la-download"></i> Export To Excel  <span class="spinner-border spinner-border-sm"></span></button>');
+                	exportData("","","","","","export-data","xlsx");
+                }
+                
+			})
+			
+			function  exportData(employeeId, name, device, sDate, eDate, excelButtonClass,flag) {
+                var data = {
+                		"employeeId":employeeId,
+	           			"name":name,
+	           			"device":device,
+	           			"sDate":sDate,
+	           			"eDate":eDate,
+    	           		"flag":flag
+                }; 
+    	            
+                $.ajax({
+	                url: '/api/action-details/export-to-file',
+	                type: 'GET',
+	               	data: data,
+	               	xhr: function () {
+	                    var xhr = new XMLHttpRequest();
+	                    xhr.onreadystatechange = function () {
+	                        if (xhr.readyState == 2) {
+	                            if (xhr.status == 200) {
+	                                xhr.responseType = "blob";
+	                            } else {
+	                                xhr.responseType = "text";
+	                            }
+	                        }
+	                    };
+	                    return xhr;
+	                },
+	                success: function (result) {
+	                	var blob = new Blob([result], { type: "application/octetstream" });
+	                	const currentDate = moment(new Date()).format('DD_MM_YYYY HH_mm_ss');
+
+	                    var isIE = false || !!document.documentMode;
+	                    if (isIE) {
+	                        window.navigator.msSaveBlob(blob, fileName);
+	                    } else {
+	                        var url = window.URL || window.webkitURL;
+	                        link = url.createObjectURL(blob);
+	                        var a = $("<a />");
+	                        a.attr("download", "Exception_Report_"+currentDate+"."+flag);
+	                        a.attr("href", link);
+	                        $("body").append(a);
+	                        a[0].click();
+	                        $("body").remove(a);
+	                    }
+	                    $("#excel-button").html('').append('<button  value ="excel" type="button" class="btn add-btn '+excelButtonClass+'"><i class="las la-download"></i> Export To Excel </button>'); 
+	                }
+            })
+		}
+			
+	});
+	</script>
+</body>
+</html>

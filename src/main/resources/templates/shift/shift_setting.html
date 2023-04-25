@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="mataheader :: headfragment">
+</head>
+<body>
+
+<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"> </div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+	
+	
+	<!-- Page Wrapper -->
+            <div class="page-wrapper">
+			
+				<!-- Page Content -->
+                <div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row align-items-center">
+							<div class="col">
+								<h3 class="page-heaer"><i class="las la-cog"> Shift Setting</i></h3><br>
+								<ul class="breadcrumb">
+						        <li class="breadcrumb-item">Shift</li>
+						       <li class="breadcrumb-item active">Shift Setting</li>
+								</ul>
+							</div>
+							
+						</div>
+					</div>
+
+			<div class="row">
+						<div class="col-md-12">
+							<div class="card">
+<!-- 								<div class="card-header"> -->
+<!-- 									<h4 class="card-title mb-0">Basic Form</h4> -->
+<!-- 								</div> -->
+								<div class="card-body">
+									<form action="#" th:action="@{/shift/setting/add}"
+									th:object="${shiftSetting}" method="POST">
+									<table>
+									   <tr>
+								<td><b>Name</b></td>
+								<td><input type="text" th:field="*{name}"
+									placeholder="Enter Shift Name" class="form-control" /></td>
+									
+								<td><b>Time Table Type</b></td>
+								<td> <input type="text" th:field="*{timeTableType}" placeholder="Enter type"
+										class="form-control"></td>
+							</tr>	
+							<tr>
+								<td><label><strong>Organization:</strong></label></td>
+								<td><select name="organization" th:field="*{organization}" class="form-control">
+									<option value="">Select Organization</option>
+									<option th:each="org : ${listOrganization}" 
+										th:value="${org.id}"
+										th:text="${org.name}">
+									</select> </td>
+							</tr>
+							<tr><td><hr></td></tr>
+							<tr>
+								<td><label for="time"><b>Check In Time:</b></label></td>
+								<td><div class="form-group">
+									<div class="input-group date" id="start_time">
+										<input type="text" id="time" value="11:31:00"
+											placeholder="Enter Start Time" class="form-control"
+											th:field="*{checkInTime}" />
+										<div class="input-group-addon input-group-append">
+											<div class="input-group-text">
+												<i class="fa fa-clock-o"></i>
+											</div>
+										</div>
+									</div>
+								</div></td>
+								
+								<td><label ><b>Check Out Time:</b></label></td>
+								<td><div class="form-group">
+									<div class="input-group date" id="end_time">
+										<input type="text" id="time" value="11:31:00"
+											placeholder="Enter End Time" class="form-control"
+											th:field="*{checkOutTime}" />
+										<div class="input-group-addon input-group-append">
+											<div class="input-group-text">
+												<i class="fa fa-clock-o"></i>
+											</div>
+										</div>
+									</div>
+								</div></td>
+								</tr>
+								<tr>
+									<td><b>Before going to work</b></td>
+									<td><input type="text" th:field="*{beforeGoingToWork}" placeholder="60" class="form-control" /></td>
+									<td><b>Before going off duty</b></td>
+									<td><input type="text" th:field="*{beforeGoingOffDuty}" placeholder="60" class="form-control" /></td>
+								</tr>
+								<tr>
+									<td><b>After work</b></td>
+									<td><input type="text" th:field="*{afterWork}" placeholder="60" class="form-control" /></td>
+									<td><b>After work</b></td>
+									<td><input type="text" th:field="*{afterDuty}" placeholder="60" class="form-control" /></td>
+								</tr>
+								<tr>
+									<td><b>Allow Late(minutes)</b></td>
+									<td><input type="text" th:field="*{allowLate}" placeholder="15" class="form-control" /></td>
+									<td><b>Allow Early Leave(minutes) </b></td>
+									<td><input type="text" th:field="*{allowEarlyLeave}" placeholder="0" class="form-control" /></td>
+								</tr>
+								<tr>
+									<td><b>Must Check-In</b></td>
+									<td><select th:field="*{mustCheckIn}" class="form-control mb-4 col-4">
+										<option th:value="Yes">Yes</option>
+										<option th:value="No">No</option>
+										</select>
+									</td>
+									<td><b>Must Check-Out</b></td>
+									<td><select th:field="*{mustCheckOut}" class="form-control mb-4 col-4">
+										<option th:value="Yes">Yes</option>
+										<option th:value="No">No</option>
+										</select>
+									</td>
+								</tr>
+								<tr><td><hr></td></tr>
+								<tr>
+									<td><b>Work Day</b></td>
+									<td><input type="text" th:field="*{workDay}" placeholder="1.0" class="form-control" /></td>
+									<td><b>Work Time (minutes)</b></td>
+									<td><input type="text" th:field="*{workTime}" placeholder="420" class="form-control" /></td>
+								</tr>
+								<tr>
+									<td><b>Auto Deduct Break Time</b></td>
+									<td><select th:field="*{autoDeductBreakTime}" class="form-control">
+										<option th:value="No">No</option>
+										<option th:value="Yes">Yes</option>
+										</select>
+									</td>
+								</tr>
+								<tr><td><hr></td></tr>
+								<tr>
+									<td><input type="checkbox" th:field="*{onDuty}" value ="On duty"> <b>On duty</b></td>
+									<td><input type="checkbox" th:field="*{offDuty}" value = "Off duty"> <b>Off duty</b></td>
+								</tr>
+								<tr>
+									<td><input type="checkbox" th:field="*{enableFlexibleWork}" value = "Enable flexible work"> <b>Enable flexible work</b></td>
+								</tr>
+								<tr><td><hr></td></tr>
+										<tr>
+									<td>
+											<button type="submit" class="btn btn-primary">Submit</button></td>
+										  <td> <a class="btn btn-danger" th:href="@{/shift}">Cancel</a></td>
+										</tr>
+										</table>
+									</form>
+								</div>
+							</div>
+						</div>
+	</div>
+	</div>
+	</div>
+	</div>
+<div th:replace="matafooter :: footer">
+<script src="/assets/js/app.js"></script>
+</div>
+</body>
+</html>

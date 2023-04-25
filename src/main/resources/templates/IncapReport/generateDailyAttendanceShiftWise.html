@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="mataheader :: headfragment"></head>
+<body>
+
+	<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"></div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+		<!-- Page Wrapper -->
+		<div class="page-wrapper">
+
+			<!-- Page Content -->
+			<div class="content container-fluid">
+
+				<!-- Page Header -->
+				<div class="page-header">
+					<div class="row align-items-center">
+						<div class="col">
+							<h3 class="page-heaer">
+								<i class="las la-calculator"> Generate Daily Attendance By Shift</i>
+							</h3>
+							<br>
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item">Reports</li>
+								<li class="breadcrumb-item">Daily Attendance</li>
+								<li class="breadcrumb-item active">Generate</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- /Page Header -->
+
+				<!-- Search Filter -->
+				<form action="#" th:action="@{/incap/get/daily-attendance/shift}"
+			 method="POST">
+				<div class="row filter-row mb-4" >
+										<div class="col-sm-6 col-md-3">  
+							<div class="form-group form-focus">
+								<div class="cal-icon">
+									<input class="form-control floating datetimepicker"name="sDate" type="text" id="generate-sDate">
+								</div>
+								<label class="focus-label">Start Date</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3">  
+								<div class="form-group form-focus">
+								<div class="cal-icon">
+									<input class="form-control floating datetimepicker"name="eDate" type="text" id="generate-eDate">
+								</div>
+								<label class="focus-label">End Date</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-2">  
+						<button type="submit" class="btn btn-primary">Generate</button>
+						</div>
+						
+					</div>
+					</form><br>
+						
+					</div>
+				</div>
+			</div>
+
+	<div th:replace="matafooter :: footer"></div>
+        
+	<!-- Datetimepicker JS -->
+	<script src="/assets/js/moment.min.js"></script>
+	<script src="/assets/js/bootstrap-datetimepicker.min.js"></script>
+	
+	<!-- Select2 JS -->
+		<script src="/assets/js/select2.min.js"></script>
+		
+	<!-- Custom JS -->
+	<script src="/assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="mataheader :: headfragment">
+</head>
+<body>
+
+<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"> </div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+	
+	
+	<!-- Page Wrapper -->
+            <div class="page-wrapper">
+			
+				<!-- Page Content -->
+                <div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row align-items-center">
+							<div class="col">
+								<h3 class="page-heaer"><i class="la la-building"> Department</i></h3><br>
+								<ul class="breadcrumb">
+						        <li class="breadcrumb-item">Organization</li>
+						       <li class="breadcrumb-item active"><i class="la la-building"></i> Department</li>
+								</ul>
+							</div>
+							<div class="col-auto float-right ml-auto" sec:authorize="hasAuthority('department_create')">
+								<a th:href = "@{/department/new}" class="btn add-btn" ><i class="fa fa-plus"></i> Add Department</a>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+					
+					<div class="row filter-row">
+					<div class="col-sm-6 col-md-3"> 
+						<div class="form-group form-focus select-focus">
+						 	<label ><b>Add Filter:</b></label>
+					        <select id="people" name="people" multiple>
+								<option value="id" >Id</option>
+								<option value="name" >Name</option>
+					        </select>
+						</div>
+					</div>
+
+					<div class="col-sm-6 col-md-1" id="hide-search" style="display: none;"></div>
+				</div>
+				<div style="display:none">
+					<input type="hidden" id="orginalById">
+					<input type="hidden" id="orginalByName">
+				</div>
+				<div id= "input-field" class="row">
+				</div>
+				<!-- /Search Filter -->
+				
+				<div class="row">
+					<div class="col-md-12">
+						<div>
+							<table id="vehicle" class="table table-striped custom-table mb-0 datatable">
+								<thead>
+									<tr id="table-header"></tr>
+								</thead>
+								<tbody id="table-body"></tbody>
+							</table><br>
+							<div class = "row">
+								<div class = "col-sm-6" id="filter-out-of-total"></div>
+								
+								<div class="col-sm-6 pagination-box">
+									<ul class="pagination"  id="page-no-of-table"></ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> 
+	
+<div style="display:none;">
+		<div sec:authorize="hasAuthority('department_update')"> <span id="span_update"></span></div>
+		<div sec:authorize="hasAuthority('department_delete')"> <span id="span_delete"></span></div>
+	</div>
+	<div th:replace="matafooter :: footer"></div>
+	
+	
+	<!-- Datatable JS -->
+	<script src="/assets/js/app.js"></script> 
+    <script type="text/javascript" src="/assets/js/jquery.multi-select.js"></script>
+    
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#department_menu").addClass("active");
+			var showUpdate = $("#span_update").length>0;
+			var showDelete = $("#span_delete").length>0;
+			
+			$(function(){
+		        $('#people').multiSelect();
+		        $('#ice-cream').multiSelect();
+		        $('#line-wrap-example').multiSelect({
+		            positionMenuWithin: $('.position-menu-within')
+		        });
+		        $('#modal-example').multiSelect({
+		            'modalHTML': '<div class="multi-select-modal">'
+		        });
+	    	});
+		
+			$("#people").change(function() {
+				var selectedvalue = $("#people").val();
+				var selectedText = $("#people").text();
+	     	    var matches = document.querySelectorAll('input[type="checkbox"]:not(:checked)');
+	     	   for(var i=0; i< matches.length; i++) {
+					var oldInput = document.getElementById(matches[i].value);
+					if(oldInput != null)
+						document.getElementById("remove-element-"+matches[i].value).remove();
+	     	    }
+        	    
+	     	   var inputText = '';
+        	    for(var i=0; i< selectedvalue.length; i++) {
+					var oldInput = document.getElementById(selectedvalue[i]);
+					if(oldInput == null){
+							inputText += '<div class="col-md-3" id="remove-element-'+selectedvalue[i]+'"><div class="form-group">'+
+							'<label><b>'+selectedvalue[i][0].toUpperCase()+ selectedvalue[i].slice(1)+':</b></label> '+
+							'<input type="text" placeholder="Enter '+selectedvalue[i]+'" id="'+selectedvalue[i]+'" class="form-control">'+
+						'</div></div>';
+					}
+        	    }
+        	    	
+				document.getElementById("hide-search").remove();
+			
+				inputText +='<div class="col-sm-6 col-md-1" id="hide-search" style="margin-top:34px">'+
+						'<a class="btn btn-success btn-block searchButtonField"> Search </a><br><br>'+
+				'</div>';
+				
+        	    $("#input-field").append(inputText);
+        	    
+        	    if(selectedvalue.length == 0){
+					$("#hide-search").css("display","none"); 
+				 }
+			});
+			
+			
+			function uncheckedRemove(){
+				var matches = document.querySelectorAll('input[type="checkbox"]:not(:checked)');
+				for(var i=0; i< matches.length; i++) {
+					 var oldInput = document.getElementById(matches[i].value);
+					 if(oldInput != null){
+						 oldInput.remove();
+					 }
+	     	    }
+			}
+			
+			function uncheckedAppend(){
+				var matches = document.querySelectorAll('input[type="checkbox"]:not(:checked)');
+	     	    var unchecked ='';
+	     	    for(var i=0; i< matches.length; i++) {
+	     	    	unchecked += '<input type="hidden" id="'+matches[i].value+'"/>';
+	     	    }
+	     	    $("#input-field").append(unchecked);
+			}
+			
+			
+			$(function(){
+        		var id = document.getElementById('orginalById').value;
+				var name= document.getElementById('orginalByName').value;
+				
+				ajaxCall(id, name, "sortByField", "previousPage", 1,"id","desc");
+        	})
+        	
+        	
+			//start sort
+			$(document).on('click', '.sortByField', function(e) {
+				var value = $(this).val();
+				var valueList = value.split("-");
+				
+				var id = document.getElementById('orginalById').value;
+				var name= document.getElementById('orginalByName').value;
+				
+				ajaxCall(id, name, "sortByField", "previousPage", valueList[0],valueList[1],valueList[2]);
+				
+        	})
+        	//end sort 
+        	
+			$(document).on('click', '.previousPage', function(e) {
+				var value = $(this).val();
+				var valueList = value.split("-");
+				
+				var id = document.getElementById('orginalById').value;
+				var name= document.getElementById('orginalByName').value;
+				
+				ajaxCall(id, name, "sortByField", "previousPage", valueList[0],valueList[1],valueList[2]);
+        	})
+			
+			//start search and sort field
+			$(document).on('click', '.sortBySearchField', function(e) {
+				uncheckedAppend();
+				var value = $(this).val();
+				var valueList = value.split("-");
+				
+				var id = document.getElementById('id').value;
+				var name = document.getElementById('name').value;
+				uncheckedRemove();
+				ajaxCall(id, name, "sortBySearchField", "nextPage", valueList[0],valueList[1],valueList[2]);
+				
+        	})
+        	//end search and sort field
+        	
+        	$(document).on('click', '.nextPage', function(e) {
+        		uncheckedAppend();
+				var value = $(this).val();
+				var valueList = value.split("-");
+				
+				var id = document.getElementById('id').value;
+				var name = document.getElementById('name').value;
+				uncheckedRemove();
+				ajaxCall(id, name, "sortBySearchField", "nextPage", valueList[0],valueList[1],valueList[2]);
+        	})
+			
+        	$(document).on('click', '.searchButtonField', function(e) {
+        		uncheckedAppend();
+        		
+        		var id = document.getElementById('id').value;
+				var name = document.getElementById('name').value;
+				uncheckedRemove();
+				ajaxCall(id, name, "sortBySearchField", "nextPage", 1,"id","desc");
+        	})
+	        	
+	        function ajaxCall(id, name, headFlag, pageFlag, pageno, sortField,sortDir) {
+				var data = {
+	           		"id" : id,
+	           		"name":name,
+	           		"pageno":pageno,
+	           		"sortField":sortField,
+	           		"sortDir":sortDir
+	            }; 
+	         	
+	            $.ajax({
+	                url: '/api/search/department',
+	                type: 'GET',
+	               	data: data,
+	               	success: function (result) {
+	               		var table_header = tableHeader(result, headFlag);
+	               		var table_data = tableData(result);
+	               		var pageno = pagenoData(result, pageFlag);
+						$("#table-header").html('').append(table_header);			
+						$("tbody#table-body").html('').append(table_data);
+	               		$("#filter-out-of-total").html('').append("Showing "+((null == result.data )?0:result.data.length)+" entries (filtered from "+result.total_record+" total entries)");
+	               		$("#page-no-of-table").html('').append(pageno);
+	               	}
+	            })
+	        }
+			
+			function tableHeader(result, flag) {
+				var table_header ='';
+				if(result.data.length == 0) {
+					table_header = '<th><b>Id</b></th>'+
+						'<th><b>Name</b></th>'+
+						'<th><b>Description</b></th>';
+					if(showUpdate || showDelete)
+						table_header+='<th><b><i class="icon_cogs"></i> Actions</b></th>';
+				}else {
+					table_header = '<th><button  value="'+result.page_number+'-id-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Id</b></button>'+
+		   			'</th><th>'+
+		   			'<button  value="'+result.page_number+'-name-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Name</b></button>'+
+		   			'</th><th>'+		
+						'<button  value="'+result.page_number+'-description-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Description</b></button>'+	
+					'</th>';
+					if(showUpdate || showDelete)
+						table_header+='<th><i class="icon_cogs"></i> Actions</th>';
+				}
+				return table_header;
+			}
+			
+			function tableData(result) {
+				var table_data ='';
+           		$.each(result.data, function(i, customer) {
+           			table_data +='<tr>' +
+               	 		'<td>' + customer.id + '</td>' +
+               	 		'<td>' + customer.name + '</td>';
+              	 	if(null != customer.description){
+              	 		table_data += '<td>' + customer.description + '</td>';
+              	 	} else{
+              	 		table_data += '<td></td>';
+              	 	}
+              	 	if(showUpdate)
+           				table_data +='<td> <a href="/department/edit/'+customer.id+'" class="btn btn-primary"><i class="las la-edit"></i></a>';
+       				if(showDelete)
+       					table_data +='&nbsp;&nbsp;'+
+               			'<a href="/department/delete/'+customer.id+'" class="btn btn-danger" id="deleteButton"><i class="las la-trash"></i></a></td></tr>';
+           		});
+           		return table_data;
+			}
+			
+			function pagenoData(result, flag){
+           		var pageno ='';
+           		//pre
+           		if(result.page_number<=1){
+           			pageno += '<li class="page-item disabled">'+
+						'<span  class="page-link" >Previous</span>'+
+						'</li>';
+           		}else{
+           			pageno += '<li class="page-item">'+
+           					'<button value="'+ (result.page_number-1) +'-id-desc" type="button" class="page-link '+flag+'">Previous</button>'+
+						'</li>';
+           		}
+				
+				for( var i= 1; i<=result.total_pages; i++){
+					
+					if(result.total_pages <= 8){
+						if(i == result.page_number){
+          					pageno += '<li class="page-item active">'+
+      							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+							'</li>';
+          				}else{
+          					pageno += '<li class="page-item">'+
+      							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+						'</li>';
+          				}
+           			}else{
+           				if(i == 1){
+    						if(1 == result.page_number){
+               					pageno += '<li class="page-item active">'+
+       								'<button value="'+ 1 +'-id-desc" type="button" class="page-link '+flag+'">'+ 1 +'</button>'+
+    							'</li>';
+           					}else{
+    	       					pageno += '<li class="page-item">'+
+    	   							'<button value="'+ 1 +'-id-desc" type="button" class="page-link '+flag+'">'+ 1 +'</button>'+
+    							'</li>';
+    	       				}
+    						
+    					} else if(i<=5){
+    						if(result.page_number == 5 && i == 5){
+    							pageno += '<li class="page-item">'+
+    		   						'<span class="page-link"><b>..</b></span>'+
+    		   					'</li>';
+    	           				pageno += '<li class="page-item">'+
+    								'<button value="'+ (i-1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i-1) +'</button>'+
+    							'</li>';
+    						
+    							pageno += '<li class="page-item active">'+
+    								'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    							'</li>';
+    							
+    							pageno += '<li class="page-item">'+
+    								'<button value="'+ (i+1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i+1) +'</button>'+
+    							'</li>';
+    							
+    						} else if(result.page_number < 5){
+    							if(i == result.page_number){
+    	           					pageno += '<li class="page-item active">'+
+    	       							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    								'</li>';
+    	           				}else{
+    	           					pageno += '<li class="page-item">'+
+    	       							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    								'</li>';
+    	           				}
+    						}
+               			} else if(i>5 && i < result.total_pages-3 && i== result.page_number){
+               				
+               				pageno += '<li class="page-item">'+
+    	   						'<span class="page-link"><b>..</b></span>'+
+    	   					'</li>';
+               				pageno += '<li class="page-item">'+
+    							'<button value="'+ (i-1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i-1) +'</button>'+
+    						'</li>';
+    					
+    						pageno += '<li class="page-item active">'+
+    							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    						'</li>';
+    						
+    						pageno += '<li class="page-item">'+
+    							'<button value="'+ (i+1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i+1) +'</button>'+
+    						'</li>';
+           				}else if(i == result.total_pages-3){
+           					pageno += '<li class="page-item">'+
+    	   						'<span class="page-link"><b>..</b></span>'+
+    	   					'</li>';
+    						if(result.page_number == result.total_pages-3 && i == result.total_pages-3){
+    							
+    	           				pageno += '<li class="page-item">'+
+    								'<button value="'+ (i-1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i-1) +'</button>'+
+    							'</li>';
+    						
+    							pageno += '<li class="page-item active">'+
+    								'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    							'</li>';
+    							
+    							pageno += '<li class="page-item">'+
+    								'<button value="'+ (i+1) +'-id-desc" type="button" class="page-link '+flag+'">'+ (i+1) +'</button>'+
+    							'</li>';
+    							pageno += '<li class="page-item">'+
+    		   						'<span class="page-link"><b>..</b></span>'+
+    		   					'</li>';
+    							
+    						} else if(result.page_number == result.total_pages || result.page_number == result.total_pages-1 || result.page_number == result.total_pages-2){
+    							pageno += '<li class="page-item">'+
+    								'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    							'</li>';
+    						}
+           				} else if(i >= result.total_pages-2 && i < result.total_pages){
+    						if(result.page_number >= result.total_pages-2) {
+    							if(i == result.page_number){
+    								pageno += '<li class="page-item active">'+
+    									'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    								'</li>';
+    							}else{
+    								pageno += '<li class="page-item">'+
+    									'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    								'</li>';
+    							}
+    						}
+           				} else if(i == result.total_pages){
+           					if(i == result.page_number){
+           						pageno += '<li class="page-item active">'+
+    	  							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    							'</li>';
+           					}else{
+           						pageno += '<li class="page-item ">'+
+    	  							'<button value="'+ i +'-id-desc" type="button" class="page-link '+flag+'">'+ i +'</button>'+
+    						'</li>';
+           					}
+              			}
+           			}
+           		}
+           		
+           		//next
+           		if(result.page_number < result.total_pages){
+           			pageno += '<li class="page-item" >'+
+							'<button value="'+ (result.page_number+1) +'-id-desc" type="button" class="page-link '+flag+'">Next</button>'+
+						'</li>';
+           		}else{
+           			pageno += '<li class="page-item disabled" >'+
+							'<span  class="page-link" >Next</span>'+
+						'</li>';
+           		}
+           		return pageno;
+			}
+	});
+	</script>
+</body>
+</html>

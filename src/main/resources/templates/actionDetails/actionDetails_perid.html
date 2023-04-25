@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="mataheader :: headfragment">
+</head>
+<body>
+
+<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div th:replace="matatopmenu :: topmenufragment"> </div>
+		<div th:replace="mataleftmenu :: leftmenu"></div>
+
+	
+	
+	<!-- Page Wrapper -->
+	<div class="page-wrapper">
+			
+				<!-- Page Content -->
+				<div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row align-items-center">
+							<div class="col">
+								<h3 class="page-heaer"><i class="lab la-buffer"> <b>Audit Details</b></i></h3><br>
+								<ul class="breadcrumb">
+						        <li class="breadcrumb-item">Audit</li>
+						       <li class="breadcrumb-item active"><i class="lab la-buffer"></i> Audit Details</li>
+								</ul>
+							</div>
+<!-- 							<div class="col-auto float-right ml-auto"> -->
+<!-- 								<a th:href = "@{/action-details/new}" class="btn add-btn" ><i class="fa fa-plus"></i> Add Exception</a> -->
+<!-- 							</div> -->
+						</div>
+					</div>
+					<!-- /Page Header -->
+					
+					<div class="row">
+						<div class="col-md-12">
+							<div>
+								<input type="hidden" th:value="${id}" id ="id">
+								<table id="table-data" class="table table-striped custom-table mb-0 datatable">
+									<thead>
+										<tr>
+											<th>Id</th>
+											<th>Employee Id</th>
+											<th>Employee Name</th>
+											<th>Action</th>
+											<th>Device</th>
+											<th>Ip Address</th>
+											<th>Status</th>
+											<th>Message</th>
+<!-- 											<th class="text-right">Actions</th> -->
+										</tr>
+									</thead>
+									<tbody id="table-body"></tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+                </div>
+            </div>
+		</div> 
+
+	<div th:replace="matafooter :: footer"></div>
+	
+	<!-- Datatable JS -->
+	<script src="/assets/js/jquery.dataTables.1.10.23.js"></script>
+	<script src="/assets/js/dataTables.bootstrap4.min.js"></script>
+	<script type="text/javascript" src="/assets/js/jquery.spring-friendly.js"></script>
+	<script src="/assets/js/app.js"></script>
+	<script>
+		$(document).ready(function() {
+			var id = document.getElementById('id').value;
+			 
+			//console.log(id);
+			var data={
+					"id":id
+			}
+			$.ajax({
+			      url : "/api/action-details/per-id",
+			      data:data,
+			      success: function(result){
+			    	  var div_data ='';
+	               		$.each(result, function(i, customer){
+	               			div_data +='<tr>' +
+		                    	 '<td>' + customer.id + '</td>' +
+		                    	 '<td>' + customer.action.employee.empId+ '</td>' +
+		                    	 '<td>' + customer.action.employee.name+ '</td>' +
+		                    	 '<td>' + customer.action.type+ '</td>' +
+		                    	 '<td>' + customer.device.name+'</td>' +
+		                    	 '<td>' + customer.device.ipAddress+'</td>' ;
+		                    	 if(null !=  customer.status)
+		                    		 div_data +='<td>' + customer.status+ '</td>';
+		                    	 else
+		                    		 div_data += '<td>'+''+ '</td>';
+		                    	 if(null !=  customer.message)
+		                    		 div_data += '<td>' + customer.message+ '</td>';
+		                    	else
+		                    		 div_data += '<td>'+''+ '</td></tr>';
+// 		                    	div_data += '<td><a href="/action-details/edit/'+ customer.id +'" class="btn btn-primary" ><i class="las la-edit"></i></a> '
+// 		                    	 +'<a href="/action-details/delete/'+ data +'"  class="btn btn-danger"><i class="las la-trash"></i></a></td></tr>';
+			            });
+	               		$("#table-body").html("");
+	               		$("#table-body").append(div_data);
+	               		
+	               		var table = $('table#table-data').DataTable({
+	        				"searching": false,
+	        				"bLengthChange": false,
+	        			});
+			      }
+			})
+			
+			$(".dataTables_filter").addClass("d-flex justify-content-end");
+		});
+	</script>
+</body>
+</html>
