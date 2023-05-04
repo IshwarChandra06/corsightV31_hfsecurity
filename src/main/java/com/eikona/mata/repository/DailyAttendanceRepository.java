@@ -144,7 +144,7 @@ public interface DailyAttendanceRepository extends DataTablesRepository<DailyAtt
 	  		+ "SUM( CASE WHEN (dr.attendanceStatus = 'Present') THEN 1 ELSE 0 END) as present, "
 	  		+ "SUM( CASE WHEN (dr.empInMask = 'true') THEN 1 ELSE 0 END) as empInMask, "
 	  		+ "SUM( CASE WHEN (dr.empOutMask = 'true' and (dr.empOutTime != '' or dr.empOutTime is not null )) THEN 1 ELSE 0 END) as empOutMask, "
-	  		+ "SUM( CASE WHEN (dr.missedOutPunch = 1) THEN 1 ELSE 0 END) as missedOutPunch, "
+	  		+ "SUM( CASE WHEN (dr.missedOutPunch = 'Yes') THEN 1 ELSE 0 END) as missedOutPunch, "
 	  		+ "SUM( CASE WHEN (dr.overTime > 0) THEN 1 ELSE 0 END) as overTime, "
 	  		+ "SUM( CASE WHEN (dr.workTime != null AND dr.workTime != '8:30' and dr.overTime = null) THEN 1 ELSE 0 END) as lessTime, "
 	  		+ "SUM( CASE WHEN (dr.lateComing  > 0) THEN 1 ELSE 0 END) as lateComing, "
@@ -162,7 +162,7 @@ public interface DailyAttendanceRepository extends DataTablesRepository<DailyAtt
 	  		+ "SUM( CASE WHEN (dr.attendanceStatus = 'Present') THEN 1 ELSE 0 END) as present, "
 	  		+ "SUM( CASE WHEN (dr.empInMask = 'true') THEN 1 ELSE 0 END) as empInMask, "
 	  		+ "SUM( CASE WHEN (dr.empOutMask = 'true' and (dr.empOutTime != '' or dr.empOutTime is not null )) THEN 1 ELSE 0 END) as empOutMask, "
-	  		+ "SUM( CASE WHEN (dr.missedOutPunch = 1) THEN 1 ELSE 0 END) as missedOutPunch, "
+	  		+ "SUM( CASE WHEN (dr.missedOutPunch = 'Yes') THEN 1 ELSE 0 END) as missedOutPunch, "
 	  		+ "SUM( CASE WHEN (dr.overTime > 0) THEN 1 ELSE 0 END) as overTime, "
 	  		+ "SUM( CASE WHEN (dr.workTime != null AND dr.workTime != '8:30' and dr.overTime = null) THEN 1 ELSE 0 END) as lessTime, "
 	  		+ "SUM( CASE WHEN (dr.lateComing  > 0) THEN 1 ELSE 0 END) as lateComing, "
@@ -176,6 +176,12 @@ public interface DailyAttendanceRepository extends DataTablesRepository<DailyAtt
 
 	@Query("SELECT  dr FROM com.eikona.mata.entity.DailyAttendance as dr where dr.workTime != null and dr.workTime != '8:30' and dr.overTime = null ")
 	Page<DailyAttendance> findAllLessTimeCustom(Specification<DailyAttendance> and, Pageable pageable);
+
+	@Query("SELECT  dr FROM com.eikona.mata.entity.DailyAttendance as dr where dr.date >= :sDate and dr.date <= :eDate")
+	List<DailyAttendance> findByDateAndOrganization(Date sDate,Date eDate);
+
+	@Query("SELECT  dr.empId FROM com.eikona.mata.entity.DailyAttendance as dr where dr.date >= :sDate and dr.date <= :eDate")
+	List<String> findByDateCustom(Date sDate,Date eDate);
 
 
 

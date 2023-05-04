@@ -70,6 +70,9 @@ public interface EmployeeRepository extends DataTablesRepository<Employee, Long>
 	
 	List<Employee> findAllByIsDeletedFalseAndIsSyncFromDeviceTrue();
 
+	@Query("select e from com.eikona.mata.entity.Employee as e where e.isDeleted=false and e.empId NOT IN :empIds ")
+	List<Employee> findByEmpIdAndIsDeletedFalseCustom(List<String> empIds);
+
 
 
 

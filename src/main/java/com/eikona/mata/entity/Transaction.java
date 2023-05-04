@@ -514,6 +514,7 @@ public class Transaction implements Serializable{
 		this.cropImageByte = cropImageByte;
 	}
 
+
 	public Transaction() {
 		super();
 	}

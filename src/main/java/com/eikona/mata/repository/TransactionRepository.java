@@ -89,4 +89,9 @@ public interface TransactionRepository extends DataTablesRepository<Transaction,
 
 	@Query("Select ev.totalCount from com.eikona.mata.entity.Transaction as ev  WHERE ev.id=(SELECT max(ev.id) FROM com.eikona.mata.entity.Transaction as ev)")
 	Long findLastRecordCustom();
+
+
+	@Query("SELECT tr FROM com.eikona.mata.entity.Transaction as tr where tr.punchDate >=:sDate and tr.punchDate <=:eDate "
+			+ " and tr.empId is not null order by tr.punchDateStr asc, tr.punchTimeStr asc")
+	List<Transaction> getTransactionData(Date sDate, Date eDate);
 }

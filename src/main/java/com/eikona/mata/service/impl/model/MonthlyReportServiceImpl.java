@@ -143,6 +143,7 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
 			day++;
 		}
 		headList.add(ApplicationConstants.TOTAL_PRESENT);
+		headList.add(ApplicationConstants.TOTAL_WORKTIME);
 		headList.add(ApplicationConstants.TOTAL_OVERTIME);
 		return headList;
 	}
@@ -202,6 +203,7 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
 		Integer totalAbsentCount = NumberConstants.ZERO;
 		
 		long totalOverTime = NumberConstants.LONG_ZERO;
+		long totalWorkTime = NumberConstants.LONG_ZERO;
 		
 		List<String> dataList = new ArrayList<String>();
 		while(first <= last) {
@@ -216,13 +218,16 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
 					
 					if(null!=dailyAttendance.getOverTime())
 						totalOverTime+=dailyAttendance.getOverTime();
+					
+					if(null!=dailyAttendance.getWorkMinute())
+					    totalWorkTime+=dailyAttendance.getWorkMinute();
 
 					if(MonthlyAttendanceConstants.ABSENT.equalsIgnoreCase(dailyAttendance.getAttendanceStatus()))
 						dataList.add("A");
 					else if(MonthlyAttendanceConstants.PRESENT.equalsIgnoreCase(dailyAttendance.getAttendanceStatus()))
 						dataList.add("P");
-					else if(null == dailyAttendance.getAttendanceStatus() )
-							dataList.add(ApplicationConstants.DELIMITER_HYPHEN);
+					else
+						dataList.add(ApplicationConstants.DELIMITER_HYPHEN);
 					
 					if (dailyReportListItr.hasNext()) {
 						dailyAttendance = dailyReportListItr.next();
@@ -240,7 +245,8 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
 		
 		monthlyDailyReportDto.setTotalPresentCount(String.valueOf(totalPresentCount));
 		monthlyDailyReportDto.setTotalAbsentCount(String.valueOf(lastDayOfMonth-totalPresentCount));
-		monthlyDailyReportDto.setTotalOverTime(String.valueOf(totalOverTime/60));
+		monthlyDailyReportDto.setTotalWorkTime(String.valueOf(totalWorkTime/60)+":"+String.valueOf(totalWorkTime%60));
+		monthlyDailyReportDto.setTotalOverTime(String.valueOf(totalOverTime/60)+":"+String.valueOf(totalOverTime%60));
 		
 		monthlyDailyReportDto.setTotalDays(String.valueOf(lastDayOfMonth));
 		
@@ -361,6 +367,10 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
 
 			cell = row.createCell(columnCount++);
 			cell.setCellValue(monthlyDetail.getTotalPresentCount());
+			cell.setCellStyle(cellStyle);
+			
+			cell = row.createCell(columnCount++);
+			cell.setCellValue(monthlyDetail.getTotalWorkTime());
 			cell.setCellStyle(cellStyle);
 			
 			cell = row.createCell(columnCount++);

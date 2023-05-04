@@ -430,11 +430,14 @@
 					'<td><b>Office</b></td>'+
 					'<td><b>Department</b></td>'+
 					'<td><b>Designation</b></td>'+
+					'<td><b>City</b></td>'+
+					'<td><b>Shift</b></td>'+
 					'<th><b>Shift In Time</b></th>'+
 					'<th><b>Shift Out Time</b></th>'+
 					'<th><b>Employee In Time</b></th>'+
 					'<th><b>Employee Out Time</b></th>'+
 					'<th><b>Work Time</b></th>'+
+					'<th><b>Over Time</b></th>'+
 					'<th><b>Early Coming</b></th>'+
 					'<th><b>Late Going</b></th>'+
 					'<th><b>Early Going</b></th>'+
@@ -469,6 +472,10 @@
 		   			'</th><th>'+
 		   				'<button  value="'+result.page_number+'-designation-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Designation</b></button>'+
 		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-city-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>City</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-shift-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Shift</b></button>'+
+		   			'</th><th>'+
 		   				'<button  value="'+result.page_number+'-shiftInTime-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Shift In Time</b></button>'+
 		   			'</th><th>'+
 		   				'<button  value="'+result.page_number+'-shiftOutTime-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Shift Out Time</b></button>'+
@@ -478,6 +485,8 @@
 		   				'<button  value="'+result.page_number+'-empOutTime-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Employee Out Time</b></button>'+
 		   			'</th><th>'+
 		   				'<button  value="'+result.page_number+'-workTime-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Work Time</b></button>'+
+		   			'</th><th>'+
+		   				'<button  value="'+result.page_number+'-overTime-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Over Time</b></button>'+
 		   			'</th><th>'+
 		   				'<button  value="'+result.page_number+'-earlyComing-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Early Coming</b></button>'+
 		   			'</th><th>'+
@@ -493,7 +502,7 @@
 		   			'</th><th>'+
 		   				'<button  value="'+result.page_number+'-empOutTemp-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Employee Out Temp</b></button>'+
 		   			'</th><th>'+
-		   				'<button  value="'+result.page_number+'-empInMask-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Employee In MasK</b></button>'+
+		   				'<button  value="'+result.page_number+'-empInMask-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Employee In Mask</b></button>'+
 		   			'</th><th>'+
 		   				'<button  value="'+result.page_number+'-empOutMask-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Employee Out Mask</b></button>'+
 		   			'</th><th>'+
@@ -521,11 +530,14 @@
 	            	'<td>' + ((null != customer.office)?customer.office:'') + '</td>'+
 	            	'<td>' + ((null != customer.department)?customer.department:'')+ '</td>'+
                		'<td>' + ((null != customer.designation)?customer.designation:'')+ '</td>' +
+               		'<td>' + ((null != customer.city)?customer.city:'')+ '</td>' +
+               		'<td>' + ((null != customer.shift)?customer.shift:'')+ '</td>' +
                		'<td>' + ((null != customer.shiftInTime)?customer.shiftInTime:'')+ '</td>' +
                		'<td>' + ((null != customer.shiftOutTime)?customer.shiftOutTime:'')+ '</td>' +
                		'<td>' + ((null != customer.empInTime)?customer.empInTime:'')+ '</td>' +
                		'<td>' + ((null != customer.empOutTime)?customer.empOutTime:'')+ '</td>' +
                		'<td>' + ((null != customer.workTime)?customer.workTime:'') + '</td>'+
+               		'<td>' + ((null != customer.overTimeStr)?customer.overTimeStr:'') + '</td>'+
                		'<td>' + ((null != customer.earlyComing)?customer.earlyComing:'') + '</td>'+
                		'<td>' + ((null != customer.lateGoing)?customer.lateGoing:'') + '</td>'+
                		'<td>' + ((null != customer.earlyGoing)?customer.earlyGoing:'') + '</td>'+
@@ -692,6 +704,7 @@
 			
 			//Export In Excel
 			$(document).on('click', '.export-data-by-search', function(e) {
+				uncheckedAppend();
 				var type = $(this).val();
 				var sDate = document.getElementById('startDate').value;
 	            var eDate = document.getElementById('endDate').value;
@@ -701,7 +714,7 @@
 	            var designation = document.getElementById('designation').value;
 	            var department = document.getElementById('department').value;
 				var status = document.getElementById('status').value;
-				
+				uncheckedRemove();
                 
                 if("excel" == type){
                 	exportData(sDate,eDate,employeeName,employeeId,designation,department,office,status,"xlsx");

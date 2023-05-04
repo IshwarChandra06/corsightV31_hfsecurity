@@ -29,5 +29,6 @@ public class DailyAttendanceConstants {
 	public static final String DAILY_ATTENDANCE_REPORT = "Daily Attendance Report";
 	
 	public static final String EIGHT_COLON_THIRTY = "8:30";
+	public static final String NINE_COLON_ZERO = "9:00";
 
 }

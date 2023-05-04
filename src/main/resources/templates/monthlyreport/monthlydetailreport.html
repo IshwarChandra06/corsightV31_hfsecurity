@@ -362,6 +362,7 @@
 				       	});
 				        table_data +=data_list;
 				        table_data += '<td>' + customer.totalPresentCount+'</td>' +
+				        '<td>' + customer.totalWorkTime+'</td>' +
 		               	 '<td>' + customer.totalOverTime+'</td>' ;
 		        	'</tr>';
 				})
@@ -517,13 +518,14 @@
 			
 			//Excel
 			$(document).on('click', '.export-data-by-search', function(e) {
+				   uncheckedAppend();
 				    var type = $(this).val();
 				    var date = document.getElementById('month').value;
 				 	var employeeName = document.getElementById('employeeName').value;
 		            var employeeId = document.getElementById('employeeId').value;
 		            var designation = document.getElementById('designation').value;
 		            var department = document.getElementById('department').value;
-		            
+		            uncheckedRemove();
 		            if("excel" == type){
 	                	exportData(date,employeeName,employeeId,designation,department,"xlsx");
 	                }

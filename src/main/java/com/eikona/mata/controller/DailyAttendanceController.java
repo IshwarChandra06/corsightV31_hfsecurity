@@ -24,6 +24,7 @@ import com.eikona.mata.service.BranchService;
 import com.eikona.mata.service.DailyAttendanceService;
 import com.eikona.mata.service.DepartmentService;
 import com.eikona.mata.service.DesignationService;
+import com.eikona.mata.service.impl.model.DailyAttendanceServiceImpl;
 import com.eikona.mata.service.impl.model.ShiftWiseDailyReportServiceImpl;
 import com.eikona.mata.util.ExportDailyAttendance;
 
@@ -31,7 +32,7 @@ import com.eikona.mata.util.ExportDailyAttendance;
 public class DailyAttendanceController {
 
 	@Autowired
-	private DailyAttendanceService dailyAttendanceService;
+	private DailyAttendanceServiceImpl dailyAttendanceService;
 
 	@Autowired
 	private DepartmentService departmentService;
@@ -66,8 +67,9 @@ public class DailyAttendanceController {
 	@GetMapping("/get/daily-attendance")
 	@PreAuthorize("hasAuthority('dailyreport_generate')")
 	public String generateDailyReportReportAction(String sDate,String eDate) {
-		dailyAttendanceService.generateDailyAttendance(sDate, eDate);
-		return "redirect:/daily-reports";
+		dailyAttendanceService.generateDailyAttendanceShiftWise(sDate, eDate);
+		dailyAttendanceService.generateNotPunchDailyAttendance(sDate, eDate);
+		return "reports/generateDailyAttendance";
 	}
 	
 	@GetMapping(value = "/generate/daily-attendance/shift")

@@ -351,7 +351,8 @@ public class CorsightDeviceServiceImpl implements DeviceSyncAbstractService<Stri
 				Date punchDate = new Date(ts.getTime() * NumberConstants.THOUSAND);
 				
 				JSONObject matchDataObject = (JSONObject) currobj.get(CorsightDeviceConstants.MATCH_DATA);
-				String empId=(String) matchDataObject.get(CorsightDeviceConstants.POI_DISPLAY_NAME);
+//				String empId=(String) matchDataObject.get(CorsightDeviceConstants.POI_DISPLAY_NAME);
+				String empId=(String) matchDataObject.get(CorsightDeviceConstants.POI_ID);
 				
 				
 				Transaction eventReport = transactionRepository.findByEmpIdAndPunchDate(empId,punchDate);
@@ -473,10 +474,11 @@ public class CorsightDeviceServiceImpl implements DeviceSyncAbstractService<Stri
 
 	private void setEmployeeDetails(JSONObject matchDataObject, Transaction event) {
 		if (null != matchDataObject.get(CorsightDeviceConstants.POI_DISPLAY_NAME)) {
-			Employee employee = employeeRepository.findByEmpIdAndIsDeletedFalse((String) matchDataObject.get(CorsightDeviceConstants.POI_DISPLAY_NAME));
+			Employee employee = employeeRepository.findByEmpIdAndIsDeletedFalse((String) matchDataObject.get(CorsightDeviceConstants.POI_ID));
 
 			if (null != employee) {
 				event.setName(employee.getName());	
+				event.setEmployee(employee);
 				if (null != employee.getDepartment())
 					event.setDepartment(employee.getDepartment().getName());
 
@@ -486,7 +488,7 @@ public class CorsightDeviceServiceImpl implements DeviceSyncAbstractService<Stri
 				if (null != employee.getBranch())
 					event.setBranch(employee.getBranch().getName());
 			}
-			event.setEmpId((String) matchDataObject.get(CorsightDeviceConstants.POI_DISPLAY_NAME));
+			event.setEmpId((String) matchDataObject.get(CorsightDeviceConstants.POI_ID));
 		}
 	}
 

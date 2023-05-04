@@ -15,6 +15,7 @@ import com.eikona.mata.constants.CorsightDeviceConstants;
 import com.eikona.mata.constants.MessageConstants;
 import com.eikona.mata.constants.NumberConstants;
 import com.eikona.mata.entity.Employee;
+import com.eikona.mata.entity.Organization;
 import com.eikona.mata.repository.EmployeeRepository;
 import com.eikona.mata.util.RequestExecutionUtil;
 
@@ -33,10 +34,10 @@ public class EmployeeSync {
 	@Value("${corsight.poi.port}")
     private String poiPort;
 
-	public String syncEmployee() {
+	public String syncEmployee(Organization organization) {
 		try {
 			String afterId = ApplicationConstants.DELIMITER_EMPTY;
-			getEmployeeList(afterId);
+			getEmployeeList(afterId,organization);
 			return MessageConstants.SYNC_SUCCESSFULLY;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -44,7 +45,7 @@ public class EmployeeSync {
 		}
 	}
 
-	public void getEmployeeList(String afterId) throws Exception {
+	public void getEmployeeList(String afterId, Organization organization) throws Exception {
 
 			String poiUrl = ApplicationConstants.HTTPS_COLON_DOUBLE_SLASH + corsightHost
 					+ ApplicationConstants.DELIMITER_COLON + poiPort;
@@ -64,17 +65,17 @@ public class EmployeeSync {
 			JSONArray jsonArray = (JSONArray) jsonResponseData.get(CorsightDeviceConstants.POIS);
 			List<Employee> WorkerList = new ArrayList<>();
            System.out.println(jsonResponseData.toString());
-			setEmployeeDetails(jsonArray, WorkerList);
+			setEmployeeDetails(jsonArray, WorkerList,organization);
 
 			if (!WorkerList.isEmpty()) {
 				afterId = WorkerList.get(WorkerList.size() - 1).getPoi();
 
-				getEmployeeList(afterId);
+				getEmployeeList(afterId, organization);
 
 			}
 	}
 
-	private void setEmployeeDetails(JSONArray jsonArray, List<Employee> WorkerList) {
+	private void setEmployeeDetails(JSONArray jsonArray, List<Employee> WorkerList, Organization organization) {
 		for (int i = NumberConstants.ZERO; i < jsonArray.size(); i++) {
 			JSONObject jsonData = (JSONObject) jsonArray.get(i);
 
@@ -84,12 +85,14 @@ public class EmployeeSync {
 				workerObj.setName((String) jsonData.get(CorsightDeviceConstants.DISPLAY_NAME));
 				workerObj.setPoi((String) jsonData.get(CorsightDeviceConstants.POI_ID));
 				workerObj.setEmpId((String) jsonData.get(CorsightDeviceConstants.POI_ID));
+				workerObj.setOrganization(organization);
 				employeeRepository.save(workerObj);
 				WorkerList.add(workerObj);
 			}else {
 				employee.setName((String) jsonData.get(CorsightDeviceConstants.DISPLAY_NAME));
 				employee.setPoi((String) jsonData.get(CorsightDeviceConstants.POI_ID));
 				employee.setEmpId((String) jsonData.get(CorsightDeviceConstants.POI_ID));
+				employee.setOrganization(organization);
 				employeeRepository.save(employee);
 				WorkerList.add(employee);
 			}

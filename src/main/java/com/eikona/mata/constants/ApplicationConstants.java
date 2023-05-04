@@ -124,6 +124,7 @@ public final class ApplicationConstants {
 	public static final String TOTAL_PRESENT = "Total Present";
 	public static final String TOTAL_OVERTIME = "Total Overtime (In Hr)";
 	public static final String LAST_MODIFIED_DATE = "lastModifiedDate";
+	public static final String TOTAL_WORKTIME = "Total Worktime (In Hr)";
 	
 	
 	

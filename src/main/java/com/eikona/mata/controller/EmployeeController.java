@@ -40,7 +40,10 @@ import com.eikona.mata.dto.PaginationDto;
 import com.eikona.mata.entity.Area;
 import com.eikona.mata.entity.Device;
 import com.eikona.mata.entity.Employee;
+import com.eikona.mata.entity.Organization;
+import com.eikona.mata.entity.User;
 import com.eikona.mata.repository.EmployeeRepository;
+import com.eikona.mata.repository.UserRepository;
 import com.eikona.mata.service.AreaService;
 import com.eikona.mata.service.BranchService;
 import com.eikona.mata.service.DepartmentService;
@@ -60,6 +63,9 @@ public class EmployeeController {
 	
 	@Autowired
 	private EmployeeRepository employeeRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
 	
 	@Autowired
 	private OrganizationService organizationService;
@@ -210,17 +216,18 @@ public class EmployeeController {
 	
 	@GetMapping("/employee-sync")
 	@PreAuthorize("hasAuthority('employee_sync')")
-	private String poiSync(Model model) {
-		String message = syncEmployee();
+	private String poiSync(Model model,Principal principal) {
+		User user=userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String message = syncEmployee(user.getOrganization());
 		model.addAttribute("message",message);
 		model.addAttribute("corsightEnabled",true);
 		model.addAttribute("cosecEnabled",cosecEnabled);
 		return "employee/employee_list";
 	}
-	public String syncEmployee() {
+	public String syncEmployee(Organization organization) {
 		try {
 			String afterId = ApplicationConstants.DELIMITER_EMPTY;
-			employeeSync.getEmployeeList(afterId);
+			employeeSync.getEmployeeList(afterId,organization);
 			return MessageConstants.SYNC_SUCCESSFULLY;
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -7,8 +7,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -54,6 +57,248 @@ public class DailyAttendanceServiceImpl implements DailyAttendanceService {
 	@Override
 	public List<DailyAttendance> findAll() {
 		return (List<DailyAttendance>) dailyAttendanceRepository.findAll();
+	}
+	
+   public void generateNotPunchDailyAttendance(String sDate, String eDate) {
+		
+		try {
+			
+			SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			sDate = format.format(inputFormat.parse(sDate));
+			eDate = format.format(inputFormat.parse(eDate));
+			
+			Date startDate = calendarUtil.getConvertedDate(format.parse(sDate), 00, 00, 00);
+			Date endDate = calendarUtil.getConvertedDate(format.parse(eDate), 23, 59, 59);
+			
+			List<String> dailyReportEmpIdList = dailyAttendanceRepository.findByDateCustom(startDate, endDate);
+			
+			if(dailyReportEmpIdList.isEmpty())
+				dailyReportEmpIdList.add(" ");
+			
+			List<Employee> absentEmployeeList = employeeRepository.findByEmpIdAndIsDeletedFalseCustom(dailyReportEmpIdList);
+			List<DailyAttendance> dailyReportList = new ArrayList<>();
+			for(Employee employee : absentEmployeeList) {
+				
+				DailyAttendance dailyReport = new DailyAttendance();
+				dailyReport.setEmpId(employee.getEmpId().trim());
+				dailyReport.setDateStr(sDate);
+				dailyReport.setDate(startDate);
+				dailyReport.setEmployeeName(employee.getName());
+				dailyReport.setOrganization((null == employee.getOrganization()?"":employee.getOrganization().getName()));
+				dailyReport.setDepartment((null == employee.getDepartment()?"":employee.getDepartment().getName()));
+				dailyReport.setDesignation((null == employee.getDesignation()?"":employee.getDesignation().getName()));
+				if(null!=employee.getBranch())
+					  dailyReport.setBranch(employee.getBranch().getName());
+				dailyReport.setAttendanceStatus("-");
+				dailyReport.setMissedOutPunch("No");
+				dailyReportList.add(dailyReport);
+				
+			}
+			
+			dailyAttendanceRepository.saveAll(dailyReportList);
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
+	public List<DailyAttendance> generateDailyAttendanceShiftWise(String sDate, String eDate) {
+
+		List<DailyAttendance> dailyReportList = new ArrayList<>();
+		try {
+			
+			SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			sDate = format.format(inputFormat.parse(sDate));
+			eDate = format.format(inputFormat.parse(eDate));
+			
+			Date startDate = calendarUtil.getConvertedDate(format.parse(sDate), 00, 00, 00);
+			Date endDate = calendarUtil.getConvertedDate(format.parse(eDate), 23, 59, 59);
+	
+			List<Transaction> transactionList = transactionRepository.getTransactionData(startDate,endDate);
+			
+			Map<String, DailyAttendance> reportMap = new HashMap<String, DailyAttendance>();
+
+			for (Transaction transaction : transactionList) {
+	
+				try {
+					
+					String key = transaction.getEmpId() + "-" + transaction.getPunchDateStr();
+					key = key.trim();
+					DailyAttendance dailyReport = null;
+					
+					if(!reportMap.containsKey(key)) {
+						
+						dailyReport = new DailyAttendance();
+						dailyReport.setEmpId(transaction.getEmpId().trim());
+						dailyReport.setDateStr(transaction.getPunchDateStr());
+						dailyReport.setDate(format.parse(transaction.getPunchDateStr()));
+						dailyReport.setEmployeeName(transaction.getName());
+						dailyReport.setOrganization(transaction.getEmployee().getOrganization().getName());
+						dailyReport.setDepartment(transaction.getDepartment());
+						dailyReport.setDesignation(transaction.getDesignation());
+						if(null!=transaction.getEmployee().getBranch())
+						  dailyReport.setBranch(transaction.getEmployee().getBranch().getName());
+						dailyReport.setMissedOutPunch("Yes");
+						dailyReport.setEmpInTime(transaction.getPunchTimeStr());
+						dailyReport.setEmpInTemp(transaction.getTemperature());
+						dailyReport.setEmpInMask(transaction.getMaskStatus());
+						dailyReport.setEmpInAccessType("Face");
+						dailyReport.setEmpInLocation(transaction.getDeviceName());
+						dailyReport.setAttendanceStatus("Present");
+						String city = "Moscow";
+						System.out.println(transaction.getPunchTimeStr());
+							int hour = Integer.parseInt(transaction.getPunchTimeStr().split(":")[0]);
+							int minute = Integer.parseInt(transaction.getPunchTimeStr().split(":")[1]);
+							if(hour > 5 && hour<19){
+								
+								if (hour<7) {
+									dailyReport.setShift("1 смена"); 
+									dailyReport.setShiftInTime("07:00:00");
+									dailyReport.setShiftOutTime("16:00:00");
+							}
+							
+							if(hour == 7) {
+								if(minute <= 10) {
+									dailyReport.setShift("1 смена"); 
+									dailyReport.setShiftInTime("07:00:00");
+									dailyReport.setShiftOutTime("16:00:00");
+								}else if(minute > 10) {
+									dailyReport.setShift("2 смена"); 
+									dailyReport.setShiftInTime("08:00:00");
+									dailyReport.setShiftOutTime("17:00:00");
+								}
+									
+							}
+							
+							if(hour == 8) {
+								if(minute <= 10) {
+									dailyReport.setShift("2 смена"); 
+									dailyReport.setShiftInTime("08:00:00");
+									dailyReport.setShiftOutTime("17:00:00");
+								}else if(minute > 10) {
+									dailyReport.setShift("3 смена"); 
+									dailyReport.setShiftInTime("09:00:00");
+									dailyReport.setShiftOutTime("18:00:00");
+								}
+									
+							}
+							
+							if(hour == 9) {
+								if(minute <= 10) {
+									dailyReport.setShift("3 смена"); 
+									dailyReport.setShiftInTime("09:00:00");
+									dailyReport.setShiftOutTime("18:00:00");
+								}else if(minute > 10) {
+									dailyReport.setShift("4 смена"); 
+									dailyReport.setShiftInTime("10:00:00");
+									dailyReport.setShiftOutTime("19:00:00");
+								}
+									
+							}
+							
+							if(hour >=10 && hour < 19) {
+								dailyReport.setShift("4 смена"); 
+								dailyReport.setShiftInTime("10:00:00");
+								dailyReport.setShiftOutTime("19:00:00");
+						}
+						
+						dailyReport.setCity(city);
+	
+						LocalTime shiftIn = LocalTime.parse(dailyReport.getShiftInTime());
+						LocalTime empIn = LocalTime.parse(dailyReport.getEmpInTime().replace("'", ""));
+	
+						Long lateComing = shiftIn.until(empIn, ChronoUnit.MINUTES);
+						Long earlyComing = empIn.until(shiftIn, ChronoUnit.MINUTES);
+	
+						if (earlyComing > 0)
+							dailyReport.setEarlyComing(earlyComing);
+	
+						if (lateComing > 0)
+							dailyReport.setLateComing(lateComing);
+						
+						dailyReport.setCity(city);
+						reportMap.put(key, dailyReport);
+							}
+							
+					} else {
+						
+						dailyReport = reportMap.get(key);
+						if (dailyReport.getEmpInTime().equalsIgnoreCase(transaction.getPunchTimeStr())) {
+							continue;
+						} else {
+							
+							dailyReport.setEmpOutTime(transaction.getPunchTimeStr());
+							dailyReport.setEmpOutTemp(transaction.getTemperature());
+							dailyReport.setEmpOutMask(transaction.getMaskStatus());
+							dailyReport.setEmpOutAccessType("Face");
+							dailyReport.setEmpOutLocation(transaction.getDeviceName());
+	
+							dailyReport.setMissedOutPunch("No");
+	
+							LocalTime shiftIn = LocalTime.parse(dailyReport.getShiftInTime());
+							LocalTime shiftOut = LocalTime.parse(dailyReport.getShiftOutTime());
+							LocalTime empIn = LocalTime.parse(dailyReport.getEmpInTime());
+							LocalTime empOut = LocalTime.parse(dailyReport.getEmpOutTime());
+	
+                            Long shiftMinutes = shiftIn.until(shiftOut, ChronoUnit.MINUTES);
+							
+	
+							Long workHours = empIn.until(empOut, ChronoUnit.HOURS);
+							Long workMinutes = empIn.until(empOut, ChronoUnit.MINUTES);
+							
+							if(workHours<0) {
+								workHours = 24 + workHours;
+								workMinutes = 60 + workMinutes;
+							}
+							
+	
+							dailyReport.setWorkTime(String.valueOf(workHours) + ":" + String.valueOf(workMinutes % 60));
+							dailyReport.setWorkMinute(workMinutes);
+	
+							Long overTime = workMinutes - shiftMinutes;
+							Long earlyGoing =0l;
+							Long lateGoing =0l;
+							
+							 lateGoing = shiftOut.until(empOut, ChronoUnit.MINUTES);
+							 earlyGoing = empOut.until(shiftOut, ChronoUnit.MINUTES);
+	
+							if (lateGoing > 0)
+								dailyReport.setLateGoing(lateGoing);
+							else
+								dailyReport.setLateGoing(null);
+	
+							if (earlyGoing > 0) {
+								dailyReport.setEarlyGoing(earlyGoing);
+							} else {
+								dailyReport.setEarlyGoing(null);
+							}
+	
+							if (overTime > 0) {
+								dailyReport.setOverTime(overTime);
+								dailyReport.setOverTimeStr(overTime/60+":"+(overTime % 60));
+							}
+								
+							
+							reportMap.put(key, dailyReport);
+						}
+					}
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+		
+			Set<String> keySet =  reportMap.keySet();
+			for (String string : keySet) {
+				dailyReportList.add(reportMap.get(string));
+			}
+			dailyAttendanceRepository.saveAll(dailyReportList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dailyReportList;
 	}
 
 	@Override
@@ -110,7 +355,7 @@ public class DailyAttendanceServiceImpl implements DailyAttendanceService {
 
 				dailyAttendance.setDate(startCalendar.getTime());
 				dailyAttendance.setDateStr(format.format(startCalendar.getTime()));
-				setEmployeeDetails(employee, dailyAttendance);
+				setEmployeeDetails(employee, dailyAttendance); 
 
 				if (eventReportMinList.isEmpty() && eventReportMaxList.isEmpty()) {
 					// absent
@@ -338,9 +583,9 @@ public class DailyAttendanceServiceImpl implements DailyAttendanceService {
 			sortField = ApplicationConstants.ID;
 		}
 
-		Specification<DailyAttendance> flagSpec = generalSpecificationDailyAttendance.stringSpecification(ApplicationConstants.TRUE, DailyAttendanceConstants.MISSED_OUT_PUNCH);
-
-		Page<DailyAttendance> page = getDailyAttendancePage(id, employeeId, employeeName, office, organization, department,
+		Specification<DailyAttendance> flagSpec = generalSpecificationDailyAttendance.stringSpecification(ApplicationConstants.YES, DailyAttendanceConstants.MISSED_OUT_PUNCH);
+      
+		Page<DailyAttendance> page = getDailyAttendancePage(id, employeeId, employeeName,  organization,office, department,
 				designation, pageno, sortField, sortDir, startDate, endDate, flagSpec);
 		List<DailyAttendance> employeeShiftList = page.getContent();
 
@@ -647,10 +892,10 @@ public class DailyAttendanceServiceImpl implements DailyAttendanceService {
 		Specification<DailyAttendance> empIdSpec = generalSpecificationDailyAttendance.stringSpecification(employeeId, DailyAttendanceConstants.EMPLOYEE_ID);
 		Specification<DailyAttendance> empNameSpec = generalSpecificationDailyAttendance.stringSpecification(employeeName, DailyAttendanceConstants.EMPLOYEE_NAME);
 		Specification<DailyAttendance> orgSpec = generalSpecificationDailyAttendance.stringSpecification(organization, "organization");
-		Specification<DailyAttendance> offSpec = generalSpecificationDailyAttendance.stringSpecification(office, DailyAttendanceConstants.OFFICE);
+		Specification<DailyAttendance> offSpec = generalSpecificationDailyAttendance.stringSpecification(office, DailyAttendanceConstants.BRANCH);
 		Specification<DailyAttendance> deptSpec = generalSpecificationDailyAttendance.stringSpecification(department, DailyAttendanceConstants.DEPARTMENT);
 		Specification<DailyAttendance> desiSpec = generalSpecificationDailyAttendance.stringSpecification(designation, DailyAttendanceConstants.DESIGNATION);
-
+		 List<DailyAttendance> l1= dailyAttendanceRepository.findAll(flagSpec.and(dateSpec).and(offSpec));
 		Page<DailyAttendance> page = dailyAttendanceRepository.findAll(flagSpec.and(idSpec).and(dateSpec).and(empIdSpec)
 				.and(empNameSpec).and(offSpec).and(deptSpec).and(desiSpec).and(orgSpec), pageable);
 		return page;

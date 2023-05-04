@@ -118,6 +118,12 @@ public class DailyAttendance implements Serializable {
 	@Column(name = "work_time")
 	private String workTime;
 	
+	@Column(name = "work_minute")
+	private Long workMinute;
+	
+	@Column
+	private String overTimeStr;
+	
 	@Column(name ="as_per_roster")
 	private String asPerRoster;
 	
@@ -406,6 +412,22 @@ public class DailyAttendance implements Serializable {
 
 	public void setSecondHalf(String secondHalf) {
 		this.secondHalf = secondHalf;
+	}
+
+	public String getOverTimeStr() {
+		return overTimeStr;
+	}
+
+	public void setOverTimeStr(String overTimeStr) {
+		this.overTimeStr = overTimeStr;
+	}
+
+	public Long getWorkMinute() {
+		return workMinute;
+	}
+
+	public void setWorkMinute(Long workMinute) {
+		this.workMinute = workMinute;
 	}
 	
 	

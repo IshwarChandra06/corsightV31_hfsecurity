@@ -78,7 +78,6 @@ $(document).ready(function(){
 		$(".spinner").show();
 		var sDate = document.getElementById('sDate').value;
         var eDate = document.getElementById('eDate').value;
-        console.log(sDate)
 		checkDate(sDate,eDate);
 		
 	})
@@ -103,14 +102,13 @@ $(document).ready(function(){
 				var eDay = new Date(eDateParts[2]+"-"+eDateParts[1]+"-"+eDateParts[0]);
 				var today =new Date(new Date().toISOString().slice(0, 10));
 				var diffDays = parseInt((eDay - sDay) / (1000 * 60 * 60 * 24), 10);
-				console.log(diffDays)
 				if(sDay > eDay){
 					$(".spinner").hide();
 				   alert("Start Date Is Greater Than End Date !");
 				}
-				else if(diffDays>1){
+				else if(diffDays>0){
 					$(".spinner").hide();
-				   alert("You Can Calculate maximum Last 2 Days Data !");
+				   alert("You Can Calculate maximum Only 1 Day Data !");
 				}else{
 					 var data = {
 			            		"sDate" : from,

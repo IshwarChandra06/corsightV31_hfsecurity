@@ -14,6 +14,7 @@ public class MonthlyAttendanceDto {
 	private String totalAbsentCount;
 	private String mobile;
 	private String totalOverTime;
+	private String totalWorkTime;
 	private String totalDays;
 
 	private List<String> dateList;
@@ -118,6 +119,14 @@ public class MonthlyAttendanceDto {
 
 	public void setDateList(List<String> dateList) {
 		this.dateList = dateList;
+	}
+
+	public String getTotalWorkTime() {
+		return totalWorkTime;
+	}
+
+	public void setTotalWorkTime(String totalWorkTime) {
+		this.totalWorkTime = totalWorkTime;
 	}
 	
 }

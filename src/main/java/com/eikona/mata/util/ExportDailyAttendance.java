@@ -164,7 +164,15 @@ public class ExportDailyAttendance {
 			cell = row.createCell(columnCount++);
 			cell.setCellValue(dailyAttendance.getBranch());
 			cell.setCellStyle(cellStyle);
-
+			
+			cell = row.createCell(columnCount++);
+			cell.setCellValue(dailyAttendance.getCity());
+			cell.setCellStyle(cellStyle);
+			
+			cell = row.createCell(columnCount++);
+			cell.setCellValue(dailyAttendance.getShift());
+			cell.setCellStyle(cellStyle);
+			
 			cell = row.createCell(columnCount++);
 			cell.setCellValue(dailyAttendance.getShiftInTime());
 			cell.setCellStyle(cellStyle);
@@ -183,6 +191,10 @@ public class ExportDailyAttendance {
 
 			cell = row.createCell(columnCount++);
 			cell.setCellValue(dailyAttendance.getWorkTime());
+			cell.setCellStyle(cellStyle);
+			
+			cell = row.createCell(columnCount++);
+			cell.setCellValue(dailyAttendance.getOverTimeStr());
 			cell.setCellStyle(cellStyle);
 
 			cell = row.createCell(columnCount++);
@@ -248,6 +260,7 @@ public class ExportDailyAttendance {
 			cell = row.createCell(columnCount++);
 			cell.setCellValue(dailyAttendance.getEmpOutAccessType());
 			cell.setCellStyle(cellStyle);
+			
 
 		}
 	}
@@ -285,78 +298,90 @@ public class ExportDailyAttendance {
 		cell.setCellStyle(cellStyle);
 
 		cell = row.createCell(NumberConstants.EIGHT);
-		cell.setCellValue(HeaderConstants.BRANCH);
+		cell.setCellValue(HeaderConstants.OFFICE);
 		cell.setCellStyle(cellStyle);
-
+		
 		cell = row.createCell(NumberConstants.NINE);
-		cell.setCellValue(HeaderConstants.SHIFT_IN_TIME);
+		cell.setCellValue(HeaderConstants.CITY);
 		cell.setCellStyle(cellStyle);
 
 		cell = row.createCell(NumberConstants.TEN);
+		cell.setCellValue(HeaderConstants.SHIFT);
+		cell.setCellStyle(cellStyle);
+		
+		cell = row.createCell(NumberConstants.ELEVEN);
+		cell.setCellValue(HeaderConstants.SHIFT_IN_TIME);
+		cell.setCellStyle(cellStyle);
+
+		cell = row.createCell(NumberConstants.TWELVE);
 		cell.setCellValue(HeaderConstants.SHIFT_OUT_TIME);
 		cell.setCellStyle(cellStyle);
 
-		cell = row.createCell(NumberConstants.ELEVEN);
+		cell = row.createCell(NumberConstants.THIRTEEN);
 		cell.setCellValue(HeaderConstants.EMP_IN_TIME);
 		cell.setCellStyle(cellStyle);
 		
-		cell = row.createCell(NumberConstants.TWELVE);
+		cell = row.createCell(NumberConstants.FOURTEEN);
 		cell.setCellValue(HeaderConstants.EMP_OUT_TIME);
 		cell.setCellStyle(cellStyle);
 
-		cell = row.createCell(NumberConstants.THIRTEEN);
+		cell = row.createCell(NumberConstants.FIFTEEN);
 		cell.setCellValue(HeaderConstants.WORK_TIME);
 		cell.setCellStyle(cellStyle);
-
-		cell = row.createCell(NumberConstants.FOURTEEN);
-		cell.setCellValue(HeaderConstants.EARLY_COMING);
-		cell.setCellStyle(cellStyle);
-
-		cell = row.createCell(NumberConstants.FIFTEEN);
-		cell.setCellValue(HeaderConstants.LATE_GOING);
-		cell.setCellStyle(cellStyle);
-
+		
 		cell = row.createCell(NumberConstants.SIXTEEN);
-		cell.setCellValue(HeaderConstants.EARLY_GOING);
+		cell.setCellValue(HeaderConstants.OVER_TIME);
 		cell.setCellStyle(cellStyle);
 
 		cell = row.createCell(NumberConstants.SEVENTEEN);
-		cell.setCellValue(HeaderConstants.LATE_COMING);
+		cell.setCellValue(HeaderConstants.EARLY_COMING);
 		cell.setCellStyle(cellStyle);
-		
+
 		cell = row.createCell(NumberConstants.EIGHTEEN);
-		cell.setCellValue(HeaderConstants.MISSED_OUT_PUNCH);
+		cell.setCellValue(HeaderConstants.LATE_GOING);
 		cell.setCellStyle(cellStyle);
-		
+
 		cell = row.createCell(NumberConstants.NINETEEN);
-		cell.setCellValue(HeaderConstants.EMP_IN_TEMP);
+		cell.setCellValue(HeaderConstants.EARLY_GOING);
 		cell.setCellStyle(cellStyle);
 
 		cell = row.createCell(NumberConstants.TWENTY);
-		cell.setCellValue(HeaderConstants.EMP_OUT_TEMP);
+		cell.setCellValue(HeaderConstants.LATE_COMING);
 		cell.setCellStyle(cellStyle);
-
+		
 		cell = row.createCell(NumberConstants.TWENTY_ONE);
-		cell.setCellValue(HeaderConstants.EMP_IN_MASK);
+		cell.setCellValue(HeaderConstants.MISSED_OUT_PUNCH);
 		cell.setCellStyle(cellStyle);
-
+		
 		cell = row.createCell(NumberConstants.TWENTY_TWO);
-		cell.setCellValue(HeaderConstants.EMP_OUT_MASK);
+		cell.setCellValue(HeaderConstants.EMP_IN_TEMP);
 		cell.setCellStyle(cellStyle);
 
 		cell = row.createCell(NumberConstants.TWENTY_THREE);
-		cell.setCellValue(HeaderConstants.EMP_IN_LOCATION);
+		cell.setCellValue(HeaderConstants.EMP_OUT_TEMP);
 		cell.setCellStyle(cellStyle);
 
 		cell = row.createCell(NumberConstants.TWENTY_FOUR);
-		cell.setCellValue(HeaderConstants.EMP_OUT_LOCATION);
+		cell.setCellValue(HeaderConstants.EMP_IN_MASK);
 		cell.setCellStyle(cellStyle);
-		
+
 		cell = row.createCell(NumberConstants.TWENTY_FIVE);
-		cell.setCellValue(HeaderConstants.EMP_IN_ACCESS_TYPE);
+		cell.setCellValue(HeaderConstants.EMP_OUT_MASK);
 		cell.setCellStyle(cellStyle);
 
 		cell = row.createCell(NumberConstants.TWENTY_SIX);
+		cell.setCellValue(HeaderConstants.EMP_IN_LOCATION);
+		cell.setCellStyle(cellStyle);
+
+		cell = row.createCell(NumberConstants.TWENTY_SEVEN);
+		cell.setCellValue(HeaderConstants.EMP_OUT_LOCATION);
+		cell.setCellStyle(cellStyle);
+		
+		cell = row.createCell(NumberConstants.TWENTY_EIGHT);
+		cell.setCellValue(HeaderConstants.EMP_IN_ACCESS_TYPE);
+		cell.setCellStyle(cellStyle);
+
+		cell = row.createCell(NumberConstants.TWENTY_NINE);
 		cell.setCellValue(HeaderConstants.EMP_OUT_ACCESS_TYPE);
 		cell.setCellStyle(cellStyle);
 	}
