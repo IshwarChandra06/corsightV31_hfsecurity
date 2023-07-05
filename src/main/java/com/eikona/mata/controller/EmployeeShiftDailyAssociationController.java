@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.Principal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,6 +30,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.eikona.mata.dto.PaginationDto;
 import com.eikona.mata.dto.ShiftRosterValidationDto;
 import com.eikona.mata.entity.EmployeeShiftDailyAssociation;
+import com.eikona.mata.entity.User;
+import com.eikona.mata.repository.UserRepository;
 import com.eikona.mata.service.EmployeeShiftDailyAssociationService;
 import com.eikona.mata.util.ExportEmployeeShiftDailyAssociation;
 
@@ -40,6 +43,9 @@ public class EmployeeShiftDailyAssociationController {
 	@Autowired
 	private ExportEmployeeShiftDailyAssociation exportEmployeeShiftDailyAssociation;
 	
+	@Autowired
+	private UserRepository userRepository;
+	
 	@GetMapping("/employee-shift-daily-association")
 	@PreAuthorize("hasAuthority('employee_roster_view')")
 	public String employeeShiftDailyAssociation(Model model) {
@@ -49,9 +55,12 @@ public class EmployeeShiftDailyAssociationController {
 	@RequestMapping(value = "/api/search/employee-shift/daily-association", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('employee_roster_view')")
 	public @ResponseBody PaginationDto<EmployeeShiftDailyAssociation> searchVehicleLog(Long id, String sDate,String eDate, String employeeId, String employeeName,String department, String shift,
-			int pageno, String sortField, String sortDir) {
+			int pageno, String sortField, String sortDir, Principal principal) {
 		
-		PaginationDto<EmployeeShiftDailyAssociation> dtoList = employeeShiftDailyAssociationService.searchByField(id, sDate, eDate, employeeId, employeeName,department, shift,  pageno, sortField, sortDir);
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String orgName = (null == user.getOrganization()? null: user.getOrganization().getName());
+		
+		PaginationDto<EmployeeShiftDailyAssociation> dtoList = employeeShiftDailyAssociationService.searchByField(id, sDate, eDate, employeeId, employeeName,department, shift,  pageno, sortField, sortDir,orgName);
 		return dtoList;
 	}
 	
@@ -99,7 +108,7 @@ public class EmployeeShiftDailyAssociationController {
 	@GetMapping("/shift-roster-template-download")
 	@PreAuthorize("hasAuthority('employee_roster_export')")
 	public void downloadEmployeeListExcelTemplate(HttpServletResponse response) throws IOException {
-        String filename = "src/main/resources/static/excel/Shift_Roster_import_template.xlsx";
+        String filename = "/excel/Shift_Roster_import_template.xlsx";
         try {
         	
         	String headerKey = "Content-Disposition";

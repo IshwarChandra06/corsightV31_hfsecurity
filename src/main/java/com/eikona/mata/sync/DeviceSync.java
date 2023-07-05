@@ -18,6 +18,7 @@ import com.eikona.mata.constants.NumberConstants;
 import com.eikona.mata.entity.Area;
 import com.eikona.mata.entity.Branch;
 import com.eikona.mata.entity.Device;
+import com.eikona.mata.entity.Organization;
 import com.eikona.mata.repository.AreaRepository;
 import com.eikona.mata.repository.DeviceRepository;
 import com.eikona.mata.util.RequestExecutionUtil;
@@ -40,7 +41,7 @@ public class DeviceSync {
 	@Value("${corsight.camera.port}")
     private String cameraPort;
     
-	public String syncDevice() {
+	public String syncDevice(Organization organization) {
 		try {
 
 			String url = ApplicationConstants.HTTPS_COLON_DOUBLE_SLASH+corsightHost+ApplicationConstants.DELIMITER_COLON+cameraPort;
@@ -72,6 +73,7 @@ public class DeviceSync {
 				cameraObj.setSerialNo((String) jsonData.get(CorsightDeviceConstants.CAMERA_ID));
 				cameraObj.setName((String) jsonData.get(CorsightDeviceConstants.DESCRIPTION));
 				cameraObj.setIpAddress((String) jsonData.get(CorsightDeviceConstants.DISPLAY_RTSP_ADDRESS));
+				cameraObj.setOrganization(organization);
 				cameraList.add(cameraObj);
 
 			}

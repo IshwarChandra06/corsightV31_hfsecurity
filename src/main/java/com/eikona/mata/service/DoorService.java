@@ -14,5 +14,5 @@ public interface DoorService {
 
 	void deleteById(long id);
 	
-	PaginationDto<Door> searchByField(Long id, String name,  String ipAddress, int pageno, String sortField, String sortDir);
+	PaginationDto<Door> searchByField(Long id, String name,  String ipAddress, int pageno, String sortField, String sortDir, String orgName);
 }

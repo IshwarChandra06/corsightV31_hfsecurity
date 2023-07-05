@@ -16,6 +16,6 @@ public interface EmailSetUpService {
 	void deletedById(long id);
 
 	PaginationDto<EmailSetup> searchByField(Long id, String smppServer, String port, String userName, String senderName,
-			int pageno, String sortField, String sortDir);
+			int pageno, String sortField, String sortDir, String orgName);
 
 }

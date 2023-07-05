@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.eikona.mata.entity.Area;
 import com.eikona.mata.entity.Branch;
+import com.eikona.mata.entity.Organization;
 
 @Repository
 public interface AreaRepository extends DataTablesRepository<Area, Long> {
@@ -15,10 +16,10 @@ public interface AreaRepository extends DataTablesRepository<Area, Long> {
 	
 	Area findByIdAndIsDeletedFalse(long id);
 	
-	@Query("select b from com.eikona.mata.entity.Area as b where b.branch.name =:branch and isDeleted=false")
-	List<Area> findByBranchAndIsDeletedFalseCustom(String branch);
+	@Query("select b from com.eikona.mata.entity.Area as b where b.branch.name =:branch and b.isDeleted=false and b.organization.name = :org")
+	List<Area> findByBranchAndIsDeletedFalseCustom(String branch, String org);
 
-	List<Area> findByBranchAndIsDeletedFalse(Branch branch);
+	List<Area> findByBranchAndOrganizationAndIsDeletedFalse(Branch branch,Organization org);
 
 	Area findByNameAndIsDeletedFalse(String area);
 
@@ -33,5 +34,7 @@ public interface AreaRepository extends DataTablesRepository<Area, Long> {
 	List<Area> findAllByIsDeletedFalseAndIsSyncTrue();
 
 	Area findByWatchlistAndIsDeletedFalse(String watchlist);
+
+	List<Area> findByOrganizationAndIsDeletedFalse(Organization organization);
 
 }

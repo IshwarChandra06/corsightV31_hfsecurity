@@ -73,14 +73,14 @@ public class EmailSetupServiceImpl implements EmailSetUpService{
 	 
 	@Override
 	public PaginationDto<EmailSetup> searchByField(Long id, String smppServer, String port, String userName,
-			String senderName, int pageno, String sortField, String sortDir) {
+			String senderName, int pageno, String sortField, String sortDir,String org) {
 		if (null == sortDir || sortDir.isEmpty()) {
 			sortDir = ApplicationConstants.ASC;
 		}
 		if (null == sortField || sortField.isEmpty()) {
 			sortField = ApplicationConstants.ID;
 		}
-		Page<EmailSetup> page = getEmailSetupPage(id, smppServer, port, userName, senderName, pageno, sortField,sortDir);
+		Page<EmailSetup> page = getEmailSetupPage(id, smppServer, port, userName, senderName, pageno, sortField,sortDir,org);
         List<EmailSetup> emailSetupList =  page.getContent();
 		
 		sortDir = (ApplicationConstants.ASC.equalsIgnoreCase(sortDir))?ApplicationConstants.DESC:ApplicationConstants.ASC;
@@ -90,7 +90,7 @@ public class EmailSetupServiceImpl implements EmailSetUpService{
 	}
 
 	private Page<EmailSetup> getEmailSetupPage(Long id, String smppServer, String port, String userName,
-			String senderName, int pageno, String sortField, String sortDir) {
+			String senderName, int pageno, String sortField, String sortDir, String organization) {
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
 				: Sort.by(sortField).descending();
 
@@ -102,8 +102,9 @@ public class EmailSetupServiceImpl implements EmailSetUpService{
 		Specification<EmailSetup> userNameSpc = generalSpecification.stringSpecification(userName, EmailSetupConstants.USER_NAME);
 		Specification<EmailSetup> senderNameSpc = generalSpecification.stringSpecification(senderName, EmailSetupConstants.SENDER_NAME);
 		Specification<EmailSetup> isDeletedFalse = generalSpecification.isDeletedSpecification();
+		Specification<EmailSetup> orgSpc = generalSpecification.foreignKeyStringSpecification(organization, "organization", ApplicationConstants.NAME);
 		
-    	Page<EmailSetup> page = emailSetUpRepository.findAll(idSpc.and(smppServerSpc).and(isDeletedFalse).and(senderNameSpc).and(userNameSpc).and(portSpc),pageable);
+    	Page<EmailSetup> page = emailSetUpRepository.findAll(idSpc.and(smppServerSpc).and(isDeletedFalse).and(senderNameSpc).and(orgSpc).and(userNameSpc).and(portSpc),pageable);
 		return page;
 	}
 	

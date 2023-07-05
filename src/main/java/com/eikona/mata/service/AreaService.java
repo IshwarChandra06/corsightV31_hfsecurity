@@ -40,13 +40,13 @@ public interface AreaService {
 	String saveAreaDeviceAssociation(Long deviceId, Long areaId, Principal principal);
 
 	PaginationDto<Area> searchByField(Long id, String name, String office, int pageno, String sortField,
-			String sortDir);
+			String sortDir, String orgName);
 
 	PaginationDto<Employee> searchAreaToEmployee(String id, String name, String office, String area, int pageno,
-			String sortField, String sortDir);
+			String sortField, String sortDir, String orgName);
 
 	PaginationDto<Device> searchAreaToDevice(String name, String office, String area, int pageno,
-			String sortField, String sortDir);
+			String sortField, String sortDir, String orgName);
 	
 	
 }

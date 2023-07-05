@@ -31,15 +31,15 @@
 								class="las la-sync"></i> Sync Employee
 							</a> <b><span th:text="${message}"></span></b>
 							</div>
-							<div class="col-auto float-right ml-auto" th:if="${cosecEnabled!=true}" sec:authorize="hasAuthority('employee_import')">
+							<div class="col-auto float-right ml-auto"  sec:authorize="hasAuthority('employee_import')">
 							 <a th:href="@{/import/employee-list}" class="btn add-btn"><i class="las la-file-import"></i>Import Excel</a>
 							</div>
-<!-- 							<div class="col-auto float-right ml-auto" th:if="${cosecEnabled!=true}" sec:authorize="hasAuthority('employee_import')"> -->
-<!-- 							 <a th:href="@{/import/image-directory}" class="btn add-btn"><i class="las la-file-import"></i>Import Image Directory</a> -->
-<!-- 							</div> -->
-							<div class="col-auto float-right ml-auto" th:if="${cosecEnabled==true}" sec:authorize="hasAuthority('employee_import')">
-							 <a th:href="@{/import/cosec/employee-list}" class="btn add-btn"><i class="las la-file-import"></i>Import Excel </a>
+							<div class="col-auto float-right ml-auto"  sec:authorize="hasAuthority('employee_import')">
+							 <a th:href="@{/import/image-directory}" class="btn add-btn"><i class="las la-file-import"></i>Import Image Directory</a>
 							</div>
+<!-- 							<div class="col-auto float-right ml-auto" th:if="${cosecEnabled==true}" sec:authorize="hasAuthority('employee_import')"> -->
+<!-- 							 <a th:href="@{/import/cosec/employee-list}" class="btn add-btn"><i class="las la-file-import"></i>Import Excel </a> -->
+<!-- 							</div> -->
 							
 							<div class="col-auto float-right ml-auto" sec:authorize="hasAuthority('employee_create')">
 							<a th:href = "@{/employee/new}" class="btn add-btn" ><i class="fa fa-plus"></i> Add Employee</a>

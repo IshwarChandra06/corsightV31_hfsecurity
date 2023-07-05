@@ -97,13 +97,14 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 	<!-- Custom JS -->
 	<script src="/assets/js/app.js"></script> 
     <script type="text/javascript" src="/assets/js/jquery.multi-select.js"></script>
-    <script src="/assets/moment/moment.min.js"></script>
+    <script src="/assets/custome/moment.min.js"></script>
     
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#user_menu").addClass("active");
 			var showUpdate = $("#span_update").length>0;
 			var showDelete = $("#span_delete").length>0;
+			
 			$(function(){
 		        $('#people').multiSelect();
 		        $('#ice-cream').multiSelect();
@@ -178,6 +179,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 				var name= document.getElementById('orginalByName').value;
 				var phoneNo= document.getElementById('orginalByPhoneNo').value;
 				var role= document.getElementById('orginalByRole').value;
+				
               	sortByField(id,name,phoneNo,role, valueList[0],valueList[1],valueList[2]);
 				
         	})
@@ -188,11 +190,11 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 				var name= document.getElementById('orginalByName').value;
 				var phoneNo= document.getElementById('orginalByPhoneNo').value;
 				var role= document.getElementById('orginalByRole').value;
+				
               	sortByField(id,name,phoneNo,role, 1,"id","desc");
         	})
         	
 			$(document).on('click', '.previousPage', function(e) {
-				
 				var value = $(this).val();
 				var valueList = value.split("-");
 				
@@ -238,8 +240,8 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 						'<th><b>User Name</b></th>'+
 						'<th><b>Phone No</b></th>'+
 						'<th><b>Role</b></th>';
-					if(showUpdate || showDelete)
-						table_header +='<th>Actions</th>';
+						if(showUpdate || showDelete)
+							table_header+='<th><b>Actions</b></th>';
 				}else{
 					table_header = '<th><button  value="'+result.page_number+'-id-'+result.sortDir+'" type="button" class="btn btn-link sortByField"><b>Id</b></button>'+
 		   			'</th><th>'+
@@ -249,8 +251,8 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 		   			'</th><th>'+
 		   			'<button  value="'+result.page_number+'-role-'+result.sortDir+'" type="button" class="btn btn-link sortByField"><b>Role</b></button>'+
 		   			'</th>';
-					if(showUpdate || showDelete)
-						table_header +='<th>Actions</th>';
+		   			if(showUpdate || showDelete)
+						table_header+='<th><b> Actions</b></th>';
 					
 				}
 				return table_header;
@@ -435,6 +437,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 			
         	$(document).on('click', '.searchButtonField', function(e) {
         		uncheckedAppend();
+        		
         		var id = document.getElementById('id').value;
 				var name= document.getElementById('userName').value;
 				var phoneNo= document.getElementById('phoneNo').value;
@@ -455,7 +458,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 	            }; 
 	         	
 	            $.ajax({
-	                url: '/user/search',
+	                url: '/api/search/user',
 	                type: 'GET',
 	               	data: data,
 	               	success: function (result) {
@@ -489,10 +492,11 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
                				 table_data +='<td>' + customer.role.name + '</td>';
                			  else
                				 table_data +='<td>'+""+'</td>';
-               				if(showUpdate)	 
+               				 
+               			if(showUpdate)
                				table_data +='<td> <a href="/user/edit/'+customer.id+'" class="btn btn-primary"><i class="las la-edit"></i></a>';
-               				if(showDelete)
-               				table_data +='&nbsp;&nbsp;'+
+           				if(showDelete)
+           					table_data +='&nbsp;&nbsp;'+
                    			'<a href="/user/delete/'+customer.id+'" class="btn btn-danger" id="deleteButton"><i class="las la-trash"></i></a></td></tr>';
                		
            		});
@@ -510,7 +514,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 	   			'<button  value="'+result.page_number+'-role-'+result.sortDir+'" type="button" class="btn btn-link sortBySearchField"><b>Role</b></button>'+
 	   			'</th>';
 	   			if(showUpdate || showDelete)
-					table_header+='<th>Actions</th>';
+					table_header+='<th><i class="icon_cogs"></i> Actions</th>';
 				
 				return table_header;
 			}

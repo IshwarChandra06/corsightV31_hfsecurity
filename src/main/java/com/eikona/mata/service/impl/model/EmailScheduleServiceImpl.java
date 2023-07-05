@@ -279,7 +279,7 @@ public class EmailScheduleServiceImpl implements EmailScheduleService{
 
 	@Override
 	public PaginationDto<EmailSchedule> searchByField(Long id, String reportType, String fileType, String toMail,
-			String subject, int pageno, String sortField, String sortDir) {
+			String subject, int pageno, String sortField, String sortDir,String org) {
 		if (null == sortDir || sortDir.isEmpty()) {
 			sortDir = ApplicationConstants.ASC;
 		}
@@ -287,7 +287,7 @@ public class EmailScheduleServiceImpl implements EmailScheduleService{
 			sortField = ApplicationConstants.ID;
 		}
 		Page<EmailSchedule> page = getEmailSchedulePage(id, reportType, fileType, toMail, subject, pageno, sortField,
-				sortDir);
+				sortDir,org);
         
     	List<EmailSchedule> emailScheduleList =  page.getContent();
 		
@@ -298,7 +298,7 @@ public class EmailScheduleServiceImpl implements EmailScheduleService{
 	}
 
 	private Page<EmailSchedule> getEmailSchedulePage(Long id, String reportType, String fileType, String toMail,
-			String subject, int pageno, String sortField, String sortDir) {
+			String subject, int pageno, String sortField, String sortDir, String organization) {
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
 				: Sort.by(sortField).descending();
 
@@ -310,8 +310,9 @@ public class EmailScheduleServiceImpl implements EmailScheduleService{
 		Specification<EmailSchedule> toMailSpc = generalSpecificationEmailShedule.stringSpecification(toMail, EmailScheduleConstants.TO_EMAIL_ADDRESS);
 		Specification<EmailSchedule> subjectSpc = generalSpecificationEmailShedule.stringSpecification(subject, EmailScheduleConstants.EMAIL_SUBJECT);
 		Specification<EmailSchedule> isDeletedFalse = generalSpecificationEmailShedule.booleanSpecification(false, ApplicationConstants.IS_DELETED);
+		Specification<EmailSchedule> orgSpc = generalSpecificationEmailShedule.foreignKeyStringSpecification(organization, "organization", ApplicationConstants.NAME);
 		
-    	Page<EmailSchedule> page = emailScheduleRepository.findAll(idSpc.and(reportTypeSpc).and(isDeletedFalse).and(fileTypeSpc).and(toMailSpc).and(subjectSpc), pageable);
+    	Page<EmailSchedule> page = emailScheduleRepository.findAll(idSpc.and(reportTypeSpc).and(isDeletedFalse).and(fileTypeSpc).and(toMailSpc).and(subjectSpc).and(orgSpc), pageable);
 		return page;
 	}
 }

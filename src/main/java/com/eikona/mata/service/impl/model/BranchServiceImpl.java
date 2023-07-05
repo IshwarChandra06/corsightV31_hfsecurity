@@ -69,7 +69,7 @@ public class BranchServiceImpl implements BranchService {
 
 	@Override
 	public PaginationDto<Branch> searchByField(Long id, String name, String address, String city, String state,
-			String pin, int pageno, String sortField, String sortDir) {
+			String pin, int pageno, String sortField, String sortDir,String org) {
 		if (null == sortDir || sortDir.isEmpty()) {
 			sortDir = ApplicationConstants.ASC;
 		}
@@ -79,7 +79,7 @@ public class BranchServiceImpl implements BranchService {
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
 				: Sort.by(sortField).descending();
 
-		Page<Branch> page = getBranchPage(id, name, address, city, state, pin, pageno, sort);
+		Page<Branch> page = getBranchPage(id, name, address, city, state, pin, pageno, sort,org);
         List<Branch> branchList =  page.getContent();
 		
 		sortDir = (ApplicationConstants.ASC.equalsIgnoreCase(sortDir))?ApplicationConstants.DESC:ApplicationConstants.ASC;
@@ -89,7 +89,7 @@ public class BranchServiceImpl implements BranchService {
 	}
 
 	private Page<Branch> getBranchPage(Long id, String name, String address, String city, String state, String pin,
-			int pageno, Sort sort) {
+			int pageno, Sort sort, String organization) {
 		Pageable pageable = PageRequest.of(pageno - NumberConstants.ONE, NumberConstants.TEN, sort);
 		
 		Specification<Branch> idSpc = generalSpecification.longSpecification(id, ApplicationConstants.ID);
@@ -101,8 +101,9 @@ public class BranchServiceImpl implements BranchService {
 		Specification<Branch> isDeletedFalse = (Specification<Branch>) (root, query, builder) -> {
 			return builder.equal(root.get(ApplicationConstants.IS_DELETED), false);
 		};
+		Specification<Branch> orgSpc = generalSpecification.foreignKeyStringSpecification(organization, "organization", ApplicationConstants.NAME);
 		
-    	Page<Branch> page = branchRepository.findAll(idSpc.and(nameSpc).and(addressSpc).and(isDeletedFalse).and(citySpc).and(stateSpec).and(pinSpc),pageable);
+    	Page<Branch> page = branchRepository.findAll(idSpc.and(nameSpc).and(addressSpc).and(isDeletedFalse).and(citySpc).and(stateSpec).and(pinSpc).and(orgSpc),pageable);
 		return page;
 	}
 

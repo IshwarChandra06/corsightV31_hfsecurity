@@ -97,12 +97,13 @@ public class UnvListenerServiceImpl {
 			Device deviceObj = deviceRepository.findBySerialNoAndIsDeletedFalse(jsonPersonVerification.getString(UnvDeviceConstants.DEVICE_CODE));
 		
 			transaction.setEmployeeCode(empObj.getString(UnvDeviceConstants.PERSON_CODE));
-			transaction.setName(empObj.getString(UnvDeviceConstants.PERSON_NAME));
 			transaction.setAppearanceId(transaction.getEmployeeCode());
 			transaction.setPoiId(transaction.getEmployeeCode());
 			
 			if(null!=employee) {
+				transaction.setName(employee.getName());
 				transaction.setEmployee(employee);
+				transaction.setEmpId(employee.getEmpId());
 				if(null!=employee.getDepartment())
 					transaction.setDepartment(employee.getDepartment().getName());
 				
@@ -115,6 +116,7 @@ public class UnvListenerServiceImpl {
 			}
 			
 			if(null!=deviceObj) {
+				transaction.setOrganization(deviceObj.getOrganization().getName());
 				transaction.setDeviceName(deviceObj.getName());
 				transaction.setAccessType(deviceObj.getAccessType());
 				transaction.setSerialNo(deviceObj.getSerialNo());

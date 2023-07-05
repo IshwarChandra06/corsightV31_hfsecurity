@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.eikona.mata.dto.EmployeeToDeviceAssociationDto;
 import com.eikona.mata.dto.PaginationDto;
 import com.eikona.mata.entity.Employee;
+import com.eikona.mata.entity.User;
 
 
 public interface EmployeeService {
@@ -31,15 +32,16 @@ public interface EmployeeService {
 	/**
 	 * This function retrieves the employee data from the excel file and set into database.
 	 * @param file -MultipartFile
+	 * @param user 
 	 */
-	String storeEmployeeList(MultipartFile file);
+	String storeEmployeeList(MultipartFile file, User user);
 	/**
 	 * This function deletes the employee from database according to the respective id.  
 	 * @param
 	 */
 	void deleteById(long id, Principal principal);
 	
-	String storeCosecEmployeeList(MultipartFile file);
+	String storeCosecEmployeeList(MultipartFile file, User user);
 	
 	void saveEmployeeAreaAssociation(Employee employee, Long id, Principal principal);
 	
@@ -48,10 +50,10 @@ public interface EmployeeService {
 	String deleteEmployeeFromParticularDevice(Long deviceId, Long empId, Principal principal) throws Exception;
 	
 	PaginationDto<Employee> searchByField(Long id, String name, String empId, String branch, String department,
-			String designation, int pageno, String sortField, String sortDir);
+			String designation, int pageno, String sortField, String sortDir, String orgName);
 	
 	PaginationDto<EmployeeToDeviceAssociationDto> searchEmployeeToDevice(Long id, String device, String office,
-			String area, int pageno, String sortField, String sortDir);
+			String area, int pageno, String sortField, String sortDir, String orgName);
 
 
 

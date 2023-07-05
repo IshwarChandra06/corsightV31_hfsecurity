@@ -29,7 +29,7 @@ public class EmailSchedule extends Auditable<String> implements Serializable{
 	private Long id;
 	
 	@ManyToOne
-	@JoinColumn(name="organization_id", nullable = false)
+	@JoinColumn(name="organization_id")
 	private Organization organization;
 	
 	@Column(name = "report_type")

@@ -23,5 +23,5 @@ public interface ShiftService
 
 	List<Parameter> saveShiftSetting(ShiftSettingDto shiftSettingDto);
 
-	PaginationDto<Shift> searchByField(Long id, String name, int pageno, String sortField, String sortDir);
+	PaginationDto<Shift> searchByField(Long id, String name, int pageno, String sortField, String sortDir, String orgName);
 }

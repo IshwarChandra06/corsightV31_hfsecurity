@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.eikona.mata.dto.PaginationDto;
 import com.eikona.mata.entity.Privilege;
+import com.eikona.mata.repository.UserRepository;
 import com.eikona.mata.service.PrivilegeService;
 
 @Controller
@@ -24,6 +25,7 @@ public class PrivilegeController {
 	
 	@Autowired
 	private PrivilegeService privilegeService;
+	
 	
 	@GetMapping("/privilege")
 	@PreAuthorize("hasAuthority('privilege_view')")

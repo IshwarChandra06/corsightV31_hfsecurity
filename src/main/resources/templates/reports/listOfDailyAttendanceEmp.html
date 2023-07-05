@@ -11,7 +11,7 @@
     <title>MATA</title>
     
     <!-- Favicon -->
-      <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.png">
+      <link rel="shortcut icon" type="image/x-icon" href="/assets/img/mata_logo.png">
 
 	<!-- Bootstrap CSS -->
       <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
@@ -124,7 +124,6 @@
 	<div th:replace="matafooter :: footer"></div>
 	<div style="display:none;">
 		<div><input type="text" th:value="${date}" id="date-date"></div>
-		<div><input type="text" th:value="${organization}" id="organization-org"></div>
 		<div><input type="text" th:value="${flag}" id="flag"></div>
 	</div>
 
@@ -136,10 +135,8 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			var date = document.getElementById('date-date').value;
-			var organization = document.getElementById('organization-org').value;
 			var flag = document.getElementById('flag').value;
 			
-			console.log(organization);
 			
 			$(function(){
 		        $('#people').multiSelect();
@@ -296,7 +293,6 @@
 				var data = {
 	           		"id" : id,
 	           		"date" : date,
-	           		"organization" : organization,
 	           		"employeeId":employeeId,
 	           		"employeeName":employeeName,
 	           		"office":office,

@@ -68,14 +68,14 @@ public class DepartmentServiceImpl implements DepartmentService{
 	}
 
 	@Override
-	public PaginationDto<Department> searchByField(Long id, String name, int pageno, String sortField, String sortDir) {
+	public PaginationDto<Department> searchByField(Long id, String name, int pageno, String sortField, String sortDir,String org) {
 		if (null == sortDir || sortDir.isEmpty()) {
 			sortDir = ApplicationConstants.ASC;
 		}
 		if (null == sortField || sortField.isEmpty()) {
 			sortField = ApplicationConstants.ID;
 		}
-		Page<Department> page = getDepartmentPage(id, name, pageno, sortField, sortDir);
+		Page<Department> page = getDepartmentPage(id, name, pageno, sortField, sortDir,org);
         List<Department> departmentList =  page.getContent();
 		
 		sortDir = (ApplicationConstants.ASC.equalsIgnoreCase(sortDir))?ApplicationConstants.DESC:ApplicationConstants.ASC;
@@ -84,7 +84,7 @@ public class DepartmentServiceImpl implements DepartmentService{
 		return dtoList;
 	}
 
-	private Page<Department> getDepartmentPage(Long id, String name, int pageno, String sortField, String sortDir) {
+	private Page<Department> getDepartmentPage(Long id, String name, int pageno, String sortField, String sortDir, String organization) {
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
 				: Sort.by(sortField).descending();
 
@@ -93,8 +93,9 @@ public class DepartmentServiceImpl implements DepartmentService{
 		Specification<Department> idSpc = generalSpecification.longSpecification(id, ApplicationConstants.ID);
 		Specification<Department> nameSpc = generalSpecification.stringSpecification(name, ApplicationConstants.NAME);
 		Specification<Department> isDeletedFalse = generalSpecification.isDeletedSpecification();
+		Specification<Department> orgSpc = generalSpecification.foreignKeyStringSpecification(organization, "organization", ApplicationConstants.NAME);
 		
-    	Page<Department> page = departmentRepository.findAll(idSpc.and(nameSpc).and(isDeletedFalse),pageable);
+    	Page<Department> page = departmentRepository.findAll(idSpc.and(nameSpc).and(isDeletedFalse).and(orgSpc),pageable);
 		return page;
 	}
 	

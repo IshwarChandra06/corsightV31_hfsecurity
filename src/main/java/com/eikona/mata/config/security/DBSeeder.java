@@ -65,6 +65,11 @@ public class DBSeeder implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		List<Privilege> privilegeList = privilegeRepository.findAllByIsDeletedFalse();
 			
+			seedOrganization();
+			seedDepartment();
+			seedDesignation();
+			Branch branch =seedBranch();
+			seedArea(branch);
 			if(null==privilegeList || privilegeList.isEmpty()) {
 				List<Privilege> privileges = SeedPrivileges();
 				  
@@ -73,11 +78,7 @@ public class DBSeeder implements CommandLineRunner {
 				seedUser(admin);
 			
 			}
-			seedOrganization();
-			seedDepartment();
-			seedDesignation();
-			Branch branch =seedBranch();
-			seedArea(branch);
+			
 			
 		}
 	
@@ -142,8 +143,8 @@ public class DBSeeder implements CommandLineRunner {
 		Privilege roleDelete = new Privilege("role_delete", false);
 		
 		Privilege privilegeView = new Privilege("privilege_view", false);
-		Privilege privilegeUpdate = new Privilege("privilege_update", false);
-		Privilege privilegeDelete = new Privilege("privilege_delete", false);
+//		Privilege privilegeUpdate = new Privilege("privilege_update", false);
+//		Privilege privilegeDelete = new Privilege("privilege_delete", false);
 		
 		Privilege branchView = new Privilege("branch_view", false);
 		Privilege branchCreate = new Privilege("branch_create", false);
@@ -262,8 +263,7 @@ public class DBSeeder implements CommandLineRunner {
 				orgView, orgCreate, orgUpdate, orgDelete,
 				userView, userCreate, userUpdate, userDelete,
 				roleView, roleCreate, roleUpdate, roleDelete,
-				privilegeView,privilegeUpdate,privilegeDelete,
-				watchlistSync,notificationLogView,actiondetailsView,actiondetailsExport,
+				privilegeView,watchlistSync,notificationLogView,actiondetailsView,actiondetailsExport,
 				areaView,areaCreate,areaUpdate,areaDelete,actionview,
 				areaEmployeeAssociation,areaDeviceAssociation,deviceEmployeeAssociation,
 				constraintRangeView,constraintRangeCreate,constraintRangeUpdate,constraintRangeDelete,
@@ -289,13 +289,25 @@ public class DBSeeder implements CommandLineRunner {
 		
 		
 		  privilegeRepository.saveAll(privileges);
-		return privileges;
+		  
+		  List<Privilege> adminprivilege = Arrays.asList(
+					orgView, orgCreate, orgUpdate, orgDelete,
+					userView, userCreate, userUpdate, userDelete,
+					roleView, roleCreate, roleUpdate, roleDelete,
+					privilegeView,
+					areaView,areaCreate,areaUpdate,areaDelete,
+					deviceView,deviceCreate,deviceUpdate,deviceDelete,deviceSync
+					
+					);
+		return adminprivilege;
 	}
 
 	private Role seedRole(List<Privilege> privileges) {
 		Role admin=roleRepository.findByName("Admin");
+		
 		if(null==admin) {
-			 admin= new Role("Admin", privileges, false);
+			Organization org=organizationRepository.findByNameAndIsDeletedFalse(DEFAULT);
+			 admin= new Role("Admin", privileges,org, false);
 			roleRepository.save(admin);
 		}
 		return admin;
@@ -304,7 +316,8 @@ public class DBSeeder implements CommandLineRunner {
 	private void seedUser(Role admin) {
 		List<User> userList=userRepository.findAllByIsDeletedFalse();
 		if(null==userList || userList.isEmpty()) {
-			User adminUser= new User("Admin", passwordEncoder.encode("Admin@123"), true, admin, false);
+			Organization org=organizationRepository.findByNameAndIsDeletedFalse(DEFAULT);
+			User adminUser= new User("Admin", passwordEncoder.encode("Admin@123"),org, true, admin, false);
 			userRepository.save(adminUser);
 		}
 	}

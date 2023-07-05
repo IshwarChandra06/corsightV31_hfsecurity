@@ -31,7 +31,7 @@ public interface RoleService {
     void deleteById(long id);
     
     
-	PaginationDto<Role> searchByField(Long id, String name, int pageno, String sortField, String sortDir);
+	PaginationDto<Role> searchByField(Long id, String name, int pageno, String sortField, String sortDir, String orgName);
     
    
     }

@@ -13,5 +13,5 @@ public interface NotificationLogService {
 	List<NotificationLog> getAll();
 	 
 	PaginationDto<NotificationLog> searchByField(Long id, String notificationType, String sender, String receipent,
-			String subject, String reportType, int pageno, String sortField, String sortDir);
+			String subject, String reportType, int pageno, String sortField, String sortDir, String orgName);
 }

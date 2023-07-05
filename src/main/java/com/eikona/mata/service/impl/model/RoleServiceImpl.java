@@ -68,14 +68,14 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public PaginationDto<Role> searchByField(Long id, String name, int pageno, String sortField, String sortDir) {
+	public PaginationDto<Role> searchByField(Long id, String name, int pageno, String sortField, String sortDir,String org) {
 		if (null == sortDir || sortDir.isEmpty()) {
 			sortDir = ApplicationConstants.ASC;
 		}
 		if (null == sortField || sortField.isEmpty()) {
 			sortField = ApplicationConstants.ID;
 		}
-		Page<Role> page = getSpecificationOfRole(id, name, pageno, sortField, sortDir);
+		Page<Role> page = getSpecificationOfRole(id, name, pageno, sortField, sortDir,org);
         List<Role> roleList =  page.getContent();
 		
 		sortDir = (ApplicationConstants.ASC.equalsIgnoreCase(sortDir))?ApplicationConstants.DESC:ApplicationConstants.ASC;
@@ -84,7 +84,7 @@ public class RoleServiceImpl implements RoleService {
 		return dtoList;
 	}
 
-	private Page<Role> getSpecificationOfRole(Long id, String name, int pageno, String sortField, String sortDir) {
+	private Page<Role> getSpecificationOfRole(Long id, String name, int pageno, String sortField, String sortDir, String organization) {
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
 				: Sort.by(sortField).descending();
 
@@ -93,8 +93,9 @@ public class RoleServiceImpl implements RoleService {
 		Specification<Role> idSpc = generalSpecificationRole.longSpecification(id, ApplicationConstants.ID);
 		Specification<Role> nameSpc = generalSpecificationRole.stringSpecification(name, ApplicationConstants.NAME);
 		Specification<Role> isDeletedFalse = generalSpecificationRole.isDeletedSpecification();
+		Specification<Role> orgSpc = generalSpecificationRole.foreignKeyStringSpecification(organization, "organization", ApplicationConstants.NAME);
 		
-    	Page<Role> page = roleRepository.findAll(idSpc.and(nameSpc).and(isDeletedFalse),pageable);
+    	Page<Role> page = roleRepository.findAll(idSpc.and(nameSpc).and(isDeletedFalse).and(orgSpc),pageable);
 		return page;
 	}
 }

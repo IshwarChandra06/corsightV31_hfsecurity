@@ -79,23 +79,40 @@ public class EmployeeSync {
 		for (int i = NumberConstants.ZERO; i < jsonArray.size(); i++) {
 			JSONObject jsonData = (JSONObject) jsonArray.get(i);
 
-			Employee employee = employeeRepository.findByEmpIdAndIsDeletedFalse((String) jsonData.get(CorsightDeviceConstants.POI_ID));
+			Employee employee = employeeRepository.findByEmpIdAndIsDeletedFalse((String) jsonData.get(CorsightDeviceConstants.DISPLAY_NAME));
 			if (null == employee) {
 				Employee workerObj = new Employee();
 				workerObj.setName((String) jsonData.get(CorsightDeviceConstants.DISPLAY_NAME));
 				workerObj.setPoi((String) jsonData.get(CorsightDeviceConstants.POI_ID));
-				workerObj.setEmpId((String) jsonData.get(CorsightDeviceConstants.POI_ID));
+				workerObj.setEmpId((String) jsonData.get(CorsightDeviceConstants.DISPLAY_NAME));
 				workerObj.setOrganization(organization);
 				employeeRepository.save(workerObj);
 				WorkerList.add(workerObj);
 			}else {
 				employee.setName((String) jsonData.get(CorsightDeviceConstants.DISPLAY_NAME));
 				employee.setPoi((String) jsonData.get(CorsightDeviceConstants.POI_ID));
-				employee.setEmpId((String) jsonData.get(CorsightDeviceConstants.POI_ID));
+				employee.setEmpId((String) jsonData.get(CorsightDeviceConstants.DISPLAY_NAME));
 				employee.setOrganization(organization);
 				employeeRepository.save(employee);
 				WorkerList.add(employee);
 			}
+//			Employee employee = employeeRepository.findByEmpIdAndIsDeletedFalse((String) jsonData.get(CorsightDeviceConstants.POI_ID));
+//			if (null == employee) {
+//				Employee workerObj = new Employee();
+//				workerObj.setName((String) jsonData.get(CorsightDeviceConstants.DISPLAY_NAME));
+//				workerObj.setPoi((String) jsonData.get(CorsightDeviceConstants.POI_ID));
+//				workerObj.setEmpId((String) jsonData.get(CorsightDeviceConstants.POI_ID));
+//				workerObj.setOrganization(organization);
+//				employeeRepository.save(workerObj);
+//				WorkerList.add(workerObj);
+//			}else {
+//				employee.setName((String) jsonData.get(CorsightDeviceConstants.DISPLAY_NAME));
+//				employee.setPoi((String) jsonData.get(CorsightDeviceConstants.POI_ID));
+//				employee.setEmpId((String) jsonData.get(CorsightDeviceConstants.POI_ID));
+//				employee.setOrganization(organization);
+//				employeeRepository.save(employee);
+//				WorkerList.add(employee);
+//			}
 		}
 	}
 

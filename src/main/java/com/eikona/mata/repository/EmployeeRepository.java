@@ -1,6 +1,7 @@
 package com.eikona.mata.repository;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -52,8 +53,8 @@ public interface EmployeeRepository extends DataTablesRepository<Employee, Long>
 
 	Employee findByNameAndIsDeletedFalse(String name);
 	
-	@Query("Select count(w.id) from com.eikona.mata.entity.Employee as w where w.isDeleted = false and w.department.name =:deptName GROUP BY w.department.name")
-	Long countEmployeeDeptWiseCustom(String deptName);
+	@Query("Select count(w.id) from com.eikona.mata.entity.Employee as w where w.isDeleted = false and w.department.name =:deptName and w.organization.name = :org GROUP BY w.department.name")
+	Long countEmployeeDeptWiseCustom(String deptName, String org);
 
 	Employee findByEmpId(String string);
 	
@@ -72,6 +73,8 @@ public interface EmployeeRepository extends DataTablesRepository<Employee, Long>
 
 	@Query("select e from com.eikona.mata.entity.Employee as e where e.isDeleted=false and e.empId NOT IN :empIds ")
 	List<Employee> findByEmpIdAndIsDeletedFalseCustom(List<String> empIds);
+
+	List<Employee> findAllByOrganizationAndIsDeletedFalse(Organization organization);
 
 
 

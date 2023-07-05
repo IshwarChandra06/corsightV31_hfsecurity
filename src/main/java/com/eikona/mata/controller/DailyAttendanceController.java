@@ -1,5 +1,6 @@
 package com.eikona.mata.controller;
 
+import java.security.Principal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.eikona.mata.dto.PaginationDto;
 import com.eikona.mata.entity.DailyAttendance;
+import com.eikona.mata.entity.User;
+import com.eikona.mata.repository.UserRepository;
 import com.eikona.mata.service.BranchService;
 import com.eikona.mata.service.DailyAttendanceService;
 import com.eikona.mata.service.DepartmentService;
@@ -32,7 +35,9 @@ import com.eikona.mata.util.ExportDailyAttendance;
 public class DailyAttendanceController {
 
 	@Autowired
-	private DailyAttendanceServiceImpl dailyAttendanceService;
+	private DailyAttendanceServiceImpl dailyAttendanceServiceImpl;
+	@Autowired
+	private DailyAttendanceService dailyAttendanceService;
 
 	@Autowired
 	private DepartmentService departmentService;
@@ -48,6 +53,9 @@ public class DailyAttendanceController {
 	
 	@Autowired
 	private ExportDailyAttendance exportDailyAttendance;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	@GetMapping("/daily-reports")
 	@PreAuthorize("hasAuthority('dailyreport_view')")
@@ -67,8 +75,8 @@ public class DailyAttendanceController {
 	@GetMapping("/get/daily-attendance")
 	@PreAuthorize("hasAuthority('dailyreport_generate')")
 	public String generateDailyReportReportAction(String sDate,String eDate) {
-		dailyAttendanceService.generateDailyAttendanceShiftWise(sDate, eDate);
-		dailyAttendanceService.generateNotPunchDailyAttendance(sDate, eDate);
+		dailyAttendanceServiceImpl.generateDailyAttendanceShiftWise(sDate, eDate);
+		dailyAttendanceServiceImpl.generateNotPunchDailyAttendance(sDate, eDate);
 		return "reports/generateDailyAttendance";
 	}
 	
@@ -98,9 +106,12 @@ public class DailyAttendanceController {
 	@RequestMapping(value = "/api/search/daily-attendance", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('dailyreport_view')")
 	public @ResponseBody PaginationDto<DailyAttendance> searchVehicleLog(Long id, String sDate,String eDate, String employeeId, String employeeName, String office, String department, String designation,
-			String status,int pageno, String sortField, String sortDir) {
+			String status,int pageno, String sortField, String sortDir, Principal principal) {
 		
-		PaginationDto<DailyAttendance> dtoList = dailyAttendanceService.searchByField(id, sDate, eDate, employeeId, employeeName, office, department, designation,status, pageno, sortField, sortDir);
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String orgName = (null == user.getOrganization()? null: user.getOrganization().getName());
+		
+		PaginationDto<DailyAttendance> dtoList = dailyAttendanceService.searchByField(id, sDate, eDate, employeeId, employeeName, office, department, designation,status, pageno, sortField, sortDir,orgName);
 		
 		return dtoList;
 	}
@@ -109,7 +120,10 @@ public class DailyAttendanceController {
 	@PreAuthorize("hasAuthority('dailyreport_export')")
 	public void exportToFile(HttpServletResponse response,String sDate, String eDate, String employeeName,
 			String employeeId, String designation, String office, String department,String status,
-			String flag) {
+			String flag, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String orgName = (null == user.getOrganization()? null: user.getOrganization().getName());
 		 response.setContentType("application/octet-stream");
 			DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss");
 			String currentDateTime = dateFormat.format(new Date());
@@ -117,7 +131,7 @@ public class DailyAttendanceController {
 			String headerValue = "attachment; filename=Daily_Attendance" + currentDateTime + "."+flag;
 			response.setHeader(headerKey, headerValue);
 		try {
-			exportDailyAttendance.fileExportBySearchValue(response,sDate, eDate, employeeName,employeeId, designation, office, department,status,flag );
+			exportDailyAttendance.fileExportBySearchValue(response,sDate, eDate, employeeName,employeeId, designation, office, department,status,flag,orgName );
 		} catch (Exception  e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

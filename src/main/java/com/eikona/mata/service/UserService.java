@@ -31,7 +31,7 @@ public interface UserService {
     void deleteById(long id);
     
 	PaginationDto<User> searchByField(Long id, String name, String phone, String role, int pageno, String sortField,
-			String sortDir);
+			String sortDir, String orgName);
     
    
     }

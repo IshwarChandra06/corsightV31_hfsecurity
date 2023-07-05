@@ -242,7 +242,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Override
 	public PaginationDto<Device> searchByField(Long id, String deviceType, String name, String area, String office,
-			int pageno, String sortField, String sortDir) {
+			int pageno, String sortField, String sortDir,String org) {
 
 		if (null == sortDir || sortDir.isEmpty()) {
 			sortDir = ApplicationConstants.ASC;
@@ -250,7 +250,7 @@ public class DeviceServiceImpl implements DeviceService {
 		if (null == sortField || sortField.isEmpty()) {
 			sortField = ApplicationConstants.ID;
 		}
-		Page<Device> page = getDevicePage(id, deviceType, name, area, office, pageno, sortField, sortDir);
+		Page<Device> page = getDevicePage(id, deviceType, name, area, office, pageno, sortField, sortDir,org);
 		
 		List<Device> deviceList = page.getContent();
 
@@ -263,7 +263,7 @@ public class DeviceServiceImpl implements DeviceService {
 	}
 
 	private Page<Device> getDevicePage(Long id, String deviceType, String name, String area, String office, int pageno,
-			String sortField, String sortDir) {
+			String sortField, String sortDir, String organization) {
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
 				: Sort.by(sortField).descending();
 
@@ -278,15 +278,16 @@ public class DeviceServiceImpl implements DeviceService {
 				DeviceConstants.BRANCH, DeviceConstants.NAME);
 		Specification<Device> areaSpc = generalSpecification.foreignKeyStringSpecification(area, DeviceConstants.AREA,
 				DeviceConstants.NAME);
+		Specification<Device> orgSpc = generalSpecification.foreignKeyStringSpecification(organization, "organization", ApplicationConstants.NAME);
 
 		Page<Device> page = deviceRepository
-				.findAll(isdeleted.and(idSpc).and(deviceTypeSpc).and(nameSpc).and(officeSpc).and(areaSpc), pageable);
+				.findAll(isdeleted.and(idSpc).and(deviceTypeSpc).and(nameSpc).and(officeSpc).and(areaSpc).and(orgSpc), pageable);
 		return page;
 	}
 
 	@Override
 	public PaginationDto<Employee> searchDeviceToEmployee(Long id, String empId, String empName, String designation,
-			String office, String area, int pageno, String sortField, String sortDir) {
+			String office, String area, int pageno, String sortField, String sortDir,String orgName) {
 
 		if (null == sortDir || sortDir.isEmpty()) {
 			sortDir = ApplicationConstants.ASC;
@@ -294,7 +295,7 @@ public class DeviceServiceImpl implements DeviceService {
 		if (null == sortField || sortField.isEmpty()) {
 			sortField = ApplicationConstants.ID;
 		}
-		Page<Employee> page = getEmployeePage(empId, empName, designation, office, area, pageno, sortField, sortDir);
+		Page<Employee> page = getEmployeePage(empId, empName, designation, office, area, pageno, sortField, sortDir,orgName);
 		List<Employee> pageList = page.getContent();
 
 		List<Employee> employeeListobj = new ArrayList<Employee>();
@@ -318,7 +319,7 @@ public class DeviceServiceImpl implements DeviceService {
 	}
 
 	private Page<Employee> getEmployeePage(String empId, String empName, String designation, String office, String area,
-			int pageno, String sortField, String sortDir) {
+			int pageno, String sortField, String sortDir, String orgName) {
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
 				: Sort.by(sortField).descending();
 
@@ -333,9 +334,11 @@ public class DeviceServiceImpl implements DeviceService {
 				EmployeeConstants.BRANCH, EmployeeConstants.NAME);
 		Specification<Employee> areaSpc = generalSpecificationEmp.foreignKeyStringSpecification(area,
 				EmployeeConstants.AREA, EmployeeConstants.NAME);
+		Specification<Employee> orgSpc = generalSpecificationEmp.foreignKeyStringSpecification(orgName,
+				"organization", EmployeeConstants.NAME);
 
 		Page<Employee> page = employeeRepository
-				.findAll(isdeleted.and(empIdSpc).and(nameSpc).and(degSpc).and(officeSpc).and(areaSpc), pageable);
+				.findAll(isdeleted.and(empIdSpc).and(nameSpc).and(degSpc).and(officeSpc).and(areaSpc).and(orgSpc), pageable);
 		return page;
 	}
 

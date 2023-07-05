@@ -36,7 +36,7 @@ public class NotificationLogServiceImpl implements NotificationLogService {
 
 	@Override
 	public PaginationDto<NotificationLog> searchByField(Long id, String notificationType, String sender,
-			String receipent, String subject, String reportType, int pageno, String sortField, String sortDir) {
+			String receipent, String subject, String reportType, int pageno, String sortField, String sortDir,String organization) {
 		if (null == sortDir || sortDir.isEmpty()) {
 			sortDir = ApplicationConstants.ASC;
 		}
@@ -44,7 +44,7 @@ public class NotificationLogServiceImpl implements NotificationLogService {
 			sortField = ApplicationConstants.ID;
 		}
 		Page<NotificationLog> page = getNotificationLogPage(id, notificationType, sender, receipent, subject,
-				reportType, pageno, sortField, sortDir);
+				reportType, pageno, sortField, sortDir,organization);
         List<NotificationLog> employeeShiftList =  page.getContent();
 		
 		sortDir = (ApplicationConstants.ASC.equalsIgnoreCase(sortDir))?ApplicationConstants.DESC:ApplicationConstants.ASC;
@@ -54,7 +54,7 @@ public class NotificationLogServiceImpl implements NotificationLogService {
 	}
 
 	private Page<NotificationLog> getNotificationLogPage(Long id, String notificationType, String sender,
-			String receipent, String subject, String reportType, int pageno, String sortField, String sortDir) {
+			String receipent, String subject, String reportType, int pageno, String sortField, String sortDir, String organization) {
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
 				: Sort.by(sortField).descending();
 
@@ -66,8 +66,9 @@ public class NotificationLogServiceImpl implements NotificationLogService {
     	Specification<NotificationLog> receipentSpec = generalSpecification.stringSpecification(receipent,NotificationLogConstants.RECEIPENTS); 
     	Specification<NotificationLog> subjectSpec = generalSpecification.stringSpecification(subject,NotificationLogConstants.SUBJECT); 
     	Specification<NotificationLog>  reportTypeSpec = generalSpecification.stringSpecification(reportType,NotificationLogConstants.REPORT_TYPE);
+    	Specification<NotificationLog>  orgSpec = generalSpecification.foreignKeyStringSpecification(organization,"organization","name");
 		
-    	Page<NotificationLog> page = notificationLogRepository.findAll(idSpec.and(notificationTypeSpec).and(senderSpec).and(receipentSpec).and(subjectSpec).and(reportTypeSpec), pageable);
+    	Page<NotificationLog> page = notificationLogRepository.findAll(idSpec.and(notificationTypeSpec).and(senderSpec).and(receipentSpec).and(subjectSpec).and(reportTypeSpec).and(orgSpec), pageable);
 		return page;
 	}
 	

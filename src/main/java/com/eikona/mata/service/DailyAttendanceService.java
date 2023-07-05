@@ -52,7 +52,7 @@ public interface DailyAttendanceService {
 
 	PaginationDto<DailyAttendance> searchByField(Long id, String sDate, String eDate, String employeeId,
 			String employeeName, String office, String department, String designation,String status, int pageno, String sortField,
-			String sortDir);
+			String sortDir, String orgName);
 
 	PaginationDto<ExceptionSummaryDto> search(String sDate, String eDate, String company, int pageno,
 			String sortField, String sortDir);

@@ -66,14 +66,14 @@ public class DoorServiceImpl implements DoorService {
 	}
 
 	@Override
-	public PaginationDto<Door> searchByField(Long id, String name,String ipAddress, int pageno, String sortField, String sortDir) {
+	public PaginationDto<Door> searchByField(Long id, String name,String ipAddress, int pageno, String sortField, String sortDir,String orgName) {
 		if (null == sortDir || sortDir.isEmpty()) {
 			sortDir = ApplicationConstants.ASC;
 		}
 		if (null == sortField || sortField.isEmpty()) {
 			sortField = ApplicationConstants.ID;
 		}
-		Page<Door> page = getDoorPage(id, name, ipAddress, pageno, sortField, sortDir);
+		Page<Door> page = getDoorPage(id, name, ipAddress, pageno, sortField, sortDir,orgName);
 		List<Door> doorList = page.getContent();
 
 		sortDir = (ApplicationConstants.ASC.equalsIgnoreCase(sortDir)) ? ApplicationConstants.DESC : ApplicationConstants.ASC;
@@ -84,7 +84,7 @@ public class DoorServiceImpl implements DoorService {
 	}
 
 	private Page<Door> getDoorPage(Long id, String name, String ipAddress, int pageno, String sortField,
-			String sortDir) {
+			String sortDir, String orgName) {
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
 				: Sort.by(sortField).descending();
 
@@ -94,8 +94,9 @@ public class DoorServiceImpl implements DoorService {
 		Specification<Door> nameSpc = generalSpecification.stringSpecification(name, ApplicationConstants.NAME);
 		Specification<Door> ipAddressSpc = generalSpecification.stringSpecification(ipAddress, DoorConstants.IP_ADDRESS);
 		Specification<Door> isDeletedFalse = generalSpecification.isDeletedSpecification();
+		Specification<Door> orgSpc = generalSpecification.foreignKeyStringSpecification(orgName, "organization","name");
 
-		Page<Door> page = doorRepository.findAll(idSpc.and(nameSpc).and(ipAddressSpc).and(isDeletedFalse), pageable);
+		Page<Door> page = doorRepository.findAll(idSpc.and(nameSpc).and(ipAddressSpc).and(isDeletedFalse).and(orgSpc), pageable);
 		return page;
 	}
 

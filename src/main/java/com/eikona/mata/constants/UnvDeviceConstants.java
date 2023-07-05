@@ -15,6 +15,7 @@ public class UnvDeviceConstants {
 	public static final String NUM= "Num";
 	public static final String PERSON_INFO_LIST = "PersonInfoList";
 	public static final String PERSON_CODE = "PersonCode";
+	public static final String IDENTITY_NO = "IdentityNo";
 	public static final String IMAGE_LIST = "ImageList";
 	public static final String PERSON_NAME = "PersonName";
 	public static final String PERSON_ID = "PersonID";

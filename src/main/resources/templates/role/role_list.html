@@ -25,7 +25,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 							<div class="col">
 								<h3 class="page-heaer"><i class="las la-user-cog"> Role</i></h3><br>
 								<ul class="breadcrumb">
-						        <li class="breadcrumb-item">Role</li>
+						        <li class="breadcrumb-item">Administration</li>
 						       <li class="breadcrumb-item active"><i class="las la-user-cog"></i> Role</li>
 								</ul>
 							</div>
@@ -221,6 +221,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 			
         	$(document).on('click', '.searchButtonField', function(e) {
         		uncheckedAppend();
+        		
         		var id = document.getElementById('id').value;
 				var name = document.getElementById('name').value;
 				uncheckedRemove();

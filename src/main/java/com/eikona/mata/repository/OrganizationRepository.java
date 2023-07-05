@@ -15,6 +15,8 @@ public interface OrganizationRepository extends DataTablesRepository<Organizatio
 	List<Organization> findAllByIsDeletedFalse();
 	
 	Organization  findByNameAndIsDeletedFalse(String string);
+
+	List<Organization> findByIdAndIsDeletedFalse(Long id);
 	
 	//List<Organization> findAllByUser();
 

@@ -39,8 +39,8 @@ public interface DeviceService {
 	String saveDeviceEmployeeAssociation(EmployeeDevice employeeDevice, Long empId, Long devId, Principal principal) throws Exception;
 	
 	PaginationDto<Device> searchByField(Long id, String deviceType, String name, String area, String office, int pageno,
-			String sortField, String sortDir);
+			String sortField, String sortDir, String orgName);
 	
 	PaginationDto<Employee> searchDeviceToEmployee(Long id, String empId, String empName, String designation,
-			String office, String area, int pageno, String sortField, String sortDir);
+			String office, String area, int pageno, String sortField, String sortDir, String orgName);
 }

@@ -30,6 +30,6 @@ public interface BranchService {
 
 	void deletedById(long id);
 
-	PaginationDto<Branch> searchByField(Long id, String name, String address, String city, String state, String pin, int pageno, String sortField, String sortDir);
+	PaginationDto<Branch> searchByField(Long id, String name, String address, String city, String state, String pin, int pageno, String sortField, String sortDir, String orgName);
 
 }

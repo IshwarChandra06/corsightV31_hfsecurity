@@ -11,7 +11,7 @@
     <title>MATA</title>
     
     <!-- Favicon -->
-      <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.png">
+      <link rel="shortcut icon" type="image/x-icon" href="/assets/img/mata_logo.png">
 
 	<!-- Bootstrap CSS -->
       <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
@@ -286,6 +286,7 @@
         		uncheckedAppend();
         		var value = $(this).val();
 				var valueList = value.split("-");
+				console.log(value);
 				
         		var id = document.getElementById('id').value;
 				var sDate = document.getElementById('startDate').value;
@@ -297,7 +298,7 @@
                 var designation = document.getElementById('designation').value;
                 checkDate();
                 uncheckedRemove();
-                ajaxCall(id, sDate, eDate, employeeId, employeeName, office, department, designation, "sortBySearchField", "nextPage", valueList[0],valueList[1],valueList[2]);
+                ajaxCall(id, sDate, eDate, employeeId, employeeName, office, department, designation, "sortBySearchField", "nextPage", 1,"id","desc");
         	})
         	
 			//start search and sort field
@@ -421,7 +422,7 @@
 		   				'<button  value="'+result.page_number+'-department-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Department</b></button>'+
 		   			'</th><th>'+
 		   				'<button  value="'+result.page_number+'-designation-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Designation</b></button>'+
-		   			'</th><td><b>Attendance Status</b></td>';
+		   			'</th><th><b>Attendance Status</b></th>';
 				}
 				return table_header;
 			}

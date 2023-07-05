@@ -271,7 +271,7 @@ public class ShiftServiceImpl implements ShiftService {
 	}
 
 	@Override
-	public PaginationDto<Shift> searchByField(Long id, String name, int pageno, String sortField, String sortDir) {
+	public PaginationDto<Shift> searchByField(Long id, String name, int pageno, String sortField, String sortDir,String org) {
 
 		if (null == sortDir || sortDir.isEmpty()) {
 			sortDir = ApplicationConstants.ASC;
@@ -279,7 +279,7 @@ public class ShiftServiceImpl implements ShiftService {
 		if (null == sortField || sortField.isEmpty()) {
 			sortField =  ApplicationConstants.ID;
 		}
-		Page<Shift> page = getShiftPage(id, name, pageno, sortField, sortDir);
+		Page<Shift> page = getShiftPage(id, name, pageno, sortField, sortDir,org);
 		List<Shift> accessLevelList =  page.getContent();
 		
 		sortDir = (ApplicationConstants.ASC.equalsIgnoreCase(sortDir))?ApplicationConstants.DESC:ApplicationConstants.ASC;
@@ -288,7 +288,7 @@ public class ShiftServiceImpl implements ShiftService {
 		return dtoList;
 	}
 
-	private Page<Shift> getShiftPage(Long id, String name, int pageno, String sortField, String sortDir) {
+	private Page<Shift> getShiftPage(Long id, String name, int pageno, String sortField, String sortDir, String organization) {
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
 				: Sort.by(sortField).descending();
 
@@ -296,8 +296,8 @@ public class ShiftServiceImpl implements ShiftService {
 		Specification<Shift> isdeleted = generalSpecification.isDeletedSpecification();
 		Specification<Shift> idSpc = generalSpecification.longSpecification(id, ApplicationConstants.ID);
 		Specification<Shift> nameSpc = generalSpecification.stringSpecification(name, ApplicationConstants.NAME);
-		
-		Page<Shift> page = shiftRepository.findAll(isdeleted.and(idSpc).and(nameSpc), pageable);
+		Specification<Shift> orgSpc = generalSpecification.foreignKeyStringSpecification(organization, "organization", ApplicationConstants.NAME);
+		Page<Shift> page = shiftRepository.findAll(isdeleted.and(idSpc).and(nameSpc).and(orgSpc), pageable);
 		return page;
 	}
 }

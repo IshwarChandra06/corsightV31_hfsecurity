@@ -67,7 +67,7 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
 	@Override
 	public PaginationDto<MonthlyReportDto<MonthlyAttendanceDto>> searchByField(String dateStr,
 			String employeeId, String employeeName, String department, String designation, int pageno, String sortField,
-			String sortDir) {
+			String sortDir,String orgName) {
 
 		PaginationDto<MonthlyReportDto<MonthlyAttendanceDto>> dtoList = new PaginationDto<>();
 		MonthlyReportDto<MonthlyAttendanceDto> monthlyDetailsReport = new MonthlyReportDto<>();
@@ -116,8 +116,10 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
 						EmployeeConstants.DEPARTMENT, ApplicationConstants.NAME);
 				Specification<Employee> degSpec = generalSpecification.foreignKeyStringSpecification(designation,
 						EmployeeConstants.DESIGNATION, ApplicationConstants.NAME);
+				Specification<Employee> orgSpec = generalSpecification.foreignKeyStringSpecification(orgName,
+						"organization", ApplicationConstants.NAME);
 
-				Page<Employee> page = employeeRepository.findAll(isDeletedSpec.and(empIdSpec).and(empNameSpec).and(deptSpec).and(degSpec), pageable);
+				Page<Employee> page = employeeRepository.findAll(isDeletedSpec.and(empIdSpec).and(empNameSpec).and(deptSpec).and(degSpec).and(orgSpec), pageable);
 				setMonthlyAttendanceDtoList(monthlyDetailsReport, headList, startCalendar, endCalendar, page);
 
 				sortDir = (ApplicationConstants.ASC.equalsIgnoreCase(sortDir)) ? ApplicationConstants.DESC : ApplicationConstants.ASC;
@@ -393,7 +395,7 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
 	}
 	@Override
 	public MonthlyReportDto<MonthlyAttendanceDto> calculateMonthlyReport(String startDateStr, String employeeId,
-			String employeeName, String department, String designation) {
+			String employeeName, String department, String designation,String orgName) {
 
 		
 		MonthlyReportDto<MonthlyAttendanceDto> monthlyDetailsReport = new MonthlyReportDto<>();
@@ -428,8 +430,10 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
 					EmployeeConstants.DEPARTMENT, ApplicationConstants.NAME);
 			Specification<Employee> degSpec = generalSpecification.foreignKeyStringSpecification(designation,
 					EmployeeConstants.DESIGNATION, ApplicationConstants.NAME);
+			Specification<Employee> orgSpec = generalSpecification.foreignKeyStringSpecification(orgName,
+					"organization", ApplicationConstants.NAME);
 
-			List<Employee> workerList = employeeRepository.findAll(isDeletedSpec.and(empIdSpec).and(empNameSpec).and(deptSpec).and(degSpec));
+			List<Employee> workerList = employeeRepository.findAll(isDeletedSpec.and(empIdSpec).and(empNameSpec).and(deptSpec).and(degSpec).and(orgSpec));
 			
 			List<MonthlyAttendanceDto> monthlyReportList = new ArrayList<>();
 			for(Employee employee: workerList) {

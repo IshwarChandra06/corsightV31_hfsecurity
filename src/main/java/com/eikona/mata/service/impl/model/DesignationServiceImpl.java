@@ -69,14 +69,14 @@ public class DesignationServiceImpl implements DesignationService {
 
 	@Override
 	public PaginationDto<Designation> searchByField(Long id, String name, int pageno, String sortField,
-			String sortDir) {
+			String sortDir,String org) {
 		if (null == sortDir || sortDir.isEmpty()) {
 			sortDir =  ApplicationConstants.ASC;
 		}
 		if (null == sortField || sortField.isEmpty()) {
 			sortField = ApplicationConstants.ID;
 		}
-		Page<Designation> page = getDesignationPage(id, name, pageno, sortField, sortDir);
+		Page<Designation> page = getDesignationPage(id, name, pageno, sortField, sortDir,org);
         List<Designation> designationList =  page.getContent();
 		
 		sortDir = (ApplicationConstants.ASC.equalsIgnoreCase(sortDir))?ApplicationConstants.DESC:ApplicationConstants.ASC;
@@ -85,7 +85,7 @@ public class DesignationServiceImpl implements DesignationService {
 		return dtoList;
 	}
 
-	private Page<Designation> getDesignationPage(Long id, String name, int pageno, String sortField, String sortDir) {
+	private Page<Designation> getDesignationPage(Long id, String name, int pageno, String sortField, String sortDir, String org) {
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
 				: Sort.by(sortField).descending();
 
@@ -94,9 +94,10 @@ public class DesignationServiceImpl implements DesignationService {
 		Specification<Designation> idSpc = generalSpecification.longSpecification(id, ApplicationConstants.ID);
 		Specification<Designation> nameSpc = generalSpecification.stringSpecification(name, ApplicationConstants.NAME);
 		Specification<Designation> isDeletedFalse = generalSpecification.isDeletedSpecification();
+		Specification<Designation> orgSpc = generalSpecification.foreignKeyStringSpecification(org, "organization", ApplicationConstants.NAME);
 		
 		
-    	Page<Designation> page = designationRepository.findAll(idSpc.and(nameSpc).and(isDeletedFalse),pageable);
+    	Page<Designation> page = designationRepository.findAll(idSpc.and(nameSpc).and(isDeletedFalse).and(orgSpc),pageable);
 		return page;
 	}
 	

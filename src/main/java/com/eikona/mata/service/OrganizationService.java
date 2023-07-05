@@ -31,7 +31,7 @@ public interface OrganizationService {
     
     
 	PaginationDto<Organization> searchByField(Long id, String name, String address, String city, String pin,
-			int pageno, String sortField, String sortDir);
+			int pageno, String sortField, String sortDir, Organization organization);
     
    
     }

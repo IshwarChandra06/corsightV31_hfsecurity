@@ -30,5 +30,6 @@ public interface DesignationService {
 	void deleteById(long id);
 	
 	
-	PaginationDto<Designation> searchByField(Long id, String name, int pageno, String sortField, String sortDir);
+	PaginationDto<Designation> searchByField(Long id, String name, int pageno, String sortField, String sortDir, String orgName);
+	
 }

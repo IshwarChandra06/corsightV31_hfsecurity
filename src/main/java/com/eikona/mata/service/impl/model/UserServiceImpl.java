@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public PaginationDto<User> searchByField(Long id, String name, String phone, String role, int pageno,
-			String sortField, String sortDir) {
+			String sortField, String sortDir,String org) {
 
 		if (null == sortDir || sortDir.isEmpty()) {
 			sortDir = ApplicationConstants.ASC;
@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
 			sortField = ApplicationConstants.ID;
 		}
 
-		Page<User> page = getSpecificationOfUser(id, name, phone, role, pageno, sortField, sortDir);
+		Page<User> page = getSpecificationOfUser(id, name, phone, role, pageno, sortField, sortDir,org);
 		
 		List<User> userList = page.getContent();
 
@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
 		return dtoList;
 	}
 
-	private Page<User> getSpecificationOfUser(Long id, String name, String phone, String role, int pageno, String sortField, String sortDir) {
+	private Page<User> getSpecificationOfUser(Long id, String name, String phone, String role, int pageno, String sortField, String sortDir, String organization) {
 
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
 				: Sort.by(sortField).descending();
@@ -107,8 +107,9 @@ public class UserServiceImpl implements UserService {
 		Specification<User> phoneSpec = generalSpecification.stringSpecification(phone, UserConstants.PHONE);
 		Specification<User> roleSpec = generalSpecification.foreignKeyStringSpecification(role, UserConstants.ROLE, ApplicationConstants.NAME);
 		Specification<User> isDeletedFalse = generalSpecification.isDeletedSpecification();
+		Specification<User> orgSpc = generalSpecification.foreignKeyStringSpecification(organization, "organization", ApplicationConstants.NAME);
 
-		Page<User> page = userRepository.findAll(idSpec.and(nameSpec).and(isDeletedFalse).and(phoneSpec).and(roleSpec),
+		Page<User> page = userRepository.findAll(idSpec.and(nameSpec).and(isDeletedFalse).and(phoneSpec).and(roleSpec).and(orgSpc),
 				pageable);
 		return page;
 	}

@@ -24,5 +24,5 @@ public interface EmailScheduleService {
 	void removeTaskFromScheduler();
 
 	PaginationDto<EmailSchedule> searchByField(Long id, String reportType, String fileType, String toMail,
-			String subject, int pageno, String sortField, String sortDir);
+			String subject, int pageno, String sortField, String sortDir, String orgName);
 }

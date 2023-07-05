@@ -1,5 +1,6 @@
 package com.eikona.mata.controller;
 
+import java.security.Principal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,9 +27,11 @@ import com.eikona.mata.dto.DepartmentDto;
 import com.eikona.mata.dto.OrganizationDto;
 import com.eikona.mata.entity.Department;
 import com.eikona.mata.entity.Transaction;
+import com.eikona.mata.entity.User;
 import com.eikona.mata.repository.DepartmentRepository;
 import com.eikona.mata.repository.EmployeeRepository;
 import com.eikona.mata.repository.TransactionRepository;
+import com.eikona.mata.repository.UserRepository;
 import com.eikona.mata.util.ImageProcessingUtil;
 
 @Controller
@@ -46,6 +49,9 @@ public class HomeController {
 	@Autowired
 	private ImageProcessingUtil imageProcessingUtil;
 	
+	@Autowired
+	private UserRepository userRepository;
+	
 	@Value("${device.model}")
 	private String deviceModel;
 	
@@ -61,16 +67,16 @@ public class HomeController {
 	
 	@GetMapping(value={"/home","/"})
 	@PreAuthorize("hasAuthority('dashboard_view')")
-	public String list(Model model) {
-		
+	public String list(Model model,Principal principal) {
+		User user=userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
 		Date date = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
 		CountDto countDto = new CountDto();
-		long empTotalCount= employeeRepository.findAllByIsDeletedFalse().size();//count();
-		long presentEmpTotalCount = transactionRepository.totalpresentCustom(dateFormat.format(date));
-		long noOfAppearencesTotalCount = transactionRepository.countAppearencesCustom(dateFormat.format(date));
-		long noMaskTotalCount = transactionRepository.totalUnMaskCustom(dateFormat.format(date));
+		long empTotalCount= employeeRepository.findAllByOrganizationAndIsDeletedFalse(user.getOrganization()).size();//count();
+		long presentEmpTotalCount = transactionRepository.totalpresentCustom(dateFormat.format(date),user.getOrganization().getName());
+		long noOfAppearencesTotalCount = transactionRepository.countAppearencesCustom(dateFormat.format(date),user.getOrganization().getName());
+		long noMaskTotalCount = transactionRepository.totalUnMaskCustom(dateFormat.format(date),user.getOrganization().getName());
 		
 		countDto.setTransactions(noOfAppearencesTotalCount);
 		countDto.setNoMask(noMaskTotalCount);
@@ -84,16 +90,17 @@ public class HomeController {
 	
 	@GetMapping(value = "/attendanceCount")
 	@PreAuthorize("hasAuthority('dashboard_view')")
-	public @ResponseBody CountDto getAttendanceCount(){
+	public @ResponseBody CountDto getAttendanceCount(Principal principal) {
+		User user=userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
 		
 		Date date = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
 		CountDto countDto = new CountDto();
-		long empTotalCount= employeeRepository.findAllByIsDeletedFalse().size();
-		long presentEmpTotalCount = transactionRepository.totalpresentCustom(dateFormat.format(date));
-		long noOfAppearencesTotalCount = transactionRepository.countAppearencesCustom(dateFormat.format(date));
-		long noMaskTotalCount = transactionRepository.totalUnMaskCustom(dateFormat.format(date));
+		long empTotalCount= employeeRepository.findAllByOrganizationAndIsDeletedFalse(user.getOrganization()).size();//count();
+		long presentEmpTotalCount = transactionRepository.totalpresentCustom(dateFormat.format(date),user.getOrganization().getName());
+		long noOfAppearencesTotalCount = transactionRepository.countAppearencesCustom(dateFormat.format(date),user.getOrganization().getName());
+		long noMaskTotalCount = transactionRepository.totalUnMaskCustom(dateFormat.format(date),user.getOrganization().getName());
 		
 		countDto.setTransactions(noOfAppearencesTotalCount);
 		countDto.setNoMask(noMaskTotalCount);
@@ -104,21 +111,21 @@ public class HomeController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public @ResponseBody JSONArray departmenetWise() {
+	public @ResponseBody JSONArray departmenetWise(User user) {
 		
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String date = dateFormat.format(new Date());
 		
 		JSONArray returnArray = new JSONArray();
 		
-		List<Department> departmentList = (List<Department>) departmentRepository.findAllByIsDeletedFalse();
-		List<DepartmentDto> presentDepartmentList = transactionRepository.countTotalEmployeeInDeptCustom(date);
+		List<Department> departmentList = (List<Department>) departmentRepository.findAllByOrganizationAndIsDeletedFalse(user.getOrganization());
+		List<DepartmentDto> presentDepartmentList = transactionRepository.countTotalEmployeeInDeptCustom(date,user.getOrganization().getName());
 		List<DepartmentDto> totalDepartmentList = new ArrayList<>();
 		
 		for(Department department:departmentList) {
 			
 			DepartmentDto departmentDto= new DepartmentDto();
-			Long totalDept = employeeRepository.countEmployeeDeptWiseCustom(department.getName());
+			Long totalDept = employeeRepository.countEmployeeDeptWiseCustom(department.getName(),user.getOrganization().getName());
 			if(null == totalDept) {
 				totalDept = 0l;
 			}
@@ -140,7 +147,7 @@ public class HomeController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public @ResponseBody  JSONObject barChart() {
+	public @ResponseBody  JSONObject barChart(User user) {
 		
 		Calendar endDate = Calendar.getInstance();
 		endDate.setTime(new Date());
@@ -155,7 +162,7 @@ public class HomeController {
 		startDate.add(Calendar.MINUTE, 00);
 		startDate.add(Calendar.SECOND, 00);
 		
-		List<OrganizationDto> objList = transactionRepository.findAllOrganizationCustom(startDate.getTime(), endDate.getTime());
+		List<OrganizationDto> objList = transactionRepository.findAllOrganizationCustom(startDate.getTime(), endDate.getTime(),user.getOrganization().getName());
 	   
 	    JSONObject returnObject = new JSONObject();
 	    
@@ -174,11 +181,11 @@ public class HomeController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public @ResponseBody  JSONObject lineChart(){
+	public @ResponseBody  JSONObject lineChart(User user) {
 		
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String dateStr = dateFormat.format(new Date());
-		List<OrganizationDto> exceptionDataList = transactionRepository.countEmpPresentCustom(dateStr);
+		List<OrganizationDto> exceptionDataList = transactionRepository.countEmpPresentCustom(dateStr,user.getOrganization().getName());
 		
 		JSONObject returnObject = new JSONObject();
         
@@ -214,13 +221,14 @@ public class HomeController {
 	
 	@GetMapping(value="/api/pandemic/transaction")
 	@PreAuthorize("hasAuthority('pandemic_dashboard_view')")
-	public @ResponseBody List<Transaction> eventdata() {
+	public @ResponseBody List<Transaction> eventdata(Principal principal) {
+		User user=userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
 		
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String dateStr = dateFormat.format(new Date());
 		
 		Pageable paging = PageRequest.of(0, 5, Sort.by("punchDate").descending());
-		List<Transaction> transactionList = transactionRepository.getRealTimeDataCustom(dateStr, paging);
+		List<Transaction> transactionList = transactionRepository.getRealTimeDataCustom(dateStr,user.getOrganization().getName(), paging);
 		
 		List<Transaction> transactions = new ArrayList<Transaction>();
 		for (Transaction trans : transactionList) {
@@ -234,13 +242,14 @@ public class HomeController {
 	@SuppressWarnings("unchecked")
 	@GetMapping(value="/api/common-chart")
 	@PreAuthorize("hasAuthority('dashboard_view')")
-	public @ResponseBody JSONObject commonChart() {
+	public @ResponseBody JSONObject commonChart(Principal principal) {
+		User user=userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
 		
 		JSONObject returnObject = new JSONObject();
 		
-		JSONObject barObject = barChart();
-		JSONArray departmentArray = departmenetWise();
-		JSONObject lineObject = lineChart();
+		JSONObject barObject = barChart(user);
+		JSONArray departmentArray = departmenetWise(user);
+		JSONObject lineObject = lineChart(user);
 		
 		returnObject.put("barData", barObject);
 		returnObject.put("department", departmentArray);

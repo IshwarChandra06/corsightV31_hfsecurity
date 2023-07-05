@@ -78,6 +78,7 @@ public class ExcelEmployeeImport {
 
 			else if (cellIndex == NumberConstants.ZERO) {
 				setEmpId(employeeObj, currentCell);
+				employeeObj.setOrganization(org);
 			} else if (cellIndex == NumberConstants.ONE) {
 				employeeObj.setName(currentCell.getStringCellValue());
 			}
@@ -204,7 +205,7 @@ public class ExcelEmployeeImport {
 			employeeObj.setBranch(branch);
 		}
 	}
-	public List<Employee> parseExcelFileEmployeeList(InputStream inputStream) {
+	public List<Employee> parseExcelFileEmployeeList(InputStream inputStream, Organization org) {
 		List<Employee> employeeList = new ArrayList<Employee>();
 		try {
 
@@ -220,7 +221,6 @@ public class ExcelEmployeeImport {
 			Map<String, Designation> designationMap = employeeObjectMap.getDesignation();
 			Map<String, Department> deptMap = employeeObjectMap.getDepartment();
 			List<String> empIdList=employeeRepository.getEmpIdAndIsDeletedFalseCustom();
-			Organization org = organizationrepository.findById(DefaultConstants.DEFAULT_ORGANIZATION_ID).get();
 			while (rows.hasNext()) {
 				Row currentRow = rows.next();
 
@@ -287,7 +287,7 @@ public Employee cosecExcelRowToEmployee(Row currentRow,Organization org) {
 		return employeeObj;
 		
 	}
-	public List<Employee> parseCosecExcelFileEmployeeList(InputStream inputStream) throws InvalidFormatException {
+	public List<Employee> parseCosecExcelFileEmployeeList(InputStream inputStream, Organization org) throws InvalidFormatException {
 		List<Employee> employeeList = new ArrayList<Employee>();
 		try {
 		//OPCPackage pkg = OPCPackage.open(inputStream);
@@ -301,7 +301,6 @@ public Employee cosecExcelRowToEmployee(Row currentRow,Organization org) {
 
 			int rowNumber = NumberConstants.ZERO;
 			List<String> empIdList=employeeRepository.getEmpIdAndIsDeletedFalseCustom();
-			Organization org = organizationrepository.findById(DefaultConstants.DEFAULT_ORGANIZATION_ID).get();
 			while (rows.hasNext()) {
 				Row currentRow = rows.next();
 

@@ -6,5 +6,5 @@ import com.eikona.mata.entity.DailyAttendance;
 public interface AbsentReportService {
 
 	PaginationDto<DailyAttendance> search(Long id, String sDate, String eDate, String employeeId, String employeeName,
-			String office, String department, String designation, int pageno, String sortField, String sortDir);
+			String office, String department, String designation, int pageno, String sortField, String sortDir, String orgName);
 }

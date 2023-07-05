@@ -30,25 +30,11 @@ public class MataApplication {
 	
 	@PostConstruct 
 	public void init(){
-		TimeZone.setDefault(TimeZone.getTimeZone(zone));
-		System.out.println();
+		TimeZone.setDefault(TimeZone.getTimeZone("IST"));
 	}
 	public static void main(String[] args) {
 		
 		SpringApplication.run(MataApplication.class, args);
-		//saveIntoContentStore();
 	}
-	
-	
-//	@Bean
-//	public WebClient webClient(final WebClient.Builder webclientbuilder) {
-//	    final int size = 16 * 1024 * 1024;
-//	    final ExchangeStrategies strategies = ExchangeStrategies.builder()
-//	        .codecs(codecs -> codecs.defaultCodecs().maxInMemorySize(-1))
-//	        .build();
-//	    return webclientbuilder
-//	        .exchangeStrategies(strategies)
-//	        .build();
-//	}
 
 }

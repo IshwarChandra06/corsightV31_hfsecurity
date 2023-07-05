@@ -93,7 +93,7 @@
 	<!-- Custom JS -->
 	<script src="/assets/js/app.js"></script> 
     <script type="text/javascript" src="/assets/js/jquery.multi-select.js"></script>
-    <script src="/assets/custome/moment.min.js"></script>
+    <script src="/assets/moment/moment.min.js"></script>
     
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -276,11 +276,11 @@
 						'<th >Remove From Device</th>';
 						
 				}else {
-					table_header = '<th><button  value="'+result.page_number+'-branch-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Device Name</b></button>'+
+					table_header = '<th><button  value="'+result.page_number+'-branch-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Office</b></button>'+
 		   			'</th><th>'+
-		   				'<button  value="'+result.page_number+'-area-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>IP Address</b></button>'+
+		   				'<button  value="'+result.page_number+'-area-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Area</b></button>'+
 		   			'</th><th>'+
-		   				'<button  value="'+result.page_number+'-name-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Office</b></button>'+
+		   				'<button  value="'+result.page_number+'-deviceName-'+result.sortDir+'" type="button" class="btn btn-link '+flag+'"><b>Device</b></button>'+
 		   			'</th><th>Sync Date</th>'+
 					'<th class="text-center">Sync</th>'+
 					'<th >Remove From Device</th>';
@@ -293,11 +293,11 @@
            		$.each(result.data, function(i, customer) {
            			table_data +='<tr>' +
            			'<td>' + ((null != customer.branchName)?customer.branchName:'') + '</td>'+
-           			'<td>' + ((null != customer.areaName)?customer.areaName:'') + '</td>';
+           			'<td>' + ((null != customer.areaName)?customer.areaName:'') + '</td>'+
                	 	'<td>' + ((null != customer.deviceName)?customer.deviceName:'') + '</td>' +
-               	 	'<td>' + ((null != customer.syncDate)?customer.syncDate:'') + '</td>' +
+               	 	'<td>' + ((null != customer.syncDate)?moment(customer.syncDate, "YYYY-MM-DD'T'HH:mm:ss.SSS'Z'").format("YYYY-MM-DD HH:mm:ss"):'') + '</td>' +
                		'<td>' + ((null != customer.syncDate)?'':'<button  value="'+customer.deviceId+'" class="approvedbtn btn add-btn ">Sync</button>') + '</td>' +
-               		'<td>' + ((null != customer.syncDate)?'':'<button  value="'+customer.deviceId+'"  class="deletebtn btn btn-danger"><i class="las la-trash"></i></button>') + '</td>' ;
+               		'<td>' + ('<button  value="'+customer.deviceId+'"  class="deletebtn btn btn-danger"><i class="las la-trash"></i></button>') + '</td>' ;
                	 	
            		});
            		return table_data;

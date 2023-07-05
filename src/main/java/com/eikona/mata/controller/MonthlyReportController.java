@@ -1,5 +1,6 @@
 package com.eikona.mata.controller;
 
+import java.security.Principal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.eikona.mata.dto.MonthlyAttendanceDto;
 import com.eikona.mata.dto.MonthlyReportDto;
 import com.eikona.mata.dto.PaginationDto;
+import com.eikona.mata.entity.User;
+import com.eikona.mata.repository.UserRepository;
 import com.eikona.mata.service.MonthlyReportService;
 
 
@@ -28,6 +31,9 @@ public class MonthlyReportController {
 	@Autowired
 	private MonthlyReportService monthlyReportService;
 	
+	@Autowired
+	private UserRepository userRepository;
+	
 	@GetMapping("/monthly/report")
 	@PreAuthorize("hasAuthority('monthlyattendance_view')")
 	public String getMonthlyReportPage(Model model) {
@@ -36,7 +42,10 @@ public class MonthlyReportController {
 	
 	@GetMapping("/api/monthly/report/export-to-file")
 	@PreAuthorize("hasAuthority('monthlyattendance_export')")
-	public void excelGenerateIncapAttendance(HttpServletResponse response, String date,String employeeId,String employeeName,String designation,String department,String flag) {
+	public void excelGenerateIncapAttendance(HttpServletResponse response, String date,String employeeId,String employeeName,String designation,String department,String flag, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String orgName = (null == user.getOrganization()? null: user.getOrganization().getName());
 		response.setContentType("application/octet-stream");
 		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss");
 		String currentDateTime = dateFormat.format(new Date());
@@ -46,7 +55,7 @@ public class MonthlyReportController {
 		
 		try {
 			
-			MonthlyReportDto<MonthlyAttendanceDto> monthlyDataList = monthlyReportService.calculateMonthlyReport(date,employeeId,employeeName,department,designation);
+			MonthlyReportDto<MonthlyAttendanceDto> monthlyDataList = monthlyReportService.calculateMonthlyReport(date,employeeId,employeeName,department,designation,orgName);
 			monthlyReportService.excelGenerator(response, monthlyDataList);
 			
 		} catch (Exception  e) {
@@ -57,9 +66,12 @@ public class MonthlyReportController {
 	@RequestMapping(value = "/api/search/monthly-report", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('monthlyattendance_view')")
 	public @ResponseBody PaginationDto<MonthlyReportDto<MonthlyAttendanceDto>> searchVehicleLog(String date, String employeeId, String employeeName,String department, String designation,
-			int pageno, String sortField, String sortDir) {
+			int pageno, String sortField, String sortDir, Principal principal) {
 		
-		PaginationDto<MonthlyReportDto<MonthlyAttendanceDto>> dtoList = monthlyReportService.searchByField( date, employeeId, employeeName, department, designation, pageno, sortField, sortDir);
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String orgName = (null == user.getOrganization()? null: user.getOrganization().getName());
+		
+		PaginationDto<MonthlyReportDto<MonthlyAttendanceDto>> dtoList = monthlyReportService.searchByField( date, employeeId, employeeName, department, designation, pageno, sortField, sortDir,orgName);
 		
 		return dtoList;
 	}

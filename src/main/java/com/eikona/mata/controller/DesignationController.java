@@ -1,5 +1,8 @@
 package com.eikona.mata.controller;
 
+import java.security.Principal;
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +20,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.eikona.mata.dto.PaginationDto;
 import com.eikona.mata.entity.Designation;
+import com.eikona.mata.entity.Organization;
+import com.eikona.mata.entity.User;
+import com.eikona.mata.repository.OrganizationRepository;
+import com.eikona.mata.repository.UserRepository;
 import com.eikona.mata.service.DesignationService;
-import com.eikona.mata.service.OrganizationService;
 
 @Controller
 public class DesignationController {
@@ -26,19 +32,30 @@ public class DesignationController {
 	private DesignationService designationService;
 
 	@Autowired
-	private OrganizationService organizationService;
+	private OrganizationRepository organizationRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	@GetMapping("/designation")
 	@PreAuthorize("hasAuthority('designation_view')")
-	public String designationList(Model model) {
-		model.addAttribute("Designation", designationService.getAll());
+	public String designationList() {
 		return "designation/designation_list";
 	}
 
 	@GetMapping("/designation/new")
 	@PreAuthorize("hasAuthority('designation_create')")
-	public String newDesignation(Model model) {
-		model.addAttribute("listOrganization", organizationService.getAll());
+	public String newDesignation(Model model, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		List<Organization> organizationList = null;
+		if(null == user.getOrganization()) {
+			organizationList = (List<Organization>) organizationRepository.findAll();
+		}else {
+			organizationList = organizationRepository.findByIdAndIsDeletedFalse(user.getOrganization().getId());
+		}
+		
+		model.addAttribute("listOrganization", organizationList);
 		Designation designation = new Designation();
 		model.addAttribute("designation", designation);
 		model.addAttribute("title", "New Designation");
@@ -48,8 +65,19 @@ public class DesignationController {
 	@PostMapping("/designation/add")
 	@PreAuthorize("hasAnyAuthority('designation_create','designation_update')")
 	public String saveDesignation(@ModelAttribute("designation") Designation designation, @Valid Designation desig,
-			Errors errors,String title, Model model) {
+			Errors errors,String title, Model model, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		
 		if (errors.hasErrors()) {
+			List<Organization> organizationList = null;
+			if(null == user.getOrganization()) {
+				organizationList = (List<Organization>) organizationRepository.findAll();
+			}else {
+				organizationList = organizationRepository.findByIdAndIsDeletedFalse(user.getOrganization().getId());
+			}
+			
+			model.addAttribute("listOrganization", organizationList);
 			model.addAttribute("title", title);
 			return "designation/designation_new";
 		} else {
@@ -69,8 +97,17 @@ public class DesignationController {
 
 	@GetMapping("/designation/edit/{id}")
 	@PreAuthorize("hasAuthority('designation_update')")
-	public String updateDesignation(@PathVariable(value = "id") long id, Model model) {
-		model.addAttribute("listOrganization", organizationService.getAll());
+	public String updateDesignation(@PathVariable(value = "id") long id, Model model, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		List<Organization> organizationList = null;
+		if(null == user.getOrganization()) {
+			organizationList = (List<Organization>) organizationRepository.findAll();
+		}else {
+			organizationList = organizationRepository.findByIdAndIsDeletedFalse(user.getOrganization().getId());
+		}
+		
+		model.addAttribute("listOrganization", organizationList);
 		Designation designation = designationService.getById(id);
 		model.addAttribute("designation", designation);
 		model.addAttribute("title", "Update Designation");
@@ -87,9 +124,12 @@ public class DesignationController {
 
 	@RequestMapping(value = "/api/search/designation", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('designation_view')")
-	public @ResponseBody PaginationDto<Designation> searchAccessLevel(Long id, String name, int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<Designation> searchDesignation(Long id, String name, int pageno, String sortField, String sortDir, Principal principal) {
 		
-		PaginationDto<Designation> dtoList = designationService.searchByField(id, name,  pageno, sortField, sortDir);
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String orgName = (null == user.getOrganization()? null: user.getOrganization().getName());
+		
+		PaginationDto<Designation> dtoList = designationService.searchByField(id, name,  pageno, sortField, sortDir,orgName);
 		return dtoList;
 	}
 

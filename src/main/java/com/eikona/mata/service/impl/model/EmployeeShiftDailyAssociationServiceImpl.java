@@ -47,7 +47,7 @@ public class EmployeeShiftDailyAssociationServiceImpl implements EmployeeShiftDa
 	@Override
 	public PaginationDto<EmployeeShiftDailyAssociation> searchByField(Long id, String sDate, String eDate,
 			String employeeId, String employeeName, String department, String shift, int pageno, String sortField,
-			String sortDir) {
+			String sortDir,String org) {
 		Date startDate = null;
 		Date endDate = null;
 		if (!sDate.isEmpty() && !eDate.isEmpty()) {
@@ -68,7 +68,7 @@ public class EmployeeShiftDailyAssociationServiceImpl implements EmployeeShiftDa
 			sortField = ApplicationConstants.ID;
 		}
 		Page<EmployeeShiftDailyAssociation> page = getEmployeeShiftAssignedPage(id, employeeId, employeeName,
-				department, shift, pageno, sortField, sortDir, startDate, endDate);
+				department, shift, pageno, sortField, sortDir, startDate, endDate,org);
         List<EmployeeShiftDailyAssociation> employeeShiftList =  page.getContent();
 		
 		sortDir = (ApplicationConstants.ASC.equalsIgnoreCase(sortDir))?ApplicationConstants.DESC:ApplicationConstants.ASC;
@@ -80,7 +80,7 @@ public class EmployeeShiftDailyAssociationServiceImpl implements EmployeeShiftDa
 
 	private Page<EmployeeShiftDailyAssociation> getEmployeeShiftAssignedPage(Long id, String employeeId,
 			String employeeName, String department, String shift, int pageno, String sortField, String sortDir,
-			Date startDate, Date endDate) {
+			Date startDate, Date endDate, String organization) {
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
 				: Sort.by(sortField).descending();
 
@@ -92,8 +92,8 @@ public class EmployeeShiftDailyAssociationServiceImpl implements EmployeeShiftDa
     	Specification<EmployeeShiftDailyAssociation> employeeNameSpc = generalSpecification.foreignKeyStringSpecification(employeeName,EmployeeShiftDailyAssociationConstants.EMPLOYEE,ApplicationConstants.NAME); 
     	Specification<EmployeeShiftDailyAssociation> departmentSpc = generalSpecification.foreignKeyDoubleObjectStringSpecification(department,EmployeeShiftDailyAssociationConstants.EMPLOYEE,EmployeeConstants.DEPARTMENT,ApplicationConstants.NAME); 
     	Specification<EmployeeShiftDailyAssociation>  shiftSpc = generalSpecification.foreignKeyStringSpecification(shift, EmployeeShiftDailyAssociationConstants.SHIFT,ApplicationConstants.NAME);
-		
-    	Page<EmployeeShiftDailyAssociation> page = employeeShiftDailyAssociationRepository.findAll(idSpc.and(dateSpc).and(employeeIdSpc).and(employeeNameSpc).and(departmentSpc).and(shiftSpc),pageable);
+    	Specification<EmployeeShiftDailyAssociation> orgSpc = generalSpecification.foreignKeyDoubleObjectStringSpecification(organization, "employee","organization", ApplicationConstants.NAME);
+    	Page<EmployeeShiftDailyAssociation> page = employeeShiftDailyAssociationRepository.findAll(idSpc.and(dateSpc).and(employeeIdSpc).and(employeeNameSpc).and(departmentSpc).and(shiftSpc).and(orgSpc),pageable);
 		return page;
 	}
 

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.eikona.mata.dto.PaginationDto;
 import com.eikona.mata.entity.Department;
+import com.eikona.mata.entity.Organization;
 
 public interface DepartmentService {
 	/**
@@ -32,5 +33,5 @@ public interface DepartmentService {
 	 */
 	void deleteById(long id);
 
-	PaginationDto<Department> searchByField(Long id, String name, int pageno, String sortField, String sortDir);
+	PaginationDto<Department> searchByField(Long id, String name, int pageno, String sortField, String sortDir, String orgName);
 }

@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.eikona.mata.constants.ApplicationConstants;
@@ -179,7 +178,7 @@ public class AreaServiceImpl implements AreaService {
 
 	@Override
 	public PaginationDto<Area> searchByField(Long id, String name, String office, int pageno, String sortField,
-			String sortDir) {
+			String sortDir,String organization) {
 
 		if (null == sortDir || sortDir.isEmpty()) {
 			sortDir = ApplicationConstants.ASC;
@@ -190,7 +189,7 @@ public class AreaServiceImpl implements AreaService {
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
 				: Sort.by(sortField).descending();
 
-		Page<Area> page = getPaginatedArea(id, name, office, pageno, sort);
+		Page<Area> page = getPaginatedArea(id, name, office, pageno, sort,organization);
 		List<Area> accessLevelList = page.getContent();
 
 		sortDir = (ApplicationConstants.ASC.equalsIgnoreCase(sortDir)) ? ApplicationConstants.DESC : ApplicationConstants.ASC;
@@ -200,7 +199,7 @@ public class AreaServiceImpl implements AreaService {
 		return dtoList;
 	}
 
-	private Page<Area> getPaginatedArea(Long id, String name, String office, int pageno, Sort sort) {
+	private Page<Area> getPaginatedArea(Long id, String name, String office, int pageno, Sort sort, String organization) {
 		Pageable pageable = PageRequest.of(pageno - NumberConstants.ONE, NumberConstants.TEN, sort);
 
 		Specification<Area> isdeleted = generalSpecificationArea.isDeletedSpecification();
@@ -208,14 +207,15 @@ public class AreaServiceImpl implements AreaService {
 		Specification<Area> idSpc = generalSpecificationArea.longSpecification(id, ApplicationConstants.ID);
 		Specification<Area> nameSpc = generalSpecificationArea.stringSpecification(name, ApplicationConstants.NAME);
 		Specification<Area> officeSpc = generalSpecificationArea.foreignKeyStringSpecification(office, AreaConstants.BRANCH, ApplicationConstants.NAME);
+		Specification<Area> orgSpc = generalSpecificationArea.foreignKeyStringSpecification(organization, "organization", ApplicationConstants.NAME);
 
-		Page<Area> page = areaRepository.findAll(isdeleted.and(idSpc).and(nameSpc).and(officeSpc),pageable);
+		Page<Area> page = areaRepository.findAll(isdeleted.and(idSpc).and(nameSpc).and(officeSpc).and(orgSpc),pageable);
 		return page;
 	}
 
 	@Override
 	public PaginationDto<Employee> searchAreaToEmployee(String empId, String empName, String office, String area, int pageno,
-			String sortField, String sortDir) {
+			String sortField, String sortDir,String orgName) {
 
 		if (null == sortDir || sortDir.isEmpty()) {
 			sortDir = ApplicationConstants.ASC;
@@ -226,7 +226,7 @@ public class AreaServiceImpl implements AreaService {
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
 				: Sort.by(sortField).descending();
 
-		Page<Employee> page = getPaginatedAreaToEmployeeAssociation(empId, empName, office, pageno, sort);
+		Page<Employee> page = getPaginatedAreaToEmployeeAssociation(empId, empName, office, pageno, sort,orgName);
 		List<Employee> pageObjList = page.getContent();
 
 		sortDir = (ApplicationConstants.ASC.equalsIgnoreCase(sortDir)) ? ApplicationConstants.DESC : ApplicationConstants.ASC;
@@ -237,7 +237,7 @@ public class AreaServiceImpl implements AreaService {
 	}
 
 	private Page<Employee> getPaginatedAreaToEmployeeAssociation(String empId, String empName, String office,
-			int pageno, Sort sort) {
+			int pageno, Sort sort, String orgName) {
 		Pageable pageable = PageRequest.of(pageno - NumberConstants.ONE, NumberConstants.TEN, sort);
 
 		Specification<Employee> isdeleted = generalSpecificationEmp.isDeletedSpecification();
@@ -246,15 +246,16 @@ public class AreaServiceImpl implements AreaService {
 		Specification<Employee> nameSpc = generalSpecificationEmp.stringSpecification(empName, EmployeeConstants.NAME);
 		Specification<Employee> officeSpc = generalSpecificationEmp.foreignKeyStringSpecification(office, EmployeeConstants.BRANCH, ApplicationConstants.NAME);
 		Specification<Employee> areaSpc = generalSpecificationEmp.foreignKeyStringSpecification(office, EmployeeConstants.AREA, ApplicationConstants.NAME);
+		Specification<Employee> orgSpc = generalSpecificationEmp.foreignKeyStringSpecification(orgName,"organization", ApplicationConstants.NAME);
 
-		Page<Employee> page = employeeRepository.findAll(isdeleted.and(idSpc).and(nameSpc).and(areaSpc).and(officeSpc),
+		Page<Employee> page = employeeRepository.findAll(isdeleted.and(idSpc).and(nameSpc).and(areaSpc).and(officeSpc).and(orgSpc),
 				pageable);
 		return page;
 	}
 
 	@Override
 	public PaginationDto<Device> searchAreaToDevice(String name, String office, String area, int pageno,
-			String sortField, String sortDir) {
+			String sortField, String sortDir,String orgName) {
 
 		if (null == sortDir || sortDir.isEmpty()) {
 			sortDir = ApplicationConstants.ASC;
@@ -265,7 +266,7 @@ public class AreaServiceImpl implements AreaService {
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
 				: Sort.by(sortField).descending();
 
-		Page<Device> page = getPaginatedAreaToDeviceAssociation(name, office, area, pageno, sort);
+		Page<Device> page = getPaginatedAreaToDeviceAssociation(name, office, area, pageno, sort,orgName);
 		List<Device> pageObjList = page.getContent();
 
 		sortDir = (ApplicationConstants.ASC.equalsIgnoreCase(sortDir)) ? ApplicationConstants.DESC : ApplicationConstants.ASC;
@@ -276,7 +277,7 @@ public class AreaServiceImpl implements AreaService {
 		return dtoList;
 	}
 
-	private Page<Device> getPaginatedAreaToDeviceAssociation(String name, String office, String area, int pageno, Sort sort) {
+	private Page<Device> getPaginatedAreaToDeviceAssociation(String name, String office, String area, int pageno, Sort sort, String orgName) {
 		Pageable pageable = PageRequest.of(pageno - NumberConstants.ONE, NumberConstants.TEN, sort);
 
 		Specification<Device> isdeleted = generalSpecificationDevice.isDeletedSpecification();
@@ -284,8 +285,9 @@ public class AreaServiceImpl implements AreaService {
 		Specification<Device> nameSpc = generalSpecificationDevice.stringSpecification(name, ApplicationConstants.NAME);
 		Specification<Device> officeSpc = generalSpecificationDevice.foreignKeyStringSpecification(office, DeviceConstants.BRANCH, ApplicationConstants.NAME);
 		Specification<Device> areaSpc = generalSpecificationDevice.foreignKeyStringSpecification(area, DeviceConstants.AREA, ApplicationConstants.NAME);
+		Specification<Device> orgSpc = generalSpecificationDevice.foreignKeyStringSpecification(orgName,"organization", ApplicationConstants.NAME);
 
-		Page<Device> page = deviceRepository.findAll(isdeleted.and(nameSpc).and(officeSpc).and(areaSpc), pageable);
+		Page<Device> page = deviceRepository.findAll(isdeleted.and(nameSpc).and(officeSpc).and(areaSpc).and(orgSpc), pageable);
 		return page;
 	}
 

@@ -15,10 +15,10 @@ public interface MonthlyReportService {
 
 
 	PaginationDto<MonthlyReportDto<MonthlyAttendanceDto>> searchByField(String date, String employeeId,
-			String employeeName, String department, String designation, int pageno, String sortField, String sortDir);
+			String employeeName, String department, String designation, int pageno, String sortField, String sortDir, String orgName);
 
 	MonthlyReportDto<MonthlyAttendanceDto> calculateMonthlyReport(String date, String employeeId, String employeeName,
-			String department, String designation);
+			String department, String designation,String orgName);
 
 	void excelGenerator(HttpServletResponse response, MonthlyReportDto<MonthlyAttendanceDto> monthlyDataList) throws FileNotFoundException, IOException;
 

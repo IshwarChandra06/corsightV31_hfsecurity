@@ -15,7 +15,7 @@
 	<name>mata</name>
 	<description>HF Security Api Integration</description>
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>17</java.version>
 		<bootstrap.version>4.0.0-2</bootstrap.version>
 		<webjars-locator.version>0.30</webjars-locator.version>
 		<font-awesome.version>5.11.2</font-awesome.version>
@@ -195,6 +195,7 @@
 			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
+		
 	</dependencies>
 
 	<build>

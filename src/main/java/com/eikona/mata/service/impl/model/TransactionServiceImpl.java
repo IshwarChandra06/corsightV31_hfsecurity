@@ -48,7 +48,7 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public PaginationDto<Transaction> searchByField(Long id, String sDate, String eDate, String employeeId,
 			String employeeName, String office, String device, String department, String designation, int pageno,
-			String sortField, String sortDir) {
+			String sortField, String sortDir,String organization) {
 		Date startDate = null;
 		Date endDate = null;
 		if (!sDate.isEmpty() && !eDate.isEmpty()) {
@@ -70,7 +70,7 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 
 		Page<Transaction> page = getTransactionBySpecification(id, employeeId, employeeName, office, device, department,
-				designation, pageno, sortField, sortDir, startDate, endDate);
+				designation, pageno, sortField, sortDir, startDate, endDate,organization);
 		List<Transaction> employeeShiftList = page.getContent();
 
 		sortDir = (ApplicationConstants.ASC.equalsIgnoreCase(sortDir)) ? ApplicationConstants.DESC : ApplicationConstants.ASC;
@@ -82,7 +82,7 @@ public class TransactionServiceImpl implements TransactionService {
 
 	private Page<Transaction> getTransactionBySpecification(Long id, String employeeId, String employeeName,
 			String office, String device, String department, String designation, int pageno, String sortField,
-			String sortDir, Date startDate, Date endDate) {
+			String sortDir, Date startDate, Date endDate, String organization) {
 
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
 				: Sort.by(sortField).descending();
@@ -101,8 +101,10 @@ public class TransactionServiceImpl implements TransactionService {
 				TransactionConstants.DEPARTMENT);
 		Specification<Transaction> desiSpec = generalSpecification.stringSpecification(designation,
 				TransactionConstants.DESIGNATION);
+		
+		Specification<Transaction> orgSpc = generalSpecification.stringSpecification(organization, "organization");
 
-		Page<Transaction> page = transactionRepository.findAll(idSpec.and(dateSpec).and(empIdSpec).and(empNameSpec)
+		Page<Transaction> page = transactionRepository.findAll(idSpec.and(dateSpec).and(empIdSpec).and(empNameSpec).and(orgSpc)
 				.and(offSpec).and(devSpec).and(deptSpec).and(desiSpec), pageable);
 		return page;
 	}

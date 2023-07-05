@@ -219,7 +219,7 @@ public class ImageProcessingUtil {
 					byte[] bytes = file.getBytes();
 					InputStream is = new ByteArrayInputStream(bytes);
 					BufferedImage originalImage = ImageIO.read(is);
-
+					
 					String[] imagePath = imageProcessing(originalImage, empId);
 					Image imageObj = imageRepository.findByOriginalPath(imagePath[NumberConstants.ZERO]);
 					if (null == imageObj) {
@@ -234,6 +234,8 @@ public class ImageProcessingUtil {
 			e.printStackTrace();
 		}
 	}
+
+
 
 	private void setImagePath(List<Image> imageList, List<Employee> employeeList, String[] imagePath,
 			Image imageSaved) {

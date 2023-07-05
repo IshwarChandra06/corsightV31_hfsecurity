@@ -1,5 +1,6 @@
 package com.eikona.mata.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.eikona.mata.dto.PaginationDto;
 import com.eikona.mata.entity.Employee;
 import com.eikona.mata.entity.Transaction;
+import com.eikona.mata.entity.User;
 import com.eikona.mata.repository.TransactionRepository;
+import com.eikona.mata.repository.UserRepository;
 import com.eikona.mata.service.BranchService;
 import com.eikona.mata.service.DepartmentService;
 import com.eikona.mata.service.DesignationService;
@@ -52,6 +55,9 @@ public class TransactionController {
 	@Autowired
 	private ImageProcessingUtil imageProcessingUtil;
 	
+	@Autowired
+	private UserRepository userRepository;
+	
 	@GetMapping("/transaction")
 	@PreAuthorize("hasAuthority('transaction_view')")
 	public String transactionList(Model model) {
@@ -85,9 +91,12 @@ public class TransactionController {
 	@RequestMapping(value = "/api/search/transaction", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('transaction_view')")
 	public @ResponseBody PaginationDto<Transaction> searchVehicleLog(Long id, String sDate,String eDate, String employeeId, String employeeName, String office, String device, String department, String designation,
-			int pageno, String sortField, String sortDir) {
+			int pageno, String sortField, String sortDir, Principal principal) {
 		
-		PaginationDto<Transaction> dtoList = transactionService.searchByField(id, sDate, eDate, employeeId, employeeName, office, device, department, designation, pageno, sortField, sortDir);
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String orgName =(null == user.getOrganization()? null: user.getOrganization().getName());
+		
+		PaginationDto<Transaction> dtoList = transactionService.searchByField(id, sDate, eDate, employeeId, employeeName, office, device, department, designation, pageno, sortField, sortDir,orgName);
 		
 		List<Transaction> eventsList = dtoList.getData();
 		List<Transaction> transactionList = new ArrayList<Transaction>();

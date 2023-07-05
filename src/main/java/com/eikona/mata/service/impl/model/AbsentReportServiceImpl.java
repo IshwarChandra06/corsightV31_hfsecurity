@@ -54,7 +54,7 @@ public class AbsentReportServiceImpl implements AbsentReportService {
 	@Override
 	public PaginationDto<DailyAttendance> search(Long id, String sDate, String eDate, String employeeId,
 			String employeeName, String office, String department, String designation, int pageno, String sortField,
-			String sortDir) {
+			String sortDir,String organization) {
 
 		Date startDate = null;
 		Date endDate = null;
@@ -80,7 +80,7 @@ public class AbsentReportServiceImpl implements AbsentReportService {
 				: Sort.by(sortField).descending();
 
 		Page<DailyAttendance> page = getPaginatedDailyAttendance(id, employeeId, employeeName, office, department,
-				designation, pageno, startDate, endDate, sort);
+				designation, pageno, startDate, endDate, sort,organization);
 		List<DailyAttendance> employeeShiftList = page.getContent();
 		
 		sortDir = (ApplicationConstants.ASC.equalsIgnoreCase(sortDir)) ? ApplicationConstants.DESC : ApplicationConstants.ASC;
@@ -92,7 +92,7 @@ public class AbsentReportServiceImpl implements AbsentReportService {
 	}
 
 	private Page<DailyAttendance> getPaginatedDailyAttendance(Long id, String employeeId, String employeeName,
-			String office, String department, String designation, int pageno, Date startDate, Date endDate, Sort sort) {
+			String office, String department, String designation, int pageno, Date startDate, Date endDate, Sort sort, String organization) {
 		Pageable pageable = PageRequest.of(pageno - NumberConstants.ONE, NumberConstants.TEN, sort);
 
 		Specification<DailyAttendance> idSpec = generalSpecification.longSpecification(id, ApplicationConstants.ID);
@@ -102,10 +102,10 @@ public class AbsentReportServiceImpl implements AbsentReportService {
 		Specification<DailyAttendance> offSpec = generalSpecification.stringSpecification(office, DailyAttendanceConstants.BRANCH);
 		Specification<DailyAttendance> deptSpec = generalSpecification.stringSpecification(department, DailyAttendanceConstants.DEPARTMENT);
 		Specification<DailyAttendance> desiSpec = generalSpecification.stringSpecification(designation, DailyAttendanceConstants.DESIGNATION);
-
+		Specification<DailyAttendance> orgSpec = generalSpecification.stringSpecification(organization, "organization");
 		Specification<DailyAttendance> absentSpec = generalSpecification.stringSpecification(DailyAttendanceConstants.ABSENT, DailyAttendanceConstants.ATTENDANCE_STATUS);
 		Page<DailyAttendance> page = dailyAttendanceRepository.findAll(
-				idSpec.and(dateSpec).and(empIdSpec).and(empNameSpec).and(offSpec).and(deptSpec).and(desiSpec).and(absentSpec),
+				idSpec.and(dateSpec).and(empIdSpec).and(empNameSpec).and(offSpec).and(deptSpec).and(desiSpec).and(absentSpec).and(orgSpec),
 				pageable);
 		return page;
 	}

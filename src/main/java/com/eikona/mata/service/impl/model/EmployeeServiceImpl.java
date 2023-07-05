@@ -30,6 +30,7 @@ import com.eikona.mata.entity.Area;
 import com.eikona.mata.entity.Device;
 import com.eikona.mata.entity.Employee;
 import com.eikona.mata.entity.EmployeeDevice;
+import com.eikona.mata.entity.User;
 import com.eikona.mata.repository.DeviceRepository;
 import com.eikona.mata.repository.EmployeeDeviceRepository;
 import com.eikona.mata.repository.EmployeeRepository;
@@ -129,9 +130,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public String storeEmployeeList(MultipartFile file) {
+	public String storeEmployeeList(MultipartFile file,User user) {
 		try {
-			List<Employee> employeeList = excelEmployeeImport.parseExcelFileEmployeeList(file.getInputStream());
+			List<Employee> employeeList = excelEmployeeImport.parseExcelFileEmployeeList(file.getInputStream(),user.getOrganization());
 			employeeRepository.saveAll(employeeList);
 			return "File uploaded successfully!";
 		} catch (IOException e) {
@@ -141,9 +142,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 	
 	@Override
-	public String storeCosecEmployeeList(MultipartFile file) {
+	public String storeCosecEmployeeList(MultipartFile file,User user) {
 		try {
-			List<Employee> employeeList = excelEmployeeImport.parseCosecExcelFileEmployeeList(file.getInputStream());
+			List<Employee> employeeList = excelEmployeeImport.parseCosecExcelFileEmployeeList(file.getInputStream(),user.getOrganization());
 			employeeRepository.saveAll(employeeList);
 			return "File uploaded successfully!";
 		} catch (IOException | InvalidFormatException e) {
@@ -210,7 +211,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	
 	@Override
 	public PaginationDto<Employee> searchByField(Long id, String name, String empId, String branch, String department,
-			String designation, int pageno, String sortField, String sortDir) {
+			String designation, int pageno, String sortField, String sortDir,String org) {
 
 		if (null == sortDir || sortDir.isEmpty()) {
 			sortDir = ApplicationConstants.ASC;
@@ -219,7 +220,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			sortField = ApplicationConstants.ID;
 		}
 		Page<Employee> page = getEmployeePage(id, name, empId, branch, department, designation, pageno, sortField,
-				sortDir);
+				sortDir,org);
         List<Employee> employeeList =  page.getContent();
         List<Employee> employeeWithImgList = new ArrayList<Employee>();
         for (Employee employee : employeeList) {
@@ -235,7 +236,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	private Page<Employee> getEmployeePage(Long id, String name, String empId, String branch, String department,
-			String designation, int pageno, String sortField, String sortDir) {
+			String designation, int pageno, String sortField, String sortDir, String organization) {
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
 				: Sort.by(sortField).descending();
 
@@ -247,15 +248,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 		Specification<Employee> branchSpc = generalSpecificationEmployee.foreignKeyStringSpecification(branch, EmployeeConstants.BRANCH,ApplicationConstants.NAME);
 		Specification<Employee> deptSpec = generalSpecificationEmployee.foreignKeyStringSpecification(department, EmployeeConstants.DEPARTMENT,ApplicationConstants.NAME);
 		Specification<Employee> designationSpc = generalSpecificationEmployee.foreignKeyStringSpecification(designation, EmployeeConstants.DESIGNATION,ApplicationConstants.NAME);
-		
-    	Page<Employee> page = employeeRepository.findAll(idSpc.and(nameSpc).and(empIdSpc).and(branchSpc).and(deptSpec).and(designationSpc).and(isDeletedFalse),pageable);
+		Specification<Employee> orgSpc = generalSpecificationEmployee.foreignKeyStringSpecification(organization, "organization", ApplicationConstants.NAME);
+    	Page<Employee> page = employeeRepository.findAll(idSpc.and(nameSpc).and(empIdSpc).and(branchSpc).and(deptSpec).and(designationSpc).and(orgSpc).and(isDeletedFalse),pageable);
 		return page;
 	}
 	
 
 	@Override
 	public PaginationDto<EmployeeToDeviceAssociationDto> searchEmployeeToDevice(Long id, String device, String office,
-			String area, int pageno, String sortField, String sortDir) {
+			String area, int pageno, String sortField, String sortDir,String orgName) {
 		
 		if (null == sortDir || sortDir.isEmpty()) {
 			sortDir = ApplicationConstants.ASC;
@@ -268,7 +269,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		for(Area areaObj: employee.getArea()) {
 			areaName.add(areaObj.getName());
 		}
-		Page<Device> page = getEmployeeToDevicePage(device, office, area, pageno, sortField, sortDir, areaName);
+		Page<Device> page = getEmployeeToDevicePage(device, office, area, pageno, sortField, sortDir, areaName,orgName);
 		List<Device> deviceList =  page.getContent();
 		List<EmployeeToDeviceAssociationDto> empToDevAssociationList = new ArrayList<>();
 		for (Device deviceOnj : deviceList) {
@@ -295,7 +296,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	private Page<Device> getEmployeeToDevicePage(String device, String office, String area, int pageno,
-			String sortField, String sortDir, List<String> areaName) {
+			String sortField, String sortDir, List<String> areaName, String orgName) {
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
 				: Sort.by(sortField).descending();
 
@@ -305,8 +306,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		Specification<Device> nameSpc = generalSpecificationDevice.stringSpecification(device, DeviceConstants.NAME);
 		Specification<Device> officeSpc = generalSpecificationDevice.foreignKeyStringSpecification(office, DeviceConstants.BRANCH,ApplicationConstants.NAME);
 		Specification<Device> areaSpc = generalSpecificationDevice.foreignKeyStringSpecification(area, DeviceConstants.AREA,ApplicationConstants.NAME);
+		Specification<Device> orgSpc = generalSpecificationDevice.foreignKeyStringSpecification(orgName, "organization",ApplicationConstants.NAME);
 		
-		Page<Device> page = deviceRepository.findAll(isDeletedFalse.and(areaListSpc).and(nameSpc).and(officeSpc).and(areaSpc), pageable);
+		Page<Device> page = deviceRepository.findAll(isDeletedFalse.and(areaListSpc).and(nameSpc).and(officeSpc).and(areaSpc).and(orgSpc), pageable);
 		return page;
 	}
 

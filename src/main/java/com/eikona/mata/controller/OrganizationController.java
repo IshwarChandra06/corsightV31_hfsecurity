@@ -1,7 +1,7 @@
 package com.eikona.mata.controller;
 
 
-import java.util.List;
+import java.security.Principal;
 
 import javax.validation.Valid;
 
@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.eikona.mata.dto.PaginationDto;
 import com.eikona.mata.entity.Organization;
+import com.eikona.mata.entity.User;
+import com.eikona.mata.repository.UserRepository;
 import com.eikona.mata.service.OrganizationService;
 
 
@@ -28,6 +30,9 @@ public class OrganizationController {
 	
 	@Autowired
 	private OrganizationService organizationService;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	@GetMapping("/organization")
 	@PreAuthorize("hasAuthority('organization_view')")
@@ -84,9 +89,11 @@ public class OrganizationController {
 	
 	@RequestMapping(value = "/api/search/organization", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('organization_view')")
-	public @ResponseBody PaginationDto<Organization> searchOrganization(Long id, String name,String address,String city,String pin, int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<Organization> searchOrganization(Long id, String name,String address,String city,String pin, int pageno, String sortField, String sortDir, Principal principal) {
 		
-		PaginationDto<Organization> dtoList = organizationService.searchByField(id, name,address,city,pin,pageno, sortField, sortDir);
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		
+		PaginationDto<Organization> dtoList = organizationService.searchByField(id, name,address,city,pin,pageno, sortField, sortDir, user.getOrganization());
 		return dtoList;
 	}
 }

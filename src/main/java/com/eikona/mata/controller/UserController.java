@@ -1,5 +1,8 @@
 package com.eikona.mata.controller;
 
+import java.security.Principal;
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +20,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.eikona.mata.dto.PaginationDto;
+import com.eikona.mata.entity.Organization;
+import com.eikona.mata.entity.Role;
 import com.eikona.mata.entity.User;
-import com.eikona.mata.service.OrganizationService;
-import com.eikona.mata.service.RoleService;
+import com.eikona.mata.repository.OrganizationRepository;
+import com.eikona.mata.repository.PrivilegeRepository;
+import com.eikona.mata.repository.RoleRepository;
+import com.eikona.mata.repository.UserRepository;
 import com.eikona.mata.service.UserService;
 
 
@@ -29,10 +36,16 @@ public class UserController {
 	private UserService userService;
 
 	@Autowired
-	private RoleService roleService;
+	private OrganizationRepository organizationRepository;
 	
 	@Autowired
-	private OrganizationService organizationService;
+	private UserRepository userRepository;
+	
+	@Autowired
+	private RoleRepository roleRepository;
+	
+	@Autowired
+	private PrivilegeRepository privilegeRepository;
 
 	@GetMapping("/user")
 	@PreAuthorize("hasAuthority('user_view')")
@@ -42,25 +55,71 @@ public class UserController {
 
 	@GetMapping("/user/new")
 	@PreAuthorize("hasAuthority('user_create')")
-	public String newUser(Model model) {
-		model.addAttribute("listRole", roleService.getAll());
-		model.addAttribute("listOrganization", organizationService.getAll());
+	public String newUser(Model model, Principal principal) {
+		User userObj = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		List<Organization> organizationList = null;
+		if(null == userObj.getOrganization()) {
+			organizationList = (List<Organization>) organizationRepository.findAll();
+		}else {
+			organizationList = organizationRepository.findByIdAndIsDeletedFalse(userObj.getOrganization().getId());
+		}
+		model.addAttribute("listRole", roleRepository.findByOrganizationAndIsDeletedFalse(userObj.getOrganization()));
+		model.addAttribute("listOrganization", organizationList);
 		User user = new User();
 		model.addAttribute("user", user);
 		model.addAttribute("title", "New User");
 		return "user/user_new";
 	}
+	
+	@GetMapping("/signup")
+	public String signUp(Model model) {
+		User user = new User();
+		model.addAttribute("user", user);
+		return "signup";
+	}
+	
+	@PostMapping("/signup/details")
+	public String saveSignupDetails(@ModelAttribute("user") User user,String orgName,Model model) {
+		Organization org= organizationRepository.findByNameAndIsDeletedFalse(orgName);
+		
+		if(null==org) {
+			org=new Organization();
+			org.setName(orgName);
+			org=organizationRepository.save(org);
+		}
+		Role role=roleRepository.findByNameAndOrganizationAndIsDeletedFalse("Admin",org);
+		if(role==null) {
+			role=new Role();
+			role.setName("Admin");
+			role.setOrganization(org);
+			role.setPrivileges(privilegeRepository.findAllByIsDeletedFalse());
+			role=roleRepository.save(role);
+		}
+		user.setRole(role);
+		user.setOrganization(org);
+		
+		userService.save(user);
+		return "redirect:/login";
+
+	}
 
 	@PostMapping("/user/add")
 	@PreAuthorize("hasAnyAuthority('user_create','user_update')")
 	public String saveUser(@ModelAttribute("user") User user, @Valid User users, Errors errors, BindingResult bindingResult,
-			Model model, String title) {
+			Model model, String title, Principal principal) {
+		User userObj = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
 		if (errors.hasErrors())
 
 		{
+			List<Organization> organizationList = null;
+			if(null == userObj.getOrganization()) {
+				organizationList = (List<Organization>) organizationRepository.findAll();
+			}else {
+				organizationList = organizationRepository.findByIdAndIsDeletedFalse(userObj.getOrganization().getId());
+			}
+			model.addAttribute("listRole", roleRepository.findByOrganizationAndIsDeletedFalse(userObj.getOrganization()));
+			model.addAttribute("listOrganization", organizationList);
 			model.addAttribute("title", title);
-			model.addAttribute("listRole", roleService.getAll());
-			model.addAttribute("listOrganization", organizationService.getAll());
 			return "user/user_new";
 		}
 		model.addAttribute("message", "Add Successfully");
@@ -71,9 +130,18 @@ public class UserController {
 
 	@GetMapping("/user/edit/{id}")
 	@PreAuthorize("hasAuthority('user_update')")
-	public String editUser(@PathVariable(value = "id") Integer id, Model model) {
-		model.addAttribute("listRole", roleService.getAll());
-		model.addAttribute("listOrganization", organizationService.getAll());
+	public String editUser(@PathVariable(value = "id") Integer id, Model model, Principal principal) {
+		
+		User userObj = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		List<Organization> organizationList = null;
+		if(null == userObj.getOrganization()) {
+			organizationList = (List<Organization>) organizationRepository.findAll();
+		}else {
+			organizationList = organizationRepository.findByIdAndIsDeletedFalse(userObj.getOrganization().getId());
+		}
+		model.addAttribute("listRole", roleRepository.findByOrganizationAndIsDeletedFalse(userObj.getOrganization()));
+		model.addAttribute("listOrganization", organizationList);
+		
 		User user = userService.getById(id);
 		model.addAttribute("user", user);
 		model.addAttribute("title", "Update User");
@@ -90,9 +158,12 @@ public class UserController {
 
 	@RequestMapping(value = "/api/search/user", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('user_view')")
-	public @ResponseBody PaginationDto<User> searchDoor(Long id, String name,String phone,String role, int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<User> searchDoor(Long id, String name,String phone,String role, int pageno, String sortField, String sortDir, Principal principal) {
 		
-		PaginationDto<User> dtoList = userService.searchByField(id, name,phone,role,  pageno, sortField, sortDir);
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String orgName = (null == user.getOrganization()? null: user.getOrganization().getName());
+		
+		PaginationDto<User> dtoList = userService.searchByField(id, name,phone,role,  pageno, sortField, sortDir,orgName);
 		return dtoList;
 	}
 }

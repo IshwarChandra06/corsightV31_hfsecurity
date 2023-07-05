@@ -44,7 +44,7 @@ public class ExportDailyAttendance {
 	private CalendarUtil calendarUtil;
  
 	public void fileExportBySearchValue(HttpServletResponse response, String sDate, String eDate, String employeeName,
-			String employeeId, String designation, String office, String department,String status, String flag) throws ParseException, IOException {
+			String employeeId, String designation, String office, String department,String status, String flag, String orgName) throws ParseException, IOException {
 
 		Date startDate = null;
 		Date endDate = null;
@@ -60,12 +60,12 @@ public class ExportDailyAttendance {
 		}
 		
 		List<DailyAttendance> dailyAttendanceList = getListOfDailyAttendance(employeeName, employeeId, designation,
-				office, department, status, startDate, endDate);
+				office, department, status, startDate, endDate,orgName);
 		
 		excelGenerator(response, dailyAttendanceList);
 	}
 	private List<DailyAttendance> getListOfDailyAttendance(String employeeName, String employeeId, String designation,
-			String office, String department, String status, Date startDate, Date endDate) {
+			String office, String department, String status, Date startDate, Date endDate, String orgName) {
 		Specification<DailyAttendance> containsDate = generalSpecification.dateSpecification(startDate, endDate,ApplicationConstants.DATE);
 		Specification<DailyAttendance> containsEmployeeName = generalSpecification.stringSpecification(employeeName,DailyAttendanceConstants.EMPLOYEE_NAME);
 		Specification<DailyAttendance> containsEmployeeId = generalSpecification.stringSpecification(employeeId,DailyAttendanceConstants.EMPLOYEE_ID);
@@ -73,9 +73,10 @@ public class ExportDailyAttendance {
     	Specification<DailyAttendance>  designationSpec = generalSpecification.stringSpecification(designation,DailyAttendanceConstants.DESIGNATION);
     	Specification<DailyAttendance> branchSpec = generalSpecification.stringSpecification(office,DailyAttendanceConstants.BRANCH); 
     	Specification<DailyAttendance> statusSpec = generalSpecification.stringSpecification(status,DailyAttendanceConstants.ATTENDANCE_STATUS);
+    	Specification<DailyAttendance> orgSpec = generalSpecification.stringSpecification(orgName,"organization");
 		
 		List<DailyAttendance> dailyAttendanceList =dailyAttendanceRepository.findAll(containsDate.and(containsEmployeeName)
-				.and(containsEmployeeId).and(branchSpec).and(departmentSpec).and(designationSpec).and(statusSpec));
+				.and(containsEmployeeId).and(branchSpec).and(departmentSpec).and(designationSpec).and(statusSpec).and(orgSpec));
 		return dailyAttendanceList;
 	}
 	public void excelGenerator(HttpServletResponse response, List<DailyAttendance> dailyAttendanceList)

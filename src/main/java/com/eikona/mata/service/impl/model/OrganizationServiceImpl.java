@@ -75,14 +75,14 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	@Override
 	public PaginationDto<Organization> searchByField(Long id, String name, String address, String city, String pin,
-			int pageno, String sortField, String sortDir) {
+			int pageno, String sortField, String sortDir, Organization organization) {
 		if (null == sortDir || sortDir.isEmpty()) {
 			sortDir = ApplicationConstants.ASC;
 		}
 		if (null == sortField || sortField.isEmpty()) {
 			sortField = ApplicationConstants.ID;
 		}
-		Page<Organization> page = getOrganizationPage(id, name, address, city, pin, pageno, sortField, sortDir);
+		Page<Organization> page = getOrganizationPage(id, name, address, city, pin, pageno, sortField, sortDir,organization);
         List<Organization> organizationList =  page.getContent();
 		
 		sortDir = (ApplicationConstants.ASC.equalsIgnoreCase(sortDir))?ApplicationConstants.DESC:ApplicationConstants.ASC;
@@ -92,7 +92,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 	}
 
 	private Page<Organization> getOrganizationPage(Long id, String name, String address, String city, String pin,
-			int pageno, String sortField, String sortDir) {
+			int pageno, String sortField, String sortDir, Organization organization) {
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
 				: Sort.by(sortField).descending();
 
@@ -105,7 +105,10 @@ public class OrganizationServiceImpl implements OrganizationService {
 		Specification<Organization> pinSpc = generalSpecificationOrg.stringSpecification(pin, OrganizationConstants.PINCODE);
 		Specification<Organization> isDeletedFalse = generalSpecificationOrg.isDeletedSpecification();
 		
-    	Page<Organization> page = organizationRepository.findAll(idSpc.and(nameSpc).and(isDeletedFalse).and(addressSpc).and(citySpc).and(pinSpc),pageable);
+		String orgName = (null == organization)? null: organization.getName();
+		Specification<Organization> orgSpc = generalSpecificationOrg.stringSpecification(orgName, ApplicationConstants.NAME);
+		
+    	Page<Organization> page = organizationRepository.findAll(idSpc.and(nameSpc).and(isDeletedFalse).and(addressSpc).and(citySpc).and(pinSpc).and(orgSpc),pageable);
 		return page;
 	}
 }

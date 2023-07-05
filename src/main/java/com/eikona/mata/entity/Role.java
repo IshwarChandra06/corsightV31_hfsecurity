@@ -10,7 +10,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -29,6 +31,10 @@ public class Role extends Auditable<String> implements Serializable{
 
     @Column(name = "name")
     private String name;
+    
+    @ManyToOne
+	@JoinColumn(name="organization_id")
+	private Organization organization;
     
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -89,14 +95,23 @@ public class Role extends Auditable<String> implements Serializable{
 		this.isDeleted = isDeleted;
 	}
 
-	public Role(String name, List<Privilege> privileges, boolean isDeleted) {
+	public Role(String name, List<Privilege> privileges, Organization org, boolean isDeleted) {
 		this.name = name;
 		this.privileges = privileges;
+		this.organization=org;
 		this.isDeleted = isDeleted;
 	}
 
 	public Role() {
 		
+	}
+
+	public Organization getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(Organization organization) {
+		this.organization = organization;
 	}
     
 

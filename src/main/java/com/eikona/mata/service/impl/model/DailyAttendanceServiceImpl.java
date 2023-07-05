@@ -148,25 +148,25 @@ public class DailyAttendanceServiceImpl implements DailyAttendanceService {
 						dailyReport.setEmpInAccessType("Face");
 						dailyReport.setEmpInLocation(transaction.getDeviceName());
 						dailyReport.setAttendanceStatus("Present");
-						String city = "Moscow";
+						String city = "Bangalore";
 						System.out.println(transaction.getPunchTimeStr());
 							int hour = Integer.parseInt(transaction.getPunchTimeStr().split(":")[0]);
 							int minute = Integer.parseInt(transaction.getPunchTimeStr().split(":")[1]);
 							if(hour > 5 && hour<19){
 								
 								if (hour<7) {
-									dailyReport.setShift("1 смена"); 
+									dailyReport.setShift("1 Shift"); 
 									dailyReport.setShiftInTime("07:00:00");
 									dailyReport.setShiftOutTime("16:00:00");
 							}
 							
 							if(hour == 7) {
 								if(minute <= 10) {
-									dailyReport.setShift("1 смена"); 
+									dailyReport.setShift("1 Shift"); 
 									dailyReport.setShiftInTime("07:00:00");
 									dailyReport.setShiftOutTime("16:00:00");
 								}else if(minute > 10) {
-									dailyReport.setShift("2 смена"); 
+									dailyReport.setShift("2 Shift"); 
 									dailyReport.setShiftInTime("08:00:00");
 									dailyReport.setShiftOutTime("17:00:00");
 								}
@@ -175,11 +175,11 @@ public class DailyAttendanceServiceImpl implements DailyAttendanceService {
 							
 							if(hour == 8) {
 								if(minute <= 10) {
-									dailyReport.setShift("2 смена"); 
+									dailyReport.setShift("2 Shift"); 
 									dailyReport.setShiftInTime("08:00:00");
 									dailyReport.setShiftOutTime("17:00:00");
 								}else if(minute > 10) {
-									dailyReport.setShift("3 смена"); 
+									dailyReport.setShift("3 Shift"); 
 									dailyReport.setShiftInTime("09:00:00");
 									dailyReport.setShiftOutTime("18:00:00");
 								}
@@ -188,11 +188,11 @@ public class DailyAttendanceServiceImpl implements DailyAttendanceService {
 							
 							if(hour == 9) {
 								if(minute <= 10) {
-									dailyReport.setShift("3 смена"); 
+									dailyReport.setShift("3 Shift"); 
 									dailyReport.setShiftInTime("09:00:00");
 									dailyReport.setShiftOutTime("18:00:00");
 								}else if(minute > 10) {
-									dailyReport.setShift("4 смена"); 
+									dailyReport.setShift("4 Shift"); 
 									dailyReport.setShiftInTime("10:00:00");
 									dailyReport.setShiftOutTime("19:00:00");
 								}
@@ -200,7 +200,7 @@ public class DailyAttendanceServiceImpl implements DailyAttendanceService {
 							}
 							
 							if(hour >=10 && hour < 19) {
-								dailyReport.setShift("4 смена"); 
+								dailyReport.setShift("4 Shift"); 
 								dailyReport.setShiftInTime("10:00:00");
 								dailyReport.setShiftOutTime("19:00:00");
 						}
@@ -844,7 +844,7 @@ public class DailyAttendanceServiceImpl implements DailyAttendanceService {
 	@Override
 	public PaginationDto<DailyAttendance> searchByField(Long id, String sDate, String eDate, String employeeId,
 			String employeeName, String office, String department, String designation, String status, int pageno,
-			String sortField, String sortDir) {
+			String sortField, String sortDir, String orgName) {
 
 		Date startDate = null;
 		Date endDate = null;
@@ -868,7 +868,7 @@ public class DailyAttendanceServiceImpl implements DailyAttendanceService {
 		
 		Specification<DailyAttendance> flagSpec = generalSpecificationDailyAttendance.stringSpecification(status, DailyAttendanceConstants.ATTENDANCE_STATUS);
 		
-		Page<DailyAttendance> page = getDailyAttendancePage(id, employeeId, employeeName, "", office, department,
+		Page<DailyAttendance> page = getDailyAttendancePage(id, employeeId, employeeName,orgName, office, department,
 				designation, pageno, sortField, sortDir, startDate, endDate, flagSpec);
 		List<DailyAttendance> employeeShiftList = page.getContent();
 
@@ -895,7 +895,7 @@ public class DailyAttendanceServiceImpl implements DailyAttendanceService {
 		Specification<DailyAttendance> offSpec = generalSpecificationDailyAttendance.stringSpecification(office, DailyAttendanceConstants.BRANCH);
 		Specification<DailyAttendance> deptSpec = generalSpecificationDailyAttendance.stringSpecification(department, DailyAttendanceConstants.DEPARTMENT);
 		Specification<DailyAttendance> desiSpec = generalSpecificationDailyAttendance.stringSpecification(designation, DailyAttendanceConstants.DESIGNATION);
-		 List<DailyAttendance> l1= dailyAttendanceRepository.findAll(flagSpec.and(dateSpec).and(offSpec));
+		
 		Page<DailyAttendance> page = dailyAttendanceRepository.findAll(flagSpec.and(idSpec).and(dateSpec).and(empIdSpec)
 				.and(empNameSpec).and(offSpec).and(deptSpec).and(desiSpec).and(orgSpec), pageable);
 		return page;
@@ -935,7 +935,7 @@ public class DailyAttendanceServiceImpl implements DailyAttendanceService {
 		Pageable pageable = PageRequest.of(pageno - NumberConstants.ONE, NumberConstants.TEN, sort);
 
 		Page<ExceptionSummaryDto> page = null;
-		if(null == startDate && null == endDate && null == organization ) {
+		if(null == startDate && null == endDate && null != organization ) {
 			page = dailyAttendanceRepository.findByDateAndOrganizationCustom(0l, pageable);
 		}else {
 			page = dailyAttendanceRepository.findByDateAndOrganizationCustom(startDate, endDate,

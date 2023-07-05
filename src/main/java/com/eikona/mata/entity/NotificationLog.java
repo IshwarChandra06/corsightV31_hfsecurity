@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -43,6 +45,10 @@ public class NotificationLog implements Serializable {
 		
 		@Column(name = "date_and_time")
 		private Date dateAndTime;
+		
+		@ManyToOne
+		@JoinColumn(name="organization_id")
+		private Organization organization;
 
 		public Long getId() {
 			return id;
@@ -98,6 +104,14 @@ public class NotificationLog implements Serializable {
 
 		public void setDateAndTime(Date dateAndTime) {
 			this.dateAndTime = dateAndTime;
+		}
+
+		public Organization getOrganization() {
+			return organization;
+		}
+
+		public void setOrganization(Organization organization) {
+			this.organization = organization;
 		}
 		
 		

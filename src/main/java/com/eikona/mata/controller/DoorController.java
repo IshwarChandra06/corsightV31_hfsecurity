@@ -1,5 +1,7 @@
 package com.eikona.mata.controller;
 
+import java.security.Principal;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.eikona.mata.dto.PaginationDto;
 import com.eikona.mata.entity.Door;
+import com.eikona.mata.entity.User;
+import com.eikona.mata.repository.UserRepository;
 import com.eikona.mata.service.DeviceService;
 import com.eikona.mata.service.DoorService;
 import com.eikona.mata.service.OrganizationService;
@@ -32,6 +36,9 @@ public class DoorController {
 	
 	@Autowired
 	private DeviceService deviceService;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	@GetMapping("/door")
 	@PreAuthorize("hasAuthority('door_view')")
@@ -95,9 +102,12 @@ public class DoorController {
 	
 	@RequestMapping(value = "/api/search/door", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('door_view')")
-	public @ResponseBody PaginationDto<Door> searchDoor(Long id, String name,String ipAddress, int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<Door> searchDoor(Long id, String name,String ipAddress, int pageno, String sortField, String sortDir, Principal principal) {
 		
-		PaginationDto<Door> dtoList = doorService.searchByField(id, name,ipAddress,  pageno, sortField, sortDir);
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String orgName = (null == user.getOrganization()? null: user.getOrganization().getName());
+		
+		PaginationDto<Door> dtoList = doorService.searchByField(id, name,ipAddress,  pageno, sortField, sortDir,orgName);
 		return dtoList;
 	}
 }

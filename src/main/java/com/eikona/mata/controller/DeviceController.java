@@ -1,6 +1,7 @@
 package com.eikona.mata.controller;
 
 import java.security.Principal;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -25,11 +26,13 @@ import com.eikona.mata.dto.PaginationDto;
 import com.eikona.mata.entity.Device;
 import com.eikona.mata.entity.Employee;
 import com.eikona.mata.entity.EmployeeDevice;
-import com.eikona.mata.service.AreaService;
-import com.eikona.mata.service.BranchService;
+import com.eikona.mata.entity.Organization;
+import com.eikona.mata.entity.User;
+import com.eikona.mata.repository.BranchRepository;
+import com.eikona.mata.repository.OrganizationRepository;
+import com.eikona.mata.repository.UserRepository;
 import com.eikona.mata.service.DeviceService;
 import com.eikona.mata.service.DeviceSyncAbstractService;
-import com.eikona.mata.service.OrganizationService;
 import com.eikona.mata.sync.DeviceSync;
 
 @Controller
@@ -39,13 +42,13 @@ public class DeviceController {
 	private DeviceService deviceService;
 
 	@Autowired
-	private AreaService areaService;
+	private BranchRepository branchRepository;
 
 	@Autowired
-	private BranchService branchService;
-
-	@Autowired
-	private OrganizationService organizationService;
+	private OrganizationRepository organizationRepository;
+	
+	 @Autowired
+	private UserRepository userRepository;
 	
 	@Autowired
 	private DeviceSync cameraSync;
@@ -70,18 +73,30 @@ public class DeviceController {
 
 	@RequestMapping(value = "/api/search/device", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('device_view')")
-	public @ResponseBody PaginationDto<Device> search(Long id, String deviceType, String name, String office, String area, int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<Device> search(Long id, String deviceType, String name, String office, String area, int pageno, String sortField, String sortDir, Principal principal) {
 		
-		PaginationDto<Device> dtoList = deviceService.searchByField(id, deviceType, name, area, office, pageno, sortField, sortDir);
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String orgName = (null == user.getOrganization()? null: user.getOrganization().getName());
+		
+		PaginationDto<Device> dtoList = deviceService.searchByField(id, deviceType, name, area, office, pageno, sortField, sortDir,orgName);
 		return dtoList;
 	}
 
 	@GetMapping("/device/new")
 	@PreAuthorize("hasAuthority('device_create')")
-	public String newDevice(Model model) {
+	public String newDevice(Model model, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		List<Organization> organizationList = null;
+		if(null == user.getOrganization()) {
+			organizationList = (List<Organization>) organizationRepository.findAll();
+		}else {
+			organizationList = organizationRepository.findByIdAndIsDeletedFalse(user.getOrganization().getId());
+		}
+		
+		model.addAttribute("listOrganization", organizationList);
 
-		model.addAttribute("listBranch", branchService.getAll());
-		model.addAttribute("listOrganization", organizationService.getAll());
+		model.addAttribute("listBranch", branchRepository.findByOrganizationAndIsDeletedFalse(user.getOrganization()));
 		Device device = new Device();
 		model.addAttribute("device", device);
 		model.addAttribute("title", "New Device");
@@ -93,10 +108,18 @@ public class DeviceController {
 	@PreAuthorize("hasAnyAuthority('device_create','device_update')")
 	public String saveDevice(@ModelAttribute("device") Device device, @Valid Device dev, Errors errors, String title,
 			Model model, Principal principal) {
-
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		
 		if (errors.hasErrors()){
-			model.addAttribute("listArea", areaService.getAll());
-			model.addAttribute("listOrganization", organizationService.getAll());
+			List<Organization> organizationList = null;
+			if(null == user.getOrganization()) {
+				organizationList = (List<Organization>) organizationRepository.findAll();
+			}else {
+				organizationList = organizationRepository.findByIdAndIsDeletedFalse(user.getOrganization().getId());
+			}
+			
+			model.addAttribute("listOrganization", organizationList);
+			model.addAttribute("listBranch", branchRepository.findByOrganizationAndIsDeletedFalse(user.getOrganization()));
 			model.addAttribute("title", title);
 			return "device/device_new";
 		} else {
@@ -114,12 +137,19 @@ public class DeviceController {
 
 	@GetMapping("/device/edit/{id}")
 	@PreAuthorize("hasAuthority('device_update')")
-	public String editDevice(@PathVariable(value = "id") long id, Model model) {
-
+	public String editDevice(@PathVariable(value = "id") long id, Model model, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		List<Organization> organizationList = null;
+		if(null == user.getOrganization()) {
+			organizationList = (List<Organization>) organizationRepository.findAll();
+		}else {
+			organizationList = organizationRepository.findByIdAndIsDeletedFalse(user.getOrganization().getId());
+		}
 		Device device = deviceService.getById(id);
-
-		model.addAttribute("listBranch", branchService.getAll());
-		model.addAttribute("listOrganization", organizationService.getAll());
+		
+		model.addAttribute("listOrganization", organizationList);
+		model.addAttribute("listBranch", branchRepository.findByOrganizationAndIsDeletedFalse(user.getOrganization()));
 		model.addAttribute("device", device);
 		model.addAttribute("title", "Update Device");
 		model.addAttribute("corsightEnabled",corsightEnabled);
@@ -134,11 +164,13 @@ public class DeviceController {
 	}
 	@GetMapping("/sync-camera")
 	@PreAuthorize("hasAuthority('device_sync')")
-	public String syncDevice(Model model)
-	{
+	public String syncDevice(Model model,Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+	
 		String message = null;
 		try {
-			message = cameraSync.syncDevice();
+			message = cameraSync.syncDevice(user.getOrganization());
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
@@ -166,9 +198,12 @@ public class DeviceController {
 
 	@GetMapping("/api/search/device-to-employee/association")
 	@PreAuthorize("hasAuthority('device_employee_association')")
-	public @ResponseBody PaginationDto<Employee> deviceEmployee(Long id, String empId, String empName, String designation, String office, String area, int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<Employee> deviceEmployee(Long id, String empId, String empName, String designation, String office, String area, int pageno, String sortField, String sortDir, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String orgName = (null == user.getOrganization()? null: user.getOrganization().getName());
 
-		PaginationDto<Employee> deviceToEmpList = deviceService.searchDeviceToEmployee(id, empId, empName, designation, office, area, pageno, sortField, sortDir);
+		PaginationDto<Employee> deviceToEmpList = deviceService.searchDeviceToEmployee(id, empId, empName, designation, office, area, pageno, sortField, sortDir,orgName);
 		
 		return deviceToEmpList;
 

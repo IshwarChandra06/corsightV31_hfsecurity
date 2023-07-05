@@ -76,9 +76,9 @@ public class CorsightListenerServiceImpl {
 				try {
 					eventData = objectMapper.readValue(responseData.toString(), Data.class);
 					
-					if (eventData.getTrigger() == NumberConstants.ONE || eventData.getTrigger() == NumberConstants.TWO || eventData.getTrigger() == NumberConstants.THREE) {
+//					if (eventData.getTrigger() == NumberConstants.ONE || eventData.getTrigger() == NumberConstants.TWO || eventData.getTrigger() == NumberConstants.THREE) {
 						transaction = transactionRepository.findByAppearanceId((String) eventData.getAppearance_data().getAppearance_id());
-					}
+//					}
 					if (null == transaction) 
 						transaction = new Transaction();
 
@@ -134,8 +134,10 @@ public class CorsightListenerServiceImpl {
 		transaction.setCropimagePath(imagePath);
 
 		Device device = deviceRepository.findByCameraIdAndIsDeletedFalse(eventData.getCamera_data().getCamera_id());
-		if (null != device)
+		if (null != device) {
 			transaction.setAccessType(device.getAccessType());
+			transaction.setOrganization(device.getOrganization().getName());
+		}
 
 //		if (null != device) {
 //			transaction.setAccessType(device.getAccessType());
@@ -168,8 +170,8 @@ public class CorsightListenerServiceImpl {
 
 	public void setEmployeeDetailsToTransaction(Data eventData, Transaction transaction) {
 		if (null != eventData.getMatch_data().getPoi_id()) {
-			Employee employee = employeeRepository.findByEmpIdAndIsDeletedFalse(eventData.getMatch_data().getPoi_id());
-//			Employee employee = employeeRepository.findByEmpIdAndIsDeletedFalse(eventData.getMatch_data().getPoi_display_name());
+//			Employee employee = employeeRepository.findByEmpIdAndIsDeletedFalse(eventData.getMatch_data().getPoi_id());
+			Employee employee = employeeRepository.findByEmpIdAndIsDeletedFalse(eventData.getMatch_data().getPoi_display_name());
 
 			if (null != employee) {
 				transaction.setEmployee(employee);

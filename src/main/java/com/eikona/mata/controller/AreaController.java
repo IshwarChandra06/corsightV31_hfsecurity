@@ -6,7 +6,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,17 +25,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.eikona.mata.constants.DefaultConstants;
-import com.eikona.mata.constants.DeviceListenerConstants;
 import com.eikona.mata.dto.PaginationDto;
 import com.eikona.mata.entity.Area;
 import com.eikona.mata.entity.Branch;
 import com.eikona.mata.entity.Device;
 import com.eikona.mata.entity.Employee;
+import com.eikona.mata.entity.Organization;
+import com.eikona.mata.entity.User;
 import com.eikona.mata.repository.AreaRepository;
+import com.eikona.mata.repository.BranchRepository;
+import com.eikona.mata.repository.DoorRepository;
+import com.eikona.mata.repository.OrganizationRepository;
+import com.eikona.mata.repository.UserRepository;
 import com.eikona.mata.service.AreaService;
-import com.eikona.mata.service.BranchService;
-import com.eikona.mata.service.DoorService;
-import com.eikona.mata.service.OrganizationService;
 import com.eikona.mata.sync.WatchListSync;
 
 @Controller
@@ -49,19 +50,22 @@ public class AreaController {
 	private AreaRepository areaDatatableRepository;
 
 	@Autowired
-	private DoorService doorService;
+	private DoorRepository doorRepository;
 
 	@Autowired
-	private BranchService branchService;
+	private BranchRepository branchRepository;
 
 	@Autowired
-	private OrganizationService organizationService;
+	private OrganizationRepository organizationRepository;
 	
 	@Value("${corsight.enabled}")
 	private boolean corsightEnabled;
 	
 	@Autowired
 	private WatchListSync watchListSync;
+	
+	@Autowired
+	private UserRepository userRepository;
 	
 	@GetMapping("/area")
 	@PreAuthorize("hasAuthority('area_view')")
@@ -71,28 +75,41 @@ public class AreaController {
 	}
 
 	@GetMapping("/areabybranch")
-	public @ResponseBody List<Area> getAreaByBranch(@RequestParam String branch) {
+	public @ResponseBody List<Area> getAreaByBranch(@RequestParam String branch, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
 		Branch branchObj = new Branch();
 		branchObj.setName(branch);
-		List<Area> areaList = areaDatatableRepository.findByBranchAndIsDeletedFalseCustom(branch);
+		List<Area> areaList = areaDatatableRepository.findByBranchAndIsDeletedFalseCustom(branch,user.getOrganization().getName());
 		return areaList;
 	}
 
 	@GetMapping("/areabybranchid")
 	@PreAuthorize("hasAuthority('device_create')")
-	public @ResponseBody List<Area> getAreaByBranchId(@RequestParam String branchId) {
-		Branch branchObj = branchService.getById(Long.valueOf(branchId));
-		List<Area> areaList = areaDatatableRepository.findByBranchAndIsDeletedFalse(branchObj);
+	public @ResponseBody List<Area> getAreaByBranchId(@RequestParam String branchId, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		Branch branchObj = branchRepository.findById(Long.valueOf(branchId)).get();
+		List<Area> areaList = areaDatatableRepository.findByBranchAndOrganizationAndIsDeletedFalse(branchObj,user.getOrganization());
 		return areaList;
 	}
 
 	@GetMapping("/area/new")
 	@PreAuthorize("hasAuthority('area_create')")
-	public String newArea(Model model) {
+	public String newArea(Model model, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
 
-		model.addAttribute("listOrganization", organizationService.getAll());
-		model.addAttribute("listBranch", branchService.getAll());
-		model.addAttribute("listDoor", doorService.getAll());
+		List<Organization> organizationList = null;
+		if(null == user.getOrganization()) {
+			organizationList = (List<Organization>) organizationRepository.findAll();
+		}else {
+			organizationList = organizationRepository.findByIdAndIsDeletedFalse(user.getOrganization().getId());
+		}
+		
+		model.addAttribute("listOrganization", organizationList);
+		model.addAttribute("listBranch", branchRepository.findByOrganizationAndIsDeletedFalse(user.getOrganization()));
+		model.addAttribute("listDoor", doorRepository.findByOrganizationAndIsDeletedFalse(user.getOrganization()));
 		Area area = new Area();
 		model.addAttribute("area", area);
 		model.addAttribute("title", "New Area");
@@ -111,10 +128,12 @@ public class AreaController {
 	}
 	@GetMapping("/watch-list-sync")
 	@PreAuthorize("hasAuthority('watchlist_sync')")
-	public String areaSync(Model model) {
+	public String areaSync(Model model, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
 		String message = null;
 		try {
-			message = watchListSync.syncWatchlist();
+			message = watchListSync.syncWatchlist(user.getOrganization());
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
@@ -130,11 +149,20 @@ public class AreaController {
 	@PostMapping("/area/add")
 	@PreAuthorize("hasAnyAuthority('area_create','area_update')")
 	public String saveArea(@ModelAttribute("area") Area area, @Valid Area ar, Errors errors, String title,
-			Model model) {
+			Model model, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
 		if (errors.hasErrors()) {
-			model.addAttribute("listOrganization", organizationService.getAll());
-			model.addAttribute("listBranch", branchService.getAll());
-			model.addAttribute("listDoor", doorService.getAll());
+			List<Organization> organizationList = null;
+			if(null == user.getOrganization()) {
+				organizationList = (List<Organization>) organizationRepository.findAll();
+			}else {
+				organizationList = organizationRepository.findByIdAndIsDeletedFalse(user.getOrganization().getId());
+			}
+			
+			model.addAttribute("listOrganization", organizationList);
+			model.addAttribute("listBranch", branchRepository.findByOrganizationAndIsDeletedFalse(user.getOrganization()));
+			model.addAttribute("listDoor", doorRepository.findByOrganizationAndIsDeletedFalse(user.getOrganization()));
 			model.addAttribute("title", title);
 			return "area/area_new";
 		} else {
@@ -155,11 +183,20 @@ public class AreaController {
 
 	@GetMapping("/area/edit/{id}")
 	@PreAuthorize("hasAuthority('area_update')")
-	public String updateArea(@PathVariable(value = "id") long id, Model model) {
+	public String updateArea(@PathVariable(value = "id") long id, Model model, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
 		Area area = areaService.getById(id);
-		model.addAttribute("listOrganization", organizationService.getAll());
-		model.addAttribute("listBranch", branchService.getAll());
-		model.addAttribute("listDoor", doorService.getAll());
+		List<Organization> organizationList = null;
+		if(null == user.getOrganization()) {
+			organizationList = (List<Organization>) organizationRepository.findAll();
+		}else {
+			organizationList = organizationRepository.findByIdAndIsDeletedFalse(user.getOrganization().getId());
+		}
+		
+		model.addAttribute("listOrganization", organizationList);
+		model.addAttribute("listBranch", branchRepository.findByOrganizationAndIsDeletedFalse(user.getOrganization()));
+		model.addAttribute("listDoor", doorRepository.findByOrganizationAndIsDeletedFalse(user.getOrganization()));
 		model.addAttribute("area", area);
 		model.addAttribute("title", "Update Area");
 		model.addAttribute("corsightEnabled", corsightEnabled);
@@ -177,9 +214,12 @@ public class AreaController {
 	@RequestMapping(value = "/api/search/area", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('area_view')")
 	public @ResponseBody PaginationDto<Area> search(Long id, String name, String office, int pageno, String sortField,
-			String sortDir) {
+			String sortDir, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String orgName = (null == user.getOrganization()? null: user.getOrganization().getName());
 
-		PaginationDto<Area> dtoList = areaService.searchByField(id, name, office, pageno, sortField, sortDir);
+		PaginationDto<Area> dtoList = areaService.searchByField(id, name, office, pageno, sortField, sortDir,orgName);
 		return dtoList;
 	}
 
@@ -198,9 +238,12 @@ public class AreaController {
 
 	@RequestMapping(value = "/api/search/area-to-employee/association", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('area_employee_association')")
-	public @ResponseBody PaginationDto<Employee> search(String id, String name, String office, String area, int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<Employee> search(String id, String name, String office, String area, int pageno, String sortField, String sortDir, Principal principal) {
 		
-		PaginationDto<Employee> dtoList = areaService.searchAreaToEmployee(id, name, office, area, pageno, sortField, sortDir);
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String orgName = (null == user.getOrganization()? null: user.getOrganization().getName());
+		
+		PaginationDto<Employee> dtoList = areaService.searchAreaToEmployee(id, name, office, area, pageno, sortField, sortDir,orgName);
 		return dtoList;
 	}
 
@@ -234,10 +277,13 @@ public class AreaController {
 	@RequestMapping(value = "/api/search/area-to-device/association", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('area_device_association')")
 	public @ResponseBody PaginationDto<Device> searchAreaToDevice(String name, String office,
-			String area, int pageno, String sortField, String sortDir) {
+			String area, int pageno, String sortField, String sortDir, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String orgName = (null == user.getOrganization()? null: user.getOrganization().getName());
 
 		PaginationDto<Device> dtoList = areaService.searchAreaToDevice(name, office, area, pageno, sortField,
-				sortDir);
+				sortDir,orgName);
 		return dtoList;
 	}
 

@@ -1,6 +1,9 @@
 package com.eikona.mata.controller;
 
 
+import java.security.Principal;
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -19,9 +22,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.eikona.mata.dto.PaginationDto;
 import com.eikona.mata.entity.EmailSchedule;
+import com.eikona.mata.entity.Organization;
+import com.eikona.mata.entity.User;
+import com.eikona.mata.repository.OrganizationRepository;
+import com.eikona.mata.repository.UserRepository;
 import com.eikona.mata.service.ConstraintSingleService;
 import com.eikona.mata.service.EmailScheduleService;
-import com.eikona.mata.service.OrganizationService;
 
 @Controller
 public class EmailScheduleController {
@@ -33,19 +39,30 @@ public class EmailScheduleController {
     private ConstraintSingleService constraintSingleService;
 	
 	@Autowired
-	private OrganizationService organizationService;
+	private OrganizationRepository organizationRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	@GetMapping("/email/schedule")
 	@PreAuthorize("hasAuthority('email_schedule_view')")
-	public String listEmailSchedule(Model model) {
-		model.addAttribute("emailSchedule", emailScheduleService.getAll());
+	public String listEmailSchedule() {
 		return "emailschedule/emailschedule_list";
 	}
 
 	@GetMapping("/email/schedule/new")
 	@PreAuthorize("hasAuthority('email_schedule_create')")
-	public String newEmailSchedule(Model model) {
-		model.addAttribute("listOrganization", organizationService.getAll());
+	public String newEmailSchedule(Model model, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		List<Organization> organizationList = null;
+		if(null == user.getOrganization()) {
+			organizationList = (List<Organization>) organizationRepository.findAll();
+		}else {
+			organizationList = organizationRepository.findByIdAndIsDeletedFalse(user.getOrganization().getId());
+		}
+		
+		model.addAttribute("listOrganization", organizationList);
 		model.addAttribute("listConstraint", constraintSingleService.findAll());
 		EmailSchedule emailSchedule = new EmailSchedule();
 		model.addAttribute("emailSchedule", emailSchedule);
@@ -57,9 +74,19 @@ public class EmailScheduleController {
 	@PostMapping("/email/schedule/add")
 	@PreAuthorize("hasAnyAuthority('email_schedule_create','email_schedule_update')")
 	public String saveEmailSchedule(@ModelAttribute("emailSchedule") EmailSchedule emailSchedule, @Valid EmailSchedule entity,
-			Errors errors, Model model, HttpServletResponse response,String title) {
+			Errors errors, Model model, HttpServletResponse response,String title, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		
 		if (errors.hasErrors()) {
-			model.addAttribute("listOrganization", organizationService.getAll());
+			List<Organization> organizationList = null;
+			if(null == user.getOrganization()) {
+				organizationList = (List<Organization>) organizationRepository.findAll();
+			}else {
+				organizationList = organizationRepository.findByIdAndIsDeletedFalse(user.getOrganization().getId());
+			}
+			
+			model.addAttribute("listOrganization", organizationList);
 			model.addAttribute("listConstraint", constraintSingleService.findAll());
 			model.addAttribute("title", title);
 			return "emailschedule/emailschedule_new";
@@ -81,8 +108,17 @@ public class EmailScheduleController {
 
 	@GetMapping("/email/schedule/edit/{id}")
 	@PreAuthorize("hasAuthority('email_schedule_update')")
-	public String editEmailSchedule(@PathVariable(value = "id") long id, Model model) {
-		model.addAttribute("listOrganization", organizationService.getAll());
+	public String editEmailSchedule(@PathVariable(value = "id") long id, Model model, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		List<Organization> organizationList = null;
+		if(null == user.getOrganization()) {
+			organizationList = (List<Organization>) organizationRepository.findAll();
+		}else {
+			organizationList = organizationRepository.findByIdAndIsDeletedFalse(user.getOrganization().getId());
+		}
+		
+		model.addAttribute("listOrganization", organizationList);
 		model.addAttribute("listConstraint", constraintSingleService.findAll());
 		EmailSchedule emailSchedule = emailScheduleService.getById(id);
 		model.addAttribute("emailSchedule", emailSchedule);
@@ -101,9 +137,12 @@ public class EmailScheduleController {
 
 	@RequestMapping(value = "/api/search/email-schedule", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('email_schedule_view')")
-	public @ResponseBody PaginationDto<EmailSchedule> searchEmailSetup(Long id, String reportType,String fileType,String toMail,String subject, int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<EmailSchedule> searchEmailSetup(Long id, String reportType,String fileType,String toMail,String subject, int pageno, String sortField, String sortDir, Principal principal) {
 		
-		PaginationDto<EmailSchedule> dtoList = emailScheduleService.searchByField(id, reportType,fileType,toMail,subject,pageno, sortField, sortDir);
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String orgName = (null == user.getOrganization()? null: user.getOrganization().getName());
+		
+		PaginationDto<EmailSchedule> dtoList = emailScheduleService.searchByField(id, reportType,fileType,toMail,subject,pageno, sortField, sortDir,orgName);
 		return dtoList;
 	}
 }

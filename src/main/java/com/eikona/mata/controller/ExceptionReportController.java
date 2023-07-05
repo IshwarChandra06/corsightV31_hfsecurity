@@ -1,5 +1,7 @@
 package com.eikona.mata.controller;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.eikona.mata.dto.ExceptionSummaryDto;
 import com.eikona.mata.dto.PaginationDto;
 import com.eikona.mata.entity.DailyAttendance;
+import com.eikona.mata.entity.User;
+import com.eikona.mata.repository.UserRepository;
 import com.eikona.mata.service.DailyAttendanceService;
 import com.eikona.mata.service.OrganizationService;
 
@@ -24,6 +28,9 @@ public class ExceptionReportController {
 
 	@Autowired
 	private OrganizationService organizationService;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	@GetMapping(value = "/dailysummary")
 	@PreAuthorize("hasAuthority('exception_summary_view')")
@@ -35,7 +42,10 @@ public class ExceptionReportController {
 	
 	@RequestMapping(value = "/api/search/exceptionsummary", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('exception_summary_view')")
-	public @ResponseBody PaginationDto<ExceptionSummaryDto> exceptionDailyAttendanceSummaryData(String sDate, String eDate, String company, int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<ExceptionSummaryDto> exceptionDailyAttendanceSummaryData(String sDate, String eDate, int pageno, String sortField, String sortDir, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String company = (null == user.getOrganization()? null: user.getOrganization().getName());
 		
 		PaginationDto<ExceptionSummaryDto> dtoList = dailyAttendanceService.search( sDate, eDate, company, pageno, sortField, sortDir);
 		
@@ -60,8 +70,11 @@ public class ExceptionReportController {
 	}
 	@RequestMapping(value = "/api/search/present/daily-attendance", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('exception_summary_view')")
-	public @ResponseBody PaginationDto<DailyAttendance> searchPresent(Long id, String date, String organization, String employeeId, String employeeName, String office, String department, String designation,
-			int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<DailyAttendance> searchPresent(Long id, String date, String employeeId, String employeeName, String office, String department, String designation,
+			int pageno, String sortField, String sortDir, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String organization = (null == user.getOrganization()? null: user.getOrganization().getName());
 		
 		PaginationDto<DailyAttendance> dtoList = dailyAttendanceService.searchPresent(id, date, organization, employeeId, employeeName, office, department, designation, pageno, sortField, sortDir);
 		
@@ -88,8 +101,11 @@ public class ExceptionReportController {
 	
 	@RequestMapping(value = "/api/search/inNoMask/daily-attendance", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('exception_summary_view')")
-	public @ResponseBody PaginationDto<DailyAttendance> searchInNoMask(Long id, String date, String organization, String employeeId, String employeeName, String office, String department, String designation,
-			int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<DailyAttendance> searchInNoMask(Long id, String date,String employeeId, String employeeName, String office, String department, String designation,
+			int pageno, String sortField, String sortDir, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String organization = (null == user.getOrganization()? null: user.getOrganization().getName());
 		
 		PaginationDto<DailyAttendance> dtoList = dailyAttendanceService.searchInNoMask(id, date, organization, employeeId, employeeName, office, department, designation, pageno, sortField, sortDir);
 		
@@ -114,8 +130,11 @@ public class ExceptionReportController {
 	}
 	@RequestMapping(value = "/api/search/outNoMask/daily-attendance", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('exception_summary_view')")
-	public @ResponseBody PaginationDto<DailyAttendance> searchOutNoMask(Long id, String date, String organization, String employeeId, String employeeName, String office, String department, String designation,
-			int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<DailyAttendance> searchOutNoMask(Long id, String date,  String employeeId, String employeeName, String office, String department, String designation,
+			int pageno, String sortField, String sortDir, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String organization = (null == user.getOrganization()? null: user.getOrganization().getName());
 		
 		PaginationDto<DailyAttendance> dtoList = dailyAttendanceService.searchOutNoMask(id, date, organization, employeeId, employeeName, office, department, designation, pageno, sortField, sortDir);
 		
@@ -140,8 +159,11 @@ public class ExceptionReportController {
 	}
 	@RequestMapping(value = "/api/search/missedOutPunch/daily-attendance", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('exception_summary_view')")
-	public @ResponseBody PaginationDto<DailyAttendance> searchMissedOutPunch(Long id, String date, String organization, String employeeId, String employeeName, String office, String department, String designation,
-			int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<DailyAttendance> searchMissedOutPunch(Long id, String date,  String employeeId, String employeeName, String office, String department, String designation,
+			int pageno, String sortField, String sortDir, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String organization = (null == user.getOrganization()? null: user.getOrganization().getName());
 		
 		PaginationDto<DailyAttendance> dtoList = dailyAttendanceService.searchMissedOutPunch(id, date, organization, employeeId, employeeName, office, department, designation, pageno, sortField, sortDir);
 		
@@ -165,8 +187,11 @@ public class ExceptionReportController {
 	}
 	@RequestMapping(value = "/api/search/overTime/daily-attendance", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('exception_summary_view')")
-	public @ResponseBody PaginationDto<DailyAttendance> searchOverTime(Long id, String date, String organization, String employeeId, String employeeName, String office, String department, String designation,
-			int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<DailyAttendance> searchOverTime(Long id, String date,  String employeeId, String employeeName, String office, String department, String designation,
+			int pageno, String sortField, String sortDir, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String organization = (null == user.getOrganization()? null: user.getOrganization().getName());
 		
 		PaginationDto<DailyAttendance> dtoList = dailyAttendanceService.searchOverTime(id, date, organization, employeeId, employeeName, office, department, designation, pageno, sortField, sortDir);
 		
@@ -191,8 +216,11 @@ public class ExceptionReportController {
 	}
 	@RequestMapping(value = "/api/search/inAbnormalTemp/daily-attendance", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('exception_summary_view')")
-	public @ResponseBody PaginationDto<DailyAttendance> searchInAbnormalTemp(Long id, String date, String organization, String employeeId, String employeeName, String office, String department, String designation,
-			int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<DailyAttendance> searchInAbnormalTemp(Long id, String date, String employeeId, String employeeName, String office, String department, String designation,
+			int pageno, String sortField, String sortDir, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String organization = (null == user.getOrganization()? null: user.getOrganization().getName());
 		
 		PaginationDto<DailyAttendance> dtoList = dailyAttendanceService.searchInAbnormalTemp(id, date, organization, employeeId, employeeName, office, department, designation, pageno, sortField, sortDir);
 		
@@ -218,8 +246,11 @@ public class ExceptionReportController {
 	}
 	@RequestMapping(value = "/api/search/outAbnormalTemp/daily-attendance", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('exception_summary_view')")
-	public @ResponseBody PaginationDto<DailyAttendance> searchOutAbnormalTemp(Long id, String date, String organization, String employeeId, String employeeName, String office, String department, String designation,
-			int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<DailyAttendance> searchOutAbnormalTemp(Long id, String date,  String employeeId, String employeeName, String office, String department, String designation,
+			int pageno, String sortField, String sortDir, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String organization = (null == user.getOrganization()? null: user.getOrganization().getName());
 		
 		PaginationDto<DailyAttendance> dtoList = dailyAttendanceService.searchOutAbnormalTemp(id, date, organization, employeeId, employeeName, office, department, designation, pageno, sortField, sortDir);
 		
@@ -243,8 +274,11 @@ public class ExceptionReportController {
 	}
 	@RequestMapping(value = "/api/search/lateComing/daily-attendance", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('exception_summary_view')")
-	public @ResponseBody PaginationDto<DailyAttendance> searchLateComing(Long id, String date, String organization, String employeeId, String employeeName, String office, String department, String designation,
-			int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<DailyAttendance> searchLateComing(Long id, String date,  String employeeId, String employeeName, String office, String department, String designation,
+			int pageno, String sortField, String sortDir, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String organization = (null == user.getOrganization()? null: user.getOrganization().getName());
 		
 		PaginationDto<DailyAttendance> dtoList = dailyAttendanceService.searchLateComing(id, date, organization, employeeId, employeeName, office, department, designation, pageno, sortField, sortDir);
 		
@@ -269,8 +303,11 @@ public class ExceptionReportController {
 	}
 	@RequestMapping(value = "/api/search/earlyGoing/daily-attendance", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('exception_summary_view')")
-	public @ResponseBody PaginationDto<DailyAttendance> searchEarlyGoing(Long id, String date, String organization, String employeeId, String employeeName, String office, String department, String designation,
-			int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<DailyAttendance> searchEarlyGoing(Long id, String date,  String employeeId, String employeeName, String office, String department, String designation,
+			int pageno, String sortField, String sortDir, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String organization = (null == user.getOrganization()? null: user.getOrganization().getName());
 		
 		PaginationDto<DailyAttendance> dtoList = dailyAttendanceService.searchEarlyGoing(id, date, organization, employeeId, employeeName, office, department, designation, pageno, sortField, sortDir);
 		
@@ -295,8 +332,11 @@ public class ExceptionReportController {
 	}
 	@RequestMapping(value = "/api/search/lessTime/daily-attendance", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('exception_summary_view')")
-	public @ResponseBody PaginationDto<DailyAttendance> searchLessTime(Long id, String date, String organization, String employeeId, String employeeName, String office, String department, String designation,
-			int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<DailyAttendance> searchLessTime(Long id, String date,  String employeeId, String employeeName, String office, String department, String designation,
+			int pageno, String sortField, String sortDir, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String organization = (null == user.getOrganization()? null: user.getOrganization().getName());
 		
 		PaginationDto<DailyAttendance> dtoList = dailyAttendanceService.searchLessTime(id, date, organization, employeeId, employeeName, office, department, designation, pageno, sortField, sortDir);
 		

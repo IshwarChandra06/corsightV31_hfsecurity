@@ -42,18 +42,20 @@ import com.eikona.mata.entity.Device;
 import com.eikona.mata.entity.Employee;
 import com.eikona.mata.entity.Organization;
 import com.eikona.mata.entity.User;
+import com.eikona.mata.repository.AreaRepository;
+import com.eikona.mata.repository.BranchRepository;
+import com.eikona.mata.repository.DepartmentRepository;
+import com.eikona.mata.repository.DesignationRepository;
 import com.eikona.mata.repository.EmployeeRepository;
+import com.eikona.mata.repository.OrganizationRepository;
 import com.eikona.mata.repository.UserRepository;
 import com.eikona.mata.service.AreaService;
-import com.eikona.mata.service.BranchService;
-import com.eikona.mata.service.DepartmentService;
-import com.eikona.mata.service.DesignationService;
 import com.eikona.mata.service.DeviceService;
 import com.eikona.mata.service.DeviceSyncAbstractService;
 import com.eikona.mata.service.EmployeeService;
-import com.eikona.mata.service.OrganizationService;
 import com.eikona.mata.sync.EmployeeSync;
 import com.eikona.mata.util.ImageProcessingUtil;
+import com.eikona.mata.util.RequestExecutionUtil;
 
 @Controller
 public class EmployeeController {
@@ -68,19 +70,22 @@ public class EmployeeController {
 	private UserRepository userRepository;
 	
 	@Autowired
-	private OrganizationService organizationService;
+	private OrganizationRepository organizationRepository;
 
 	@Autowired
-	private DepartmentService departmentService;
+	private DepartmentRepository departmentRepository;
 
 	@Autowired
-	private BranchService branchService;
+	private BranchRepository branchRepository;
+	
+	@Autowired
+	private AreaRepository areaRepository;
 	
 	@Autowired
 	private AreaService areaService;
 
 	@Autowired
-	private DesignationService designationService;
+	private DesignationRepository designationRepository;
 
 	@Autowired
 	private DeviceService deviceService;
@@ -107,11 +112,10 @@ public class EmployeeController {
 	
 	
 	@Value("${corsight.host.url}")
-	private String host;
+    private String corsightHost;
 	
 	@Value("${corsight.poi.port}")
-	private String portPoi;
-	
+    private String poiPort;
 	
 	
 	@GetMapping("/employee")
@@ -127,8 +131,8 @@ public class EmployeeController {
 		List<Employee>empList=employeeRepository.findAllByIsDeletedFalse();
 //		Area area1=areaService.getById(1l);
 		Area area2=areaService.getById(2l);
-//		Area area3=areaService.getById(3l);
-//		Area area4=areaService.getById(4l);
+		Area area3=areaService.getById(3l);
+		Area area4=areaService.getById(4l);
 //		Area area5=areaService.getById(5l);
 //		Area area6=areaService.getById(6l);
 //		Area area7=areaService.getById(7l);
@@ -138,8 +142,8 @@ public class EmployeeController {
 		List<Area> areaList=new ArrayList<Area>();
 //		areaList.add(area1);
 		areaList.add(area2);
-//		areaList.add(area3);
-//		areaList.add(area4);
+		areaList.add(area3);
+		areaList.add(area4);
 //		areaList.add(area5);
 //		areaList.add(area6);
 //		areaList.add(area7);
@@ -163,8 +167,10 @@ public class EmployeeController {
 
 	@PostMapping("/upload/cosec/employee-list/excel")
 	@PreAuthorize("hasAuthority('employee_import')")
-	public String uploadCosecEmployeeList(@RequestParam("uploadfile") MultipartFile file, Model model) {
-		String message = employeeService.storeCosecEmployeeList(file);
+	public String uploadCosecEmployeeList(@RequestParam("uploadfile") MultipartFile file, Model model, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String message = employeeService.storeCosecEmployeeList(file,user);
 		model.addAttribute("message", message);
 		return "multipartfile/uploadCosecEmployeeList";
 	}
@@ -178,21 +184,31 @@ public class EmployeeController {
 
 	@PostMapping("/upload/employee-list/excel")
 	@PreAuthorize("hasAuthority('employee_import')")
-	public String uploadEmployeeList(@RequestParam("uploadfile") MultipartFile file, Model model) {
-		String message = employeeService.storeEmployeeList(file);
+	public String uploadEmployeeList(@RequestParam("uploadfile") MultipartFile file, Model model, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String message = employeeService.storeEmployeeList(file,user);
 		model.addAttribute("message", message);
 		return "multipartfile/uploadEmployeeList";
 	}
 
 	@GetMapping("/employee/new")
 	@PreAuthorize("hasAuthority('employee_create')")
-	public String newEmployee(Model model) {
-
-		model.addAttribute("listOrganization", organizationService.getAll());
-		model.addAttribute("listDepartment", departmentService.getAll());
-		model.addAttribute("listDesignation", designationService.getAll());
-		model.addAttribute("listBranch", branchService.getAll());
-		model.addAttribute("listArea", areaService.getAll());
+	public String newEmployee(Model model, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		List<Organization> organizationList = null;
+		if(null == user.getOrganization()) {
+			organizationList = (List<Organization>) organizationRepository.findAll();
+		}else {
+			organizationList = organizationRepository.findByIdAndIsDeletedFalse(user.getOrganization().getId());
+		}
+		
+		model.addAttribute("listOrganization", organizationList);
+		model.addAttribute("listDepartment", departmentRepository.findByOrganizationAndIsDeletedFalse(user.getOrganization()));
+		model.addAttribute("listDesignation", designationRepository.findByOrganizationAndIsDeletedFalse(user.getOrganization()));
+		model.addAttribute("listBranch", branchRepository.findByOrganizationAndIsDeletedFalse(user.getOrganization()));
+		model.addAttribute("listArea", areaRepository.findByOrganizationAndIsDeletedFalse(user.getOrganization()));
 		Employee employee = new Employee();
 		model.addAttribute("employee", employee);
 		model.addAttribute("title", "New Employee");
@@ -216,15 +232,24 @@ public class EmployeeController {
 	
 	@GetMapping("/employee-sync")
 	@PreAuthorize("hasAuthority('employee_sync')")
-	private String poiSync(Model model,Principal principal) {
-		User user=userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
-		String message = syncEmployee(user.getOrganization());
+	public String syncDevice(Model model,Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+	
+		String message = null;
+		try {
+			message = syncEmployeeList(user.getOrganization());
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		model.addAttribute("message",message);
 		model.addAttribute("corsightEnabled",true);
 		model.addAttribute("cosecEnabled",cosecEnabled);
 		return "employee/employee_list";
 	}
-	public String syncEmployee(Organization organization) {
+	
+	private String syncEmployeeList(Organization organization) {
 		try {
 			String afterId = ApplicationConstants.DELIMITER_EMPTY;
 			employeeSync.getEmployeeList(afterId,organization);
@@ -234,17 +259,24 @@ public class EmployeeController {
 			return MessageConstants.SYNC_FAILED;
 		}
 	}
-	
 
 	@PostMapping("/employee/add")
 	@PreAuthorize("hasAnyAuthority('employee_create','employee_update')")
 	public String saveEmployee(@RequestParam("files") MultipartFile file, @ModelAttribute("employee") Employee employee,
 			Model model, @Valid Employee emp, Errors errors, String title, Principal principal) {
 		if (errors.hasErrors()) {
-			model.addAttribute("listOrganization", organizationService.getAll());
-			model.addAttribute("listDepartment", departmentService.getAll());
-			model.addAttribute("listDesignation", designationService.getAll());
-			model.addAttribute("listBranch", branchService.getAll());
+			User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+			List<Organization> organizationList = null;
+			if(null == user.getOrganization()) {
+				organizationList = (List<Organization>) organizationRepository.findAll();
+			}else {
+				organizationList = organizationRepository.findByIdAndIsDeletedFalse(user.getOrganization().getId());
+			}
+			
+			model.addAttribute("listOrganization", organizationList);
+			model.addAttribute("listDepartment", departmentRepository.findByOrganizationAndIsDeletedFalse(user.getOrganization()));
+			model.addAttribute("listDesignation", designationRepository.findByOrganizationAndIsDeletedFalse(user.getOrganization()));
+			model.addAttribute("listBranch", branchRepository.findByOrganizationAndIsDeletedFalse(user.getOrganization()));
 			model.addAttribute("title", title);
 			return "employee/employee_new";
 		} else {
@@ -280,12 +312,20 @@ public class EmployeeController {
 
 	@GetMapping("/employee/edit/{id}")
 	@PreAuthorize("hasAuthority('employee_update')")
-	public String editEmployee(@PathVariable(value = "id") long id, Model model) {
-
-		model.addAttribute("listOrganization", organizationService.getAll());
-		model.addAttribute("listDepartment", departmentService.getAll());
-		model.addAttribute("listDesignation", designationService.getAll());
-		model.addAttribute("listBranch", branchService.getAll());
+	public String editEmployee(@PathVariable(value = "id") long id, Model model, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		List<Organization> organizationList = null;
+		if(null == user.getOrganization()) {
+			organizationList = (List<Organization>) organizationRepository.findAll();
+		}else {
+			organizationList = organizationRepository.findByIdAndIsDeletedFalse(user.getOrganization().getId());
+		}
+		
+		model.addAttribute("listOrganization", organizationList);
+		model.addAttribute("listDepartment", departmentRepository.findByOrganizationAndIsDeletedFalse(user.getOrganization()));
+		model.addAttribute("listDesignation", designationRepository.findByOrganizationAndIsDeletedFalse(user.getOrganization()));
+		model.addAttribute("listBranch", branchRepository.findByOrganizationAndIsDeletedFalse(user.getOrganization()));
 
 		Employee employee = employeeService.getById(id);
 		model.addAttribute("employee", employee);
@@ -318,17 +358,20 @@ public class EmployeeController {
 	
 	@RequestMapping(value = "/api/search/employee", method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('employee_view')")
-	public @ResponseBody PaginationDto<Employee> searchEmployee(Long id, String name,String empId,String branch,String department,String designation, int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<Employee> searchEmployee(Long id, String name,String empId,String branch,String department,String designation, int pageno, String sortField, String sortDir, Principal principal) {
 		
-		PaginationDto<Employee> dtoList = employeeService.searchByField(id, name,empId,branch,department,designation,pageno, sortField, sortDir);
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String orgName = (null == user.getOrganization()? null: user.getOrganization().getName());
+		
+		PaginationDto<Employee> dtoList = employeeService.searchByField(id, name,empId,branch,department,designation,pageno, sortField, sortDir,orgName);
 		return dtoList;
 	}
 
 	@GetMapping("/employee-to-area/association/{id}")
 	@PreAuthorize("hasAuthority('employee_area_association')")
-	public String employeeAreaAssociation(@PathVariable(value = "id") long id, Model model) {
-
-		List<Area> areaList = areaService.getAll();
+	public String employeeAreaAssociation(@PathVariable(value = "id") long id, Model model,Principal principal) {
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		List<Area> areaList = areaRepository.findByOrganizationAndIsDeletedFalse(user.getOrganization());
 		model.addAttribute("listArea", areaList);
 		Employee employee = employeeService.getById(id);
 		model.addAttribute("employee", employee);
@@ -358,9 +401,12 @@ public class EmployeeController {
 
 	@GetMapping("/api/search/employee-to-device/association")
 	@PreAuthorize("hasAuthority('employee_device_association')")
-	public @ResponseBody PaginationDto<EmployeeToDeviceAssociationDto> employeeDeviceDatatable(Long id, String device, String office, String area, int pageno, String sortField, String sortDir) {
+	public @ResponseBody PaginationDto<EmployeeToDeviceAssociationDto> employeeDeviceDatatable(Long id, String device, String office, String area, int pageno, String sortField, String sortDir, Principal principal) {
+		
+		User user = userRepository.findByUserNameAndIsDeletedFalse(principal.getName());
+		String orgName = (null == user.getOrganization()? null: user.getOrganization().getName());
 
-		PaginationDto<EmployeeToDeviceAssociationDto> empToDevAssociationList = employeeService.searchEmployeeToDevice(id, device, office, area, pageno, sortField, sortDir);
+		PaginationDto<EmployeeToDeviceAssociationDto> empToDevAssociationList = employeeService.searchEmployeeToDevice(id, device, office, area, pageno, sortField, sortDir,orgName);
 		return empToDevAssociationList;
 
 	}
@@ -400,7 +446,7 @@ public class EmployeeController {
 	@GetMapping("/excel-template-download")
 	@PreAuthorize("hasAuthority('employee_import')")
 	public void downloadEmployeeListExcelTemplate(HttpServletResponse response) throws IOException {
-        String filename = "src/main/resources/static/excel/Employee_import_template.xlsx";
+        String filename = "/excel/Employee_import_template.xlsx";
         try {
         	
         	String headerKey = "Content-Disposition";

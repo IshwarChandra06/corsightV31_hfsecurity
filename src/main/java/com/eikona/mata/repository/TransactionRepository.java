@@ -53,38 +53,38 @@ public interface TransactionRepository extends DataTablesRepository<Transaction,
 	List<Transaction> getMaxTransactionByTimeIntervalCustom(Date startTime, Date endTime);
 
 	@Query("Select count(distinct ev.poiId) from com.eikona.mata.entity.Transaction as ev where ev.employee is not null and "
-			+ "ev.punchDateStr = :dateStr")// 
-	long totalpresentCustom(String dateStr);
+			+ "ev.punchDateStr = :dateStr and ev.organization = :org")
+	long totalpresentCustom(String dateStr, String org);
 	
 	@Query("Select count(distinct ev.poiId) from com.eikona.mata.entity.Transaction as ev where ev.wearingMask = true and ev.employee is not null "
-			+ "and ev.punchDateStr = :dateStr")
-	long totalUnMaskCustom(String dateStr);
+			+ "and ev.punchDateStr = :dateStr and ev.organization = :org")
+	long totalUnMaskCustom(String dateStr, String org);
 	
 	@Query("Select count(ev.id) from com.eikona.mata.entity.Transaction as ev where ev.appearanceId is not null "
-			+ "and ev.punchDateStr = :dateStr")
-	long countAppearencesCustom(String dateStr);
+			+ "and ev.punchDateStr = :dateStr and ev.organization = :org")
+	long countAppearencesCustom(String dateStr, String org);
 	
 	@Query("Select new com.eikona.mata.dto.DepartmentDto(ev.employee.department.name, count(distinct ev.poiId) as presentEmployee) "
-			+ "from com.eikona.mata.entity.Transaction as ev where ev.employee.department is not null "
+			+ "from com.eikona.mata.entity.Transaction as ev where ev.employee.department is not null and ev.organization = :org "
 			+ "and ev.punchDateStr =:date GROUP BY ev.employee.department.name")
-	List<DepartmentDto> countTotalEmployeeInDeptCustom(String date);
+	List<DepartmentDto> countTotalEmployeeInDeptCustom(String date, String org);
 
 	@Query("Select new com.eikona.mata.dto.OrganizationDto(ev.punchTimeStr, ev.employee.organization.name, count(distinct ev.poiId) as total) "
-			+ "from com.eikona.mata.entity.Transaction as ev where ev.employee is not null and ev.employee.organization is not null "
+			+ "from com.eikona.mata.entity.Transaction as ev where ev.employee is not null and ev.employee.organization is not null and ev.organization = :org "
 			+ "and ev.punchDateStr = :dateStr GROUP BY ev.punchDate order by  ev.punchTimeStr asc")
-	List<OrganizationDto> countEmpPresentCustom(String dateStr);
+	List<OrganizationDto> countEmpPresentCustom(String dateStr, String org);
 	
 //	GROUP BY ev.punchDate, ev.employee.organization.name
-	@Query("Select tr from com.eikona.mata.entity.Transaction as tr where tr.punchDateStr =:dateStr and tr.employee IS NOT NULL ORDER BY tr.id DESC ")
-	List<Transaction> getRealTimeDataCustom(String dateStr, Pageable paging);
+	@Query("Select tr from com.eikona.mata.entity.Transaction as tr where tr.punchDateStr =:dateStr and tr.employee IS NOT NULL and tr.organization = :org ORDER BY tr.id DESC ")
+	List<Transaction> getRealTimeDataCustom(String dateStr, String org, Pageable paging);
 	
 //	@Query("Select new com.eikona.mata.dto.OrganizationDto(ev.punchDate, ev.employee.organization.name, count(distinct ev.poiId) as total) "
 //			+ "from com.eikona.mata.entity.Transaction as ev where ev.employee.organization is not null "
 //			+ "and ev.punchDate >= :startDate and ev.punchDate <=:endDate GROUP BY ev.punchDateStr, ev.employee.organization.name ORDER BY ev.punchDateStr ASC" )//  GROUP BY ev.punchDateStr, ev.employee.organization.name
-	@Query("Select new com.eikona.mata.dto.OrganizationDto(ev.punchDateStr, count(distinct ev.poiId) as total) "
-			+ "from com.eikona.mata.entity.Transaction as ev where ev.employee.organization is not null "
+	@Query("Select new com.eikona.mata.dto.OrganizationDto(ev.punchDateStr, count(distinct ev.poiId) as total ) "
+			+ "from com.eikona.mata.entity.Transaction as ev where ev.employee.organization is not null and ev.organization = :org "
 			+ "and ev.punchDate >= :startDate and ev.punchDate <=:endDate GROUP BY ev.punchDateStr ORDER BY ev.punchDateStr ASC" )
-	List<OrganizationDto> findAllOrganizationCustom(Date startDate, Date endDate);
+	List<OrganizationDto> findAllOrganizationCustom(Date startDate, Date endDate, String org);
 
 
 	@Query("Select ev.totalCount from com.eikona.mata.entity.Transaction as ev  WHERE ev.id=(SELECT max(ev.id) FROM com.eikona.mata.entity.Transaction as ev)")

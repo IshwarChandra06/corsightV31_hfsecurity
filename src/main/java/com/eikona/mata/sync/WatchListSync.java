@@ -17,6 +17,7 @@ import com.eikona.mata.constants.MessageConstants;
 import com.eikona.mata.constants.NumberConstants;
 import com.eikona.mata.entity.Area;
 import com.eikona.mata.entity.Branch;
+import com.eikona.mata.entity.Organization;
 import com.eikona.mata.repository.AreaRepository;
 import com.eikona.mata.util.RequestExecutionUtil;
 
@@ -35,7 +36,7 @@ public class WatchListSync {
 	@Value("${corsight.poi.port}")
     private String poiPort;
 
-	public String syncWatchlist() {
+	public String syncWatchlist(Organization organization) {
 		try {
 
 			String poiUrl = ApplicationConstants.HTTPS_COLON_DOUBLE_SLASH + corsightHost
@@ -52,7 +53,7 @@ public class WatchListSync {
 			for (int i = NumberConstants.ZERO; i < jsonArray.size(); i++) {
 				JSONObject currentData = (JSONObject) jsonArray.get(i);
 
-				setAreaObjectFromResponse(listWatchList, currentData);
+				setAreaObjectFromResponse(listWatchList, currentData,organization);
 			}
 			areaDatatableRepository.saveAll(listWatchList);
 			return MessageConstants.SYNC_SUCCESSFULLY;
@@ -62,7 +63,7 @@ public class WatchListSync {
 		}
 	}
 
-	private void setAreaObjectFromResponse(List<Area> listWatchList, JSONObject jsonData) {
+	private void setAreaObjectFromResponse(List<Area> listWatchList, JSONObject jsonData, Organization organization) {
 		Area area = areaDatatableRepository
 				.findByWatchlistIdAndIsDeletedFalse((String) jsonData.get(CorsightDeviceConstants.WATCHLIST_ID));
 		if (null == area) {
@@ -73,6 +74,7 @@ public class WatchListSync {
 			Branch branch = new Branch();
 			branch.setId(Long.valueOf(DefaultConstants.DEFAULT_BRANCH_ID));
 			areaObj.setBranch(branch);
+			areaObj.setOrganization(organization);
 			listWatchList.add(areaObj);
 
 		}

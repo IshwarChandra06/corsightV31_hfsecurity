@@ -10,7 +10,7 @@
     <meta name="robots" content="noindex, nofollow">
     <title>MATA</title>
 	  <!-- Favicon -->
-      <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.png">
+      <link rel="shortcut icon" type="image/x-icon" href="/assets/img/mata_logo.png">
 
 	<!-- Bootstrap CSS -->
       <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
@@ -76,23 +76,12 @@ margin-top: 30px;
 					        </select>
 						</div>
 					</div>
-					<div class="col-sm-6 col-md-3" style="display:none"> 
-						<label >Organization <font style="color:red;">*</font></label>
-						<div class="form-group form-focus select-focus">
-							<select name="" class="select floating" id="company"> 
-								<option th:each="org : ${listOrganization}"
-									th:text="${org.name}" th:value="${org.name}"></option>
-							</select>
-<!-- 							<label class="focus-label">Organization <font style="color:red;">*</font></label> -->
-						</div>
-					</div>
 
 					<div class="col-sm-6 col-md-1" id="hide-search" style="display: none;"></div>
 				</div>
 				<div style="display:none">
 					<input type="hidden" id="orginalByStartDate">
 					<input type="hidden" id="orginalByEndDate">
-					<input type="hidden" id="orginalByOrganization">
 				</div>
 				<div id= "input-field" class="row">
 				
@@ -242,21 +231,20 @@ margin-top: 30px;
 			$(function(){
 				var sDate = "";//document.getElementById('sDate').value;
 	            var eDate = "";//document.getElementById('eDate').value;
-	            var company = "";//document.getElementById('company').value;
 	            
-	            ajaxCall(sDate,eDate,company, "sortByField", "previousPage", 1,"id","desc");
+	            ajaxCall(sDate,eDate, "sortByField", "previousPage", 1,"id","desc");
 			})
 			
 			$(document).on('click', '.sortByField', function(e) {
 				var value = $(this).val();
 				var valueList = value.split("-");
-				ajaxCall("", "", "", "sortByField", "previousPage", valueList[0], valueList[1], valueList[2]);
+				ajaxCall("", "",  "sortByField", "previousPage", valueList[0], valueList[1], valueList[2]);
 			})
 			
 			$(document).on('click', '.previousPage', function(e) {
 				var value = $(this).val();
 				var valueList = value.split("-");
-				ajaxCall("", "", "", "sortByField", "previousPage", valueList[0], valueList[1], valueList[2]);
+				ajaxCall("", "", "sortByField", "previousPage", valueList[0], valueList[1], valueList[2]);
 			})
 			
 			//start search and sort field
@@ -267,10 +255,9 @@ margin-top: 30px;
 				
 				var sDate = document.getElementById('sDate').value;
 	            var eDate = document.getElementById('eDate').value;
-	            var company = document.getElementById('company').value;
 	            checkDate();
 				uncheckedRemove();
-	            ajaxCall(sDate,eDate,company, "sortBySearchField", "nextPage", valueList[0],valueList[1],valueList[2]);
+	            ajaxCall(sDate,eDate, "sortBySearchField", "nextPage", valueList[0],valueList[1],valueList[2]);
         	})
         	//end search and sort field
         	
@@ -281,10 +268,9 @@ margin-top: 30px;
 				
 				var sDate = document.getElementById('sDate').value;
 	            var eDate = document.getElementById('eDate').value;
-	            var company = document.getElementById('company').value;
 	            checkDate();
 				uncheckedRemove();
-	    	   ajaxCall(sDate,eDate,company, "sortBySearchField", "nextPage", 1,"id","desc");
+	    	   ajaxCall(sDate,eDate, "sortBySearchField", "nextPage", 1,"id","desc");
         	})
 			
         	$(document).on('click', '.searchButtonField', function(e) {
@@ -292,10 +278,9 @@ margin-top: 30px;
         		
         		var sDate = document.getElementById('sDate').value;
 	            var eDate = document.getElementById('eDate').value;
-	            var company = document.getElementById('company').value;
                 checkDate();
 				uncheckedRemove();
-    			ajaxCall(sDate,eDate,company, "sortBySearchField", "nextPage", 1,"id","desc");
+    			ajaxCall(sDate,eDate, "sortBySearchField", "nextPage", 1,"id","desc");
 	    		
         	})
 	        
@@ -318,11 +303,10 @@ margin-top: 30px;
 					}
 				}
 		}
-	        function ajaxCall(sDate, eDate, company, headFlag, pageFlag, pageno, sortField,sortDir) {
+	        function ajaxCall(sDate, eDate, headFlag, pageFlag, pageno, sortField,sortDir) {
 				var data = {
 	           		"sDate" : sDate,
 	           		"eDate" : eDate,
-	           		"company" : company,
 	           		"pageno":pageno,
 	           		"sortField":sortField,
 	           		"sortDir":sortDir
